@@ -1,4 +1,9 @@
-import { useRef } from "react";
+import {
+  useRef,
+  useState,
+  type ChangeEvent,
+  type SubmitEventHandler,
+} from "react";
 
 export default function SignUpDialog() {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -13,6 +18,40 @@ export default function SignUpDialog() {
     }
   }
 
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("http://localhost:3000/user/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      console.log("STATUS:", res.status);
+      console.log("RESPONSE:", data);
+    } catch (err) {
+      console.error("FETCH ERROR:", err);
+    }
+  };
+
   return (
     <>
       <button
@@ -26,13 +65,13 @@ export default function SignUpDialog() {
         ref={dialogRef}
         aria-labelledby="signup-title"
         onClick={handleBackdropClick}
-        className="m-auto w-full max-w-[400px] rounded-xl border-0 bg-white p-6 shadow-2xl backdrop:bg-black/50"
+        className="m-auto w-full max-w-100 rounded-xl border-0 bg-white p-6 shadow-2xl backdrop:bg-black/50"
       >
         <h2 id="signup-title" className="mb-4 text-xl font-bold">
           Sign up
         </h2>
 
-        <form className="grid gap-4">
+        <form className="grid gap-4" onSubmit={handleSubmit}>
           <div>
             <label className="mb-1 block" htmlFor="email">
               Email
@@ -43,6 +82,7 @@ export default function SignUpDialog() {
               type="email"
               id="email"
               name="email"
+              onChange={handleChange}
             />
           </div>
 
@@ -56,6 +96,21 @@ export default function SignUpDialog() {
               type="password"
               id="password"
               name="password"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block" htmlFor="confirmPassword">
+              Confirm Password
+            </label>
+
+            <input
+              className="w-full rounded-lg border p-2"
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              onChange={handleChange}
             />
           </div>
 
