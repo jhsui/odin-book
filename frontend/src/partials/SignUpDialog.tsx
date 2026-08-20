@@ -4,7 +4,7 @@ import {
   type ChangeEvent,
   type SubmitEventHandler,
 } from "react";
-import { authClient } from "./lib/auth-client.ts";
+import { authClient } from "../lib/auth-client.ts";
 
 export default function SignUpDialog() {
   const dialogRef = useRef<HTMLDialogElement | null>(null);

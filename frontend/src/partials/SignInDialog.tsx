@@ -1,0 +1,138 @@
+import {
+  useRef,
+  useState,
+  type ChangeEvent,
+  type SubmitEventHandler,
+} from "react";
+import { authClient } from "../lib/auth-client.ts";
+
+export default function SignInDialog() {
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+  function closeDialog() {
+    dialogRef.current?.close();
+  }
+
+  function handleBackdropClick(event: React.MouseEvent<HTMLDialogElement>) {
+    if (event.target === event.currentTarget) {
+      closeDialog();
+    }
+  }
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+
+    const { data, error } = await authClient.signIn.email(
+      {
+        /**
+         * The user email
+         */
+        email: formData.email,
+        /**
+         * The user password
+         */
+        password: formData.password,
+        /**
+         * A URL to redirect to after the user verifies their email (optional)
+         */
+        // callbackURL: "/dashboard",
+        /**
+         * remember the user session after the browser is closed.
+         * @default true
+         */
+        rememberMe: true,
+      },
+      {
+        //callbacks
+      },
+    );
+    if (error) {
+      console.error(error.message);
+      console.error(error.status);
+      console.error(error.code);
+    } else {
+      console.log(data.user);
+    }
+  };
+
+  return (
+    <>
+      <button
+        className="rounded-lg bg-blue-600 px-4 py-2 text-white"
+        onClick={() => dialogRef.current?.showModal()}
+      >
+        Sign in
+      </button>
+
+      <dialog
+        ref={dialogRef}
+        aria-labelledby="signup-title"
+        onClick={handleBackdropClick}
+        className="m-auto w-full max-w-100 rounded-xl border-0 bg-white p-6 shadow-2xl backdrop:bg-black/50"
+      >
+        <h2 id="signup-title" className="mb-4 text-xl font-bold">
+          Sign up
+        </h2>
+
+        <form className="grid gap-4" onSubmit={handleSubmit}>
+          <div>
+            <label className="mb-1 block" htmlFor="email">
+              Email
+            </label>
+
+            <input
+              className="w-full rounded-lg border p-2"
+              type="email"
+              id="email"
+              name="email"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block" htmlFor="password">
+              Password
+            </label>
+
+            <input
+              className="w-full rounded-lg border p-2"
+              type="password"
+              id="password"
+              name="password"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-white"
+            >
+              Sign in
+            </button>
+
+            <button
+              type="button"
+              className="rounded-lg bg-gray-900 px-4 py-2 text-white"
+              onClick={closeDialog}
+            >
+              Close
+            </button>
+          </div>
+        </form>
+      </dialog>
+    </>
+  );
+}
