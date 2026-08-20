@@ -1,11 +1,11 @@
 import express, { type Express, type Request, type Response } from "express";
-import router from "./routes/userRouter.ts";
+// import router from "./routes/userRouter.ts";
 import cors, { type CorsOptions } from "cors";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth.ts";
 
 const app: Express = express();
 const port = 3000;
-
-app.use(express.json());
 
 // app.use(express.urlencoded({ extended: true }));
 
@@ -13,10 +13,16 @@ const corsOptions: CorsOptions = {
   origin: "http://localhost:5173", // React/Vite URL
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 };
+
 app.use(cors(corsOptions));
 
-app.use("/", router);
+app.all("/api/auth/{*any}", toNodeHandler(auth));
+
+app.use(express.json());
+
+// app.use("/", router);
 
 app.listen(port, () => {
   console.log(`App listening on http://localhost:${port}`);

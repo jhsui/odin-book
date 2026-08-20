@@ -1,0 +1,19 @@
+import { betterAuth } from "better-auth/minimal";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { prisma } from "./prisma.ts";
+
+export const auth = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+  }),
+  trustedOrigins: ["http://localhost:5173"],
+  emailAndPassword: {
+    enabled: true,
+  },
+  // socialProviders: {
+  //   github: {
+  //     clientId: process.env.GITHUB_CLIENT_ID as string,
+  //     clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+  //   },
+  // },
+});

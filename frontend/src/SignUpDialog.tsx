@@ -4,6 +4,7 @@ import {
   type ChangeEvent,
   type SubmitEventHandler,
 } from "react";
+import { authClient } from "./lib/auth-client.ts";
 
 export default function SignUpDialog() {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -20,6 +21,7 @@ export default function SignUpDialog() {
 
   const [formData, setFormData] = useState({
     email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
@@ -34,21 +36,37 @@ export default function SignUpDialog() {
   const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await fetch("http://localhost:3000/user/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
-      const data = await res.json();
+    const { data, error } = await authClient.signUp.email(
+      {
+        email: formData.email,
+        password: formData.password,
+        name: formData.username,
+      },
+      // {
+      //   onRequest: (ctx) => {
+      //     //show loading
+      //   },
+      //   onSuccess: (ctx) => {
+      //     //redirect to the dashboard or sign in page
+      //   },
+      //   onError: (ctx) => {
+      //     // display the error message
+      //     alert(ctx.error.message);
+      //   },
+      // },
+    );
 
-      console.log("STATUS:", res.status);
-      console.log("RESPONSE:", data);
-    } catch (err) {
-      console.error("FETCH ERROR:", err);
+    if (error) {
+      console.error(error.message);
+      console.error(error.status);
+      console.error(error.code);
+    } else {
+      console.log(data.user);
     }
   };
 
@@ -82,6 +100,20 @@ export default function SignUpDialog() {
               type="email"
               id="email"
               name="email"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block" htmlFor="username">
+              Username
+            </label>
+
+            <input
+              className="w-full rounded-lg border p-2"
+              type="text"
+              id="username"
+              name="username"
               onChange={handleChange}
             />
           </div>
