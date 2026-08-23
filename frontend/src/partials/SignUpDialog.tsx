@@ -5,8 +5,11 @@ import {
   type SubmitEventHandler,
 } from "react";
 import { authClient } from "../lib/auth-client.ts";
+import { useNavigate } from "react-router";
 
 export default function SignUpDialog() {
+  const navigate = useNavigate();
+
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
   function closeDialog() {
@@ -41,33 +44,37 @@ export default function SignUpDialog() {
       return;
     }
 
-    const { data, error } = await authClient.signUp.email(
+    // const { data, error } =
+    await authClient.signUp.email(
       {
         email: formData.email,
         password: formData.password,
         name: formData.username,
       },
-      // {
-      //   onRequest: (ctx) => {
-      //     //show loading
-      //   },
-      //   onSuccess: (ctx) => {
-      //     //redirect to the dashboard or sign in page
-      //   },
-      //   onError: (ctx) => {
-      //     // display the error message
-      //     alert(ctx.error.message);
-      //   },
-      // },
+      {
+        onRequest: (ctx) => {
+          //show loading
+          console.log(ctx);
+        },
+        onSuccess: (ctx) => {
+          //redirect to the dashboard or sign in page
+          console.log(ctx);
+          navigate("/dashboard");
+        },
+        onError: (ctx) => {
+          // display the error message
+          alert(ctx.error.message);
+        },
+      },
     );
 
-    if (error) {
-      console.error(error.message);
-      console.error(error.status);
-      console.error(error.code);
-    } else {
-      console.log(data.user);
-    }
+    // if (error) {
+    //   console.error(error.message);
+    //   console.error(error.status);
+    //   console.error(error.code);
+    // } else {
+    //   console.log(data.user);
+    // }
   };
 
   return (

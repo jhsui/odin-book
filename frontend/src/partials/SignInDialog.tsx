@@ -5,8 +5,11 @@ import {
   type SubmitEventHandler,
 } from "react";
 import { authClient } from "../lib/auth-client.ts";
+import { useNavigate } from "react-router";
 
 export default function SignInDialog() {
+  const navigate = useNavigate();
+
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
   function closeDialog() {
@@ -52,10 +55,22 @@ export default function SignInDialog() {
          * remember the user session after the browser is closed.
          * @default true
          */
-        rememberMe: true,
+        rememberMe: false,
       },
       {
-        //callbacks
+        onRequest: (ctx) => {
+          //show loading
+          console.log(ctx);
+        },
+        onSuccess: (ctx) => {
+          //redirect to the dashboard or sign in page
+          console.log(ctx);
+          navigate("/dashboard");
+        },
+        onError: (ctx) => {
+          // display the error message
+          alert(ctx.error.message);
+        },
       },
     );
     if (error) {
@@ -83,7 +98,7 @@ export default function SignInDialog() {
         className="m-auto w-full max-w-100 rounded-xl border-0 bg-white p-6 shadow-2xl backdrop:bg-black/50"
       >
         <h2 id="signup-title" className="mb-4 text-xl font-bold">
-          Sign up
+          Sign in
         </h2>
 
         <form className="grid gap-4" onSubmit={handleSubmit}>
