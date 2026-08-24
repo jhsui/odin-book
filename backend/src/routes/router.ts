@@ -3,7 +3,9 @@ import postController from "../controllers/postController.ts";
 
 const router = Router();
 
-router.post("/post/writing", postController.writingPostController);
-router.get("/posts/all", postController.getAllPosts);
+router.get("/posts", postController.getAllPosts);
+router.get("/posts/:postId", postController.getPostById);
+
+router.post("/posts", postController.createPost);
 
 export default router;

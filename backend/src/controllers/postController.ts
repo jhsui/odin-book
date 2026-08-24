@@ -4,7 +4,7 @@ import { type Request, type Response, type NextFunction } from "express";
 import { prisma } from "../lib/prisma.ts";
 import requireAuth from "../middleware/requireAuth.ts";
 
-const writingPostController = [
+const createPost = [
   ...writingPostValidator,
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
@@ -59,4 +59,37 @@ const getAllPosts = [
   },
 ];
 
-export default { writingPostController, getAllPosts };
+const getPostById = [
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { postId } = req.params;
+
+      if (typeof postId !== "string" || postId.length === 0) {
+        return res.status(400).json({ error: "Invalid post ID" });
+      }
+
+      const post = await prisma.post.findUnique({
+        where: { id: postId },
+        include: {
+          author: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      if (!post) {
+        return res.status(404).json({
+          error: "Post not found",
+        });
+      }
+
+      res.json({ post });
+    } catch (error) {
+      next(error);
+    }
+  },
+];
+
+export default { createPost, getAllPosts, getPostById };

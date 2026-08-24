@@ -24,7 +24,7 @@ export default function AllPosts() {
           {posts.map((post) => (
             <li key={post.id}>
               <Link
-                to={`/post/${post.id}`}
+                to={`posts/${post.id}`}
                 className="group flex items-center justify-between gap-4 rounded-lg px-3 py-4 transition hover:bg-slate-50 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
               >
                 <span className="font-medium text-slate-800 transition group-hover:text-indigo-600">

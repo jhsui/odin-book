@@ -27,7 +27,7 @@ export default function Writing() {
         return;
       }
 
-      const res = await fetch("http://localhost:3000/post/writing", {
+      const res = await fetch("http://localhost:3000/posts", {
         method: "POST",
         credentials: "include",
         headers: {
