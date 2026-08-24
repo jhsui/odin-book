@@ -37,8 +37,26 @@ const writingPostController = [
       });
 
       return;
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
   },
 ];
 
-export default { writingPostController };
+const getAllPosts = [
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const posts = await prisma.post.findMany({
+        // todo: allow to switch sort
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      res.json({ posts });
+    } catch (error) {
+      next(error);
+    }
+  },
+];
+
+export default { writingPostController, getAllPosts };
