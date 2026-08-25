@@ -92,4 +92,95 @@ const getPostById = [
   },
 ];
 
-export default { createPost, getAllPosts, getPostById };
+const getIfLiked = [
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { postId } = req.params;
+      const userId = res.locals.session.user.id;
+
+      if (typeof postId !== "string" || postId.length === 0) {
+        return res.status(400).json({
+          message: "postId must be a non-empty string",
+        });
+      }
+
+      const existingLike = await prisma.postLike.findUnique({
+        where: {
+          userId_postId: {
+            userId,
+            postId,
+          },
+        },
+      });
+
+      if (existingLike) {
+        res.json({ liked: true });
+        return;
+      }
+
+      res.json({ liked: false });
+    } catch (error) {
+      next(error);
+    }
+  },
+];
+
+const togglePostLike = [
+  requireAuth,
+
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { postId } = req.params;
+      const userId = res.locals.session.user.id;
+
+      if (typeof postId !== "string" || postId.length === 0) {
+        return res.status(400).json({
+          message: "postId must be a non-empty string",
+        });
+      }
+
+      const existingLike = await prisma.postLike.findUnique({
+        where: {
+          userId_postId: {
+            userId,
+            postId,
+          },
+        },
+      });
+
+      if (existingLike) {
+        await prisma.postLike.delete({
+          where: {
+            userId_postId: {
+              userId,
+              postId,
+            },
+          },
+        });
+
+        res.json({ message: "Like cancelled.", currentLike: false });
+        return;
+      }
+
+      await prisma.postLike.create({
+        data: {
+          userId,
+          postId,
+        },
+      });
+
+      res.json({ message: "Liked.", currentLike: true });
+    } catch (error) {
+      next(error);
+    }
+  },
+];
+
+export default {
+  createPost,
+  getAllPosts,
+  getPostById,
+  getIfLiked,
+  togglePostLike,
+};
