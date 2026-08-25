@@ -92,7 +92,7 @@ const getPostById = [
   },
 ];
 
-const getIfLiked = [
+const getLikeStatus = [
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -114,12 +114,18 @@ const getIfLiked = [
         },
       });
 
+      const likeCount = await prisma.postLike.count({
+        where: {
+          postId,
+        },
+      });
+
       if (existingLike) {
-        res.json({ liked: true });
+        res.json({ liked: true, likeCount });
         return;
       }
 
-      res.json({ liked: false });
+      res.json({ liked: false, likeCount });
     } catch (error) {
       next(error);
     }
@@ -159,7 +165,13 @@ const togglePostLike = [
           },
         });
 
-        res.json({ message: "Like cancelled.", currentLike: false });
+        const likeCount = await prisma.postLike.count({
+          where: {
+            postId,
+          },
+        });
+
+        res.json({ message: "Like cancelled.", currentLike: false, likeCount });
         return;
       }
 
@@ -170,7 +182,13 @@ const togglePostLike = [
         },
       });
 
-      res.json({ message: "Liked.", currentLike: true });
+      const likeCount = await prisma.postLike.count({
+        where: {
+          postId,
+        },
+      });
+
+      res.json({ message: "Liked.", currentLike: true, likeCount });
     } catch (error) {
       next(error);
     }
@@ -181,6 +199,6 @@ export default {
   createPost,
   getAllPosts,
   getPostById,
-  getIfLiked,
+  getLikeStatus,
   togglePostLike,
 };
