@@ -35,8 +35,6 @@ const createPost = [
       res.status(201).json({
         message: "Your post submitted successfully.",
       });
-
-      return;
     } catch (error) {
       next(error);
     }

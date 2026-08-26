@@ -1,5 +1,6 @@
 import { Link, useLoaderData } from "react-router";
 import LikeButton from "./partials/likeButton";
+import CommentSection from "./CommentSection";
 
 type Post = {
   id: string;
@@ -64,6 +65,7 @@ export default function SinglePost() {
 
           <LikeButton postId={post.id}></LikeButton>
         </article>
+        <CommentSection postId={post.id}></CommentSection>
       </div>
     </main>
   );

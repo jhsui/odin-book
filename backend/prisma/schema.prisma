@@ -23,6 +23,7 @@ model User {
 
   followers UserFollow[] @relation("UserFollowers")
   following UserFollow[] @relation("UserFollowing")
+  comments  Comment[]
 
   @@unique([email])
   @@map("user")
@@ -88,7 +89,8 @@ model Post {
   authorId String
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  likes PostLike[]
+  likes    PostLike[]
+  comments Comment[]
 
   @@index([authorId, createdAt])
   @@map("post")
@@ -106,6 +108,23 @@ model PostLike {
   @@id([userId, postId])
   @@index([postId])
   @@map("post_like")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId String
+  postId   String
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt])
+  @@index([authorId, createdAt])
+  @@map("comment")
 }
 
 model UserFollow {
