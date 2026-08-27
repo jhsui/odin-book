@@ -1,6 +1,7 @@
 import { Link, useLoaderData } from "react-router";
 import LikeButton from "./partials/likeButton";
 import CommentSection from "./CommentSection";
+import formatDateTime from "./utils/formatDateTime";
 
 type Post = {
   id: string;
@@ -17,10 +18,7 @@ type Post = {
 export default function SinglePost() {
   const { post } = useLoaderData() as { post: Post };
 
-  const createdAt = new Intl.DateTimeFormat(undefined, {
-    dateStyle: "long",
-    timeStyle: "short",
-  }).format(new Date(post.createdAt));
+  const createdAt = formatDateTime(post.createdAt);
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 text-slate-900 sm:px-6 lg:px-8">

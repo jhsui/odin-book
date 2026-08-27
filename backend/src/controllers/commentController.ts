@@ -48,4 +48,32 @@ const postComment = [
   },
 ];
 
-export default { postComment };
+const getComments = [
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { postId } = req.params;
+      if (typeof postId !== "string" || postId.length === 0) {
+        return res.status(400).json({ error: "Invalid post ID" });
+      }
+
+      const comments = await prisma.comment.findMany({
+        where: {
+          postId,
+        },
+        include: {
+          author: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      res.json({ comments });
+    } catch (error) {
+      next(error);
+    }
+  },
+];
+
+export default { postComment, getComments };

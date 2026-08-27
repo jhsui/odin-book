@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from "react";
 import { authClient } from "./lib/auth-client.ts";
+import Comments from "./partials/Comments.tsx";
 
 export default function CommentSection({ postId }: { postId: string }) {
   const [comment, setComment] = useState("");
@@ -65,6 +66,8 @@ export default function CommentSection({ postId }: { postId: string }) {
         <button type="submit">Submit</button>
         {message && <p>{message}</p>}
       </form>
+
+      <Comments postId={postId}></Comments>
     </>
   );
 }
