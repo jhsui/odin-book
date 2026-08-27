@@ -24,14 +24,17 @@ export default function CommentSection({ postId }: { postId: string }) {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/comments/post/${postId}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `http://localhost:3000/posts/${postId}/comments`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ comment }),
         },
-        body: JSON.stringify({ comment }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Comment submission failed.");

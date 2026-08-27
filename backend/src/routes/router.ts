@@ -6,10 +6,12 @@ const router = Router();
 
 router.get("/posts", postController.getAllPosts);
 router.get("/posts/:postId", postController.getPostById);
-router.get("/posts/like-status/:postId", postController.getLikeStatus);
-
 router.post("/posts", postController.createPost);
-router.post("/posts/like/:postId", postController.togglePostLike);
-router.post("/comments/post/:postId", commentController.postComment);
+
+router.get("/posts/:postId/comments", commentController.getComments);
+router.post("/posts/:postId/comments", commentController.postComment);
+
+router.get("/posts/:postId/likes/me", postController.getLikeStatus);
+router.post("/posts/:postId/likes/me", postController.togglePostLike);
 
 export default router;

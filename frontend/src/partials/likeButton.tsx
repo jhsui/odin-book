@@ -26,7 +26,7 @@ export default function LikeButton({ postId }: { postId: string }) {
     enabled: Boolean(userId),
     queryFn: async (): Promise<LikeData> => {
       const res = await fetch(
-        `http://localhost:3000/posts/like-status/${postId}`,
+        `http://localhost:3000/posts/${postId}/likes/me`,
         {
           credentials: "include",
         },
@@ -45,13 +45,16 @@ export default function LikeButton({ postId }: { postId: string }) {
 
   const toggleLike = useMutation({
     mutationFn: async (): Promise<LikeData> => {
-      const res = await fetch(`http://localhost:3000/posts/like/${postId}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `http://localhost:3000/posts/${postId}/likes/me`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!res.ok) {
         throw new Error(`Could not update like: ${res.status}`);
