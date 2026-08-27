@@ -26,7 +26,7 @@ export default function LikeButton({ postId }: { postId: string }) {
     enabled: Boolean(userId),
     queryFn: async (): Promise<LikeData> => {
       const res = await fetch(
-        `http://localhost:3000/posts/${postId}/likes/me`,
+        `http://localhost:3000/posts/${encodeURIComponent(postId)}/likes/me`,
         {
           credentials: "include",
         },
@@ -46,7 +46,7 @@ export default function LikeButton({ postId }: { postId: string }) {
   const toggleLike = useMutation({
     mutationFn: async (): Promise<LikeData> => {
       const res = await fetch(
-        `http://localhost:3000/posts/${postId}/likes/me`,
+        `http://localhost:3000/posts/${encodeURIComponent(postId)}/likes/me`,
         {
           method: "POST",
           credentials: "include",

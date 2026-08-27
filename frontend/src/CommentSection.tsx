@@ -26,7 +26,7 @@ export default function CommentSection({ postId }: { postId: string }) {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/posts/${postId}/comments`,
+        `http://localhost:3000/posts/${encodeURIComponent(postId)}/comments`,
         {
           method: "POST",
           credentials: "include",
