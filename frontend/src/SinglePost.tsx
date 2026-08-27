@@ -61,7 +61,9 @@ export default function SinglePost() {
             </p>
           </div>
 
-          <LikeButton postId={post.id}></LikeButton>
+          <div className="flex justify-end border-t border-slate-200 px-6 py-5 sm:px-10">
+            <LikeButton postId={post.id} />
+          </div>
         </article>
         <CommentSection postId={post.id}></CommentSection>
       </div>
