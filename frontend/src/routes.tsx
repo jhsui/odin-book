@@ -1,6 +1,7 @@
 import App from "./App.tsx";
 import Dashboard from "./Dashboard.tsx";
 import SinglePost from "./SinglePost.tsx";
+import UserIndex from "./UserIndex.tsx";
 import Writing from "./Writing.tsx";
 import type { RouteObject } from "react-router";
 
@@ -57,6 +58,10 @@ const routes: RouteObject[] = [
       {
         path: "writing",
         element: <Writing />,
+      },
+      {
+        path: "user-index",
+        element: <UserIndex />,
       },
     ],
   },

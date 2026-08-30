@@ -10,11 +10,10 @@ const postComment = [
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Validation failed",
         errors: errors.array(),
       });
-      return;
     }
 
     const { comment } = matchedData(req);
@@ -38,7 +37,7 @@ const postComment = [
       },
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Comment submitted successfully",
     });
   },
@@ -64,7 +63,7 @@ const getComments = [
       },
     });
 
-    res.json({ comments });
+    return res.json({ comments });
   },
 ];
 

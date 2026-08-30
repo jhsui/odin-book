@@ -10,12 +10,11 @@ const createPost = [
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Validation failed",
         // todo: add error page
         errors: errors.array(),
       });
-      return;
     }
 
     const { title, content } = matchedData(req);
@@ -31,7 +30,7 @@ const createPost = [
       },
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Post submitted successfully",
     });
   },
@@ -45,7 +44,7 @@ const getAllPosts = [
         createdAt: "desc",
       },
     });
-    res.json({ posts });
+    return res.json({ posts });
   },
 ];
 
@@ -74,7 +73,7 @@ const getPostById = [
       });
     }
 
-    res.json({ post });
+    return res.json({ post });
   },
 ];
 
@@ -110,10 +109,11 @@ const getLikeStatus = [
       return;
     }
 
-    res.json({ liked: false, likeCount });
+    return res.json({ liked: false, likeCount });
   },
 ];
 
+// todo: separate
 const togglePostLike = [
   requireAuth,
 
@@ -169,7 +169,7 @@ const togglePostLike = [
       },
     });
 
-    res.json({ message: "Liked.", currentLike: true, likeCount });
+    return res.json({ message: "Liked.", currentLike: true, likeCount });
   },
 ];
 

@@ -21,7 +21,9 @@ const requireAuth = async (
 
     res.locals.session = session;
     next();
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 export default requireAuth;

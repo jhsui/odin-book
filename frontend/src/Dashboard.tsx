@@ -26,6 +26,8 @@ export default function Dashboard() {
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <AllPosts />
         </section>
+
+        <Link to={"user-index"}>User index</Link>
       </div>
     </main>
   );

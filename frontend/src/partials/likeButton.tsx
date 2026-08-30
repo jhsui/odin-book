@@ -121,6 +121,7 @@ export default function LikeButton({ postId }: { postId: string }) {
   return (
     <button
       type="button"
+      // todo: accessibility
       aria-pressed={liked}
       aria-label={`${liked ? "Unlike" : "Like"} this post. ${likeCount} ${
         likeCount === 1 ? "like" : "likes"

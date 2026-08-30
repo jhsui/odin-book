@@ -1,3 +1,117 @@
-import { matchedData, validationResult } from "express-validator";
-import { type Request, type Response, type NextFunction } from "express";
+import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
+import requireAuth from "../middleware/requireAuth.ts";
+
+const followUser = [
+  requireAuth,
+  async (req: Request, res: Response) => {
+    const { followingId } = req.params;
+    const followerId = res.locals.session.user.id;
+
+    if (typeof followingId !== "string" || followingId.length === 0) {
+      return res.status(400).json({
+        message: "followingId must be a non-empty string",
+      });
+    }
+
+    if (followerId === followingId) {
+      return res.status(400).json({
+        message: "You cannot follow yourself",
+      });
+    }
+
+    const targetUser = await prisma.user.findUnique({
+      where: { id: followingId },
+      select: { id: true },
+    });
+
+    if (!targetUser) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const follow = await prisma.userFollow.upsert({
+      where: {
+        followerId_followingId: {
+          followerId,
+          followingId,
+        },
+      },
+      create: {
+        followerId,
+        followingId,
+      },
+      update: {},
+    });
+
+    return res.status(200).json({
+      message: "User followed",
+      follow,
+    });
+  },
+];
+
+const unfollowUser = [
+  requireAuth,
+  async (req: Request, res: Response) => {
+    const { followingId } = req.params;
+    const followerId = res.locals.session.user.id;
+
+    if (typeof followingId !== "string" || followingId.length === 0) {
+      return res.status(400).json({
+        message: "followingId must be a non-empty string",
+      });
+    }
+
+    await prisma.userFollow.deleteMany({
+      where: {
+        followerId,
+        followingId,
+      },
+    });
+
+    return res.status(204).send({
+      message: "User unfollowed",
+    });
+  },
+];
+
+const getAllUsers = [
+  async (req: Request, res: Response) => {
+    const users = await prisma.user.findMany({
+      orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
+    });
+
+    return res.json({ users });
+  },
+];
+
+const getFollowStatus = [
+  requireAuth,
+  async (req: Request, res: Response) => {
+    const { followingId } = req.params;
+    const followerId = res.locals.session.user.id;
+
+    if (typeof followingId !== "string" || followingId.length === 0) {
+      return res.status(400).json({
+        message: "followingId must be a non-empty string",
+      });
+    }
+
+    const follow = await prisma.userFollow.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId,
+          followingId,
+        },
+      },
+    });
+
+    const isFollowing = follow !== null;
+
+    return res.json({ isFollowing });
+  },
+];
+
+export default { followUser, unfollowUser, getAllUsers, getFollowStatus };
