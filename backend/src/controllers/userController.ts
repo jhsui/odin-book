@@ -1,6 +1,8 @@
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
 import requireAuth from "../middleware/requireAuth.ts";
+import { auth } from "../lib/auth.ts";
+import { fromNodeHeaders } from "better-auth/node";
 
 const followUser = [
   requireAuth,
@@ -79,11 +81,52 @@ const unfollowUser = [
 
 const getAllUsers = [
   async (req: Request, res: Response) => {
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
+    });
+
+    if (!session) {
+      const users = await prisma.user.findMany({
+        select: {
+          id: true,
+          name: true,
+          createdAt: true,
+        },
+        orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
+      });
+
+      return res.json({
+        users: users.map((user) => ({
+          ...user,
+          isFollowing: false,
+        })),
+      });
+    }
+
+    const currentUserId = res.locals.session.user.id;
     const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        followers: {
+          where: {
+            followerId: currentUserId,
+          },
+          select: {
+            followerId: true,
+          },
+        },
+      },
       orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
     });
 
-    return res.json({ users });
+    const result = users.map(({ followers, ...user }) => ({
+      ...user,
+      isFollowing: followers.length > 0,
+    }));
+
+    return res.json({ users: result });
   },
 ];
 

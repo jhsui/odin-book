@@ -6,6 +6,7 @@ type User = {
   id: string;
   createdAt: string;
   name: string;
+  isFollowing: boolean;
 };
 
 export default function UserIndex() {
@@ -39,7 +40,7 @@ export default function UserIndex() {
               session.user.id === user.id ? (
                 <span>You</span>
               ) : (
-                <FollowButton userId={user.id} />
+                <FollowButton userId={user.id} isFollowing={user.isFollowing} />
               )
             ) : (
               <button onClick={() => alert("Please sign in first.")}>

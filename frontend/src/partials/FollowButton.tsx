@@ -1,23 +1,18 @@
-import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
-export default function FollowButton({ userId }: { userId: string }) {
+type CachedUser = {
+  id: string;
+  isFollowing: boolean;
+};
+
+export default function FollowButton({
+  userId,
+  isFollowing,
+}: {
+  userId: string;
+  isFollowing: boolean;
+}) {
   const queryClient = useQueryClient();
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["follow-status", userId],
-    queryFn: async (): Promise<{ isFollowing: boolean }> => {
-      const res = await fetch(
-        `http://localhost:3000/users/me/following/${encodeURIComponent(userId)}/status`,
-        { credentials: "include" },
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to get follow status");
-      }
-
-      return res.json();
-    },
-  });
 
   const mutation = useMutation({
     mutationFn: async (shouldFollow: boolean) => {
@@ -30,25 +25,29 @@ export default function FollowButton({ userId }: { userId: string }) {
       );
 
       if (!res.ok) {
-        const body = await res.json().catch(() => null);
+        const body = (await res.json().catch(() => null)) as {
+          message?: string;
+        } | null;
 
         throw new Error(body?.message ?? "Failed to update follow status");
       }
+
+      return shouldFollow;
     },
 
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["follow-status", userId],
-      }),
+    onSuccess: (newIsFollowing) => {
+      queryClient.setQueryData<CachedUser[]>(["all-users"], (users) =>
+        users?.map((user) =>
+          user.id === userId ? { ...user, isFollowing: newIsFollowing } : user,
+        ),
+      );
+    },
   });
-
-  if (isLoading) return <button disabled>Loading...</button>;
-
-  const isFollowing = data?.isFollowing ?? false;
 
   return (
     <>
       <button
+        type="button"
         disabled={mutation.isPending}
         onClick={() => mutation.mutate(!isFollowing)}
       >
