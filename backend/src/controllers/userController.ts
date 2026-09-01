@@ -103,7 +103,7 @@ const getAllUsers = [
       });
     }
 
-    const currentUserId = res.locals.session.user.id;
+    const currentUserId = session.user.id;
     const users = await prisma.user.findMany({
       select: {
         id: true,

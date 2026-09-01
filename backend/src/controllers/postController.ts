@@ -173,10 +173,31 @@ const togglePostLike = [
   },
 ];
 
+const getPostIndex = [
+  async (req: Request, res: Response) => {
+    const posts = await prisma.post.findMany({
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: [{ title: "asc" }, { createdAt: "asc" }, { id: "asc" }],
+    });
+
+    return res.json({ posts });
+  },
+];
+
 export default {
   createPost,
   getAllPosts,
   getPostById,
   getLikeStatus,
   togglePostLike,
+  getPostIndex,
 };

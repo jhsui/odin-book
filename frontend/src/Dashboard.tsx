@@ -28,6 +28,7 @@ export default function Dashboard() {
         </section>
 
         <Link to={"user-index"}>User index</Link>
+        <Link to={"post-index"}>Post index</Link>
       </div>
     </main>
   );

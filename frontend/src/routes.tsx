@@ -1,5 +1,6 @@
 import App from "./App.tsx";
 import Dashboard from "./Dashboard.tsx";
+import PostIndex from "./PostIndex.tsx";
 import SinglePost from "./SinglePost.tsx";
 import UserIndex from "./UserIndex.tsx";
 import Writing from "./Writing.tsx";
@@ -62,6 +63,10 @@ const routes: RouteObject[] = [
       {
         path: "user-index",
         element: <UserIndex />,
+      },
+      {
+        path: "post-index",
+        element: <PostIndex />,
       },
     ],
   },

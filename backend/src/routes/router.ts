@@ -6,8 +6,9 @@ import userController from "../controllers/userController.ts";
 const router = Router();
 
 router.get("/posts", postController.getAllPosts);
-router.get("/posts/:postId", postController.getPostById);
 router.post("/posts", postController.createPost);
+router.get("/posts/index", postController.getPostIndex);
+router.get("/posts/:postId", postController.getPostById);
 
 router.get("/posts/:postId/comments", commentController.getComments);
 router.post("/posts/:postId/comments", commentController.postComment);
@@ -22,6 +23,6 @@ router.get(
   userController.getFollowStatus,
 );
 
-router.get("/users/all", userController.getAllUsers);
+router.get("/users/index", userController.getAllUsers);
 
 export default router;

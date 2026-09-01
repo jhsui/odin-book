@@ -1,9 +1,8 @@
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { type UserListItem } from "../UserIndex.tsx";
 
-type CachedUser = {
-  id: string;
-  isFollowing: boolean;
-};
+const buttonClasses =
+  "inline-flex min-w-24 items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-sm transition active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100";
 
 export default function FollowButton({
   userId,
@@ -36,29 +35,67 @@ export default function FollowButton({
     },
 
     onSuccess: (newIsFollowing) => {
-      queryClient.setQueryData<CachedUser[]>(["all-users"], (users) =>
+      queryClient.setQueryData<UserListItem[]>(["user-index"], (users) =>
         users?.map((user) =>
-          user.id === userId ? { ...user, isFollowing: newIsFollowing } : user,
+          user.id === userId
+            ? {
+                ...user,
+                isFollowing: newIsFollowing,
+              }
+            : user,
         ),
       );
     },
   });
 
   return (
-    <>
+    <div className="flex flex-col items-end gap-1.5">
       <button
         type="button"
+        aria-pressed={isFollowing}
         disabled={mutation.isPending}
         onClick={() => mutation.mutate(!isFollowing)}
+        className={`${buttonClasses} ${
+          isFollowing
+            ? "border-slate-300 bg-white text-slate-700 hover:border-red-300 hover:bg-red-50 hover:text-red-700"
+            : "border-indigo-600 bg-indigo-600 text-white hover:border-indigo-500 hover:bg-indigo-500"
+        }`}
       >
-        {mutation.isPending
-          ? "Updating..."
-          : isFollowing
-            ? "Unfollow"
-            : "Follow"}
+        {mutation.isPending && <SpinnerIcon />}
+
+        {mutation.isPending ? "Updating" : isFollowing ? "Unfollow" : "Follow"}
       </button>
 
-      {mutation.isError && <p role="alert">{mutation.error.message}</p>}
-    </>
+      {mutation.isError && (
+        <p
+          role="alert"
+          className="max-w-52 text-right text-xs font-medium text-red-600"
+        >
+          {mutation.error.message}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function SpinnerIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4 animate-spin">
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        className="opacity-25"
+      />
+
+      <path
+        fill="currentColor"
+        className="opacity-75"
+        d="M21 12a9 9 0 0 0-9-9v3a6 6 0 0 1 6 6h3Z"
+      />
+    </svg>
   );
 }
