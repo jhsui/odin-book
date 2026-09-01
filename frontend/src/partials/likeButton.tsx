@@ -20,7 +20,9 @@ export default function LikeButton({ postId }: { postId: string }) {
   const {
     data: likeData,
     isPending,
+    isFetching,
     isError,
+    refetch,
   } = useQuery({
     queryKey,
     enabled: Boolean(userId),
@@ -74,13 +76,9 @@ export default function LikeButton({ postId }: { postId: string }) {
     onSuccess: (updatedLikeData) => {
       queryClient.setQueryData(queryKey, updatedLikeData);
     },
-
-    onError: () => {
-      alert("Could not update the like. Please try again.");
-    },
   });
 
-  if (isSessionPending || isPending) {
+  if (isSessionPending) {
     return (
       <button
         type="button"
@@ -106,47 +104,69 @@ export default function LikeButton({ postId }: { postId: string }) {
     );
   }
 
+  if (isPending) {
+    return (
+      <button
+        type="button"
+        disabled
+        className={`${baseButtonClasses} border-slate-200 bg-slate-100 text-slate-500`}
+      >
+        <SpinnerIcon />
+        Loading
+      </button>
+    );
+  }
+
   if (isError) {
     return (
       <button
         type="button"
-        onClick={() => alert("Something went wrong. Please try again later.")}
-        className={`${baseButtonClasses} border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-300`}
+        disabled={isFetching}
+        onClick={() => void refetch()}
+        className={`${baseButtonClasses} border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100`}
       >
-        Try again
+        {isFetching && <SpinnerIcon />}
+        {isFetching ? "Trying again" : "Try again"}
       </button>
     );
   }
 
   return (
-    <button
-      type="button"
-      // todo: accessibility
-      aria-pressed={liked}
-      aria-label={`${liked ? "Unlike" : "Like"} this post. ${likeCount} ${
-        likeCount === 1 ? "like" : "likes"
-      }`}
-      disabled={toggleLike.isPending}
-      onClick={() => toggleLike.mutate()}
-      className={`${baseButtonClasses} active:scale-95 ${
-        liked
-          ? "border-rose-500 bg-rose-500 text-white hover:bg-rose-600"
-          : "border-slate-300 bg-white text-slate-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
-      }`}
-    >
-      {toggleLike.isPending ? <SpinnerIcon /> : <HeartIcon filled={liked} />}
-
-      <span>{liked ? "Liked" : "Like"}</span>
-
-      <span
-        aria-hidden="true"
-        className={liked ? "text-rose-100" : "text-slate-300"}
+    <div className="flex flex-col items-end gap-1.5">
+      <button
+        type="button"
+        aria-pressed={liked}
+        aria-label={`${liked ? "Unlike" : "Like"} this post. ${likeCount} ${
+          likeCount === 1 ? "like" : "likes"
+        }`}
+        disabled={toggleLike.isPending}
+        onClick={() => toggleLike.mutate()}
+        className={`${baseButtonClasses} active:scale-95 ${
+          liked
+            ? "border-rose-500 bg-rose-500 text-white hover:bg-rose-600"
+            : "border-slate-300 bg-white text-slate-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
+        }`}
       >
-        ·
-      </span>
+        {toggleLike.isPending ? <SpinnerIcon /> : <HeartIcon filled={liked} />}
 
-      <span className="tabular-nums">{likeCount.toLocaleString()}</span>
-    </button>
+        <span>{liked ? "Liked" : "Like"}</span>
+
+        <span
+          aria-hidden="true"
+          className={liked ? "text-rose-100" : "text-slate-300"}
+        >
+          ·
+        </span>
+
+        <span className="tabular-nums">{likeCount.toLocaleString()}</span>
+      </button>
+
+      {toggleLike.isError && (
+        <p role="alert" className="text-xs font-medium text-red-600">
+          Could not update. Try again.
+        </p>
+      )}
+    </div>
   );
 }
 

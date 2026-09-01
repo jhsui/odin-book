@@ -4,15 +4,18 @@ import PostIndex from "./PostIndex.tsx";
 import SinglePost from "./SinglePost.tsx";
 import UserIndex from "./UserIndex.tsx";
 import Writing from "./Writing.tsx";
+import RouteError, { NotFound } from "./RouteError.tsx";
 import type { RouteObject } from "react-router";
 
 const routes: RouteObject[] = [
   {
     path: "/",
     element: <App />,
+    errorElement: <RouteError />,
   },
   {
     path: "dashboard",
+    errorElement: <RouteError />,
     children: [
       {
         index: true,
@@ -69,6 +72,10 @@ const routes: RouteObject[] = [
         element: <PostIndex />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ];
 

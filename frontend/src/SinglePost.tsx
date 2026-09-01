@@ -1,6 +1,7 @@
 import { Link, useLoaderData } from "react-router";
-import LikeButton from "./partials/likeButton";
 import CommentSection from "./CommentSection";
+import LikeButton from "./partials/likeButton";
+import SwayHeader from "./partials/SwayHeader.tsx";
 import formatDateTime from "./utils/formatDateTime";
 
 type Post = {
@@ -17,55 +18,74 @@ type Post = {
 
 export default function SinglePost() {
   const { post } = useLoaderData() as { post: Post };
-
   const createdAt = formatDateTime(post.createdAt);
+  const authorInitial = post.author.name.trim().charAt(0).toUpperCase() || "?";
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-10 text-slate-900 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl">
-        <Link
-          to="/dashboard"
-          className="inline-flex items-center gap-2 rounded-md text-sm font-medium text-indigo-600 transition hover:text-indigo-800 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-        >
-          <span aria-hidden="true">&larr;</span>
-          Back to all posts
-        </Link>
+    <main className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.2),transparent_45%),radial-gradient(circle_at_top_right,rgba(14,165,233,0.12),transparent_40%)]"
+      />
 
-        <article className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <header className="border-b border-slate-200 px-6 py-8 sm:px-10">
-            <p className="mb-3 text-sm font-semibold tracking-wider text-indigo-600 uppercase">
-              Post
-            </p>
+      <div className="relative mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+        <div className="mb-12">
+          <SwayHeader />
+        </div>
 
-            <h1 className="text-3xl leading-tight font-bold tracking-tight text-slate-950 sm:text-4xl">
-              {post.title}
-            </h1>
+        <div className="mx-auto max-w-3xl">
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center gap-2 rounded-lg text-sm font-medium text-slate-400 transition hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+          >
+            <span aria-hidden="true">←</span>
+            Back to feed
+          </Link>
 
-            <div className="mt-5 flex flex-col gap-2 text-sm text-slate-500 sm:flex-row sm:items-center sm:gap-3">
-              <p>
-                Author:{" "}
-                <span className="font-medium text-slate-700">
-                  {post.author.name}
+          <article className="mt-7 overflow-hidden rounded-3xl border border-white/10 bg-white text-slate-900 shadow-2xl shadow-black/25">
+            <header className="border-b border-slate-100 px-5 py-8 sm:px-10 sm:py-10">
+              <div className="mb-5 flex items-center gap-2">
+                <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold tracking-wider text-indigo-600 uppercase ring-1 ring-indigo-100">
+                  Community post
                 </span>
+              </div>
+
+              <h1 className="text-3xl leading-tight font-bold tracking-tight text-balance text-slate-950 sm:text-5xl sm:leading-[1.1]">
+                {post.title}
+              </h1>
+
+              <div className="mt-7 flex items-center gap-3">
+                <span className="flex size-10 items-center justify-center rounded-2xl bg-indigo-100 text-sm font-bold text-indigo-700">
+                  {authorInitial}
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {post.author.name}
+                  </p>
+                  <time
+                    dateTime={post.createdAt}
+                    className="mt-0.5 block text-xs text-slate-500"
+                  >
+                    Published {createdAt}
+                  </time>
+                </div>
+              </div>
+            </header>
+
+            <div className="px-5 py-9 sm:px-10 sm:py-12">
+              <p className="text-lg leading-8 wrap-break-word whitespace-pre-wrap text-slate-700 sm:text-xl sm:leading-9">
+                {post.content}
               </p>
-
-              <span className="hidden text-slate-300 sm:inline">•</span>
-
-              <time dateTime={post.createdAt}>Published {createdAt}</time>
             </div>
-          </header>
 
-          <div className="px-6 py-8 sm:px-10">
-            <p className="text-base leading-8 wrap-break-word whitespace-pre-wrap text-slate-700 sm:text-lg">
-              {post.content}
-            </p>
-          </div>
+            <footer className="flex items-center justify-between gap-4 border-t border-slate-100 bg-slate-50/70 px-5 py-5 sm:px-10">
+              <p className="text-sm text-slate-500">Was this worth sharing?</p>
+              <LikeButton postId={post.id} />
+            </footer>
+          </article>
 
-          <div className="flex justify-end border-t border-slate-200 px-6 py-5 sm:px-10">
-            <LikeButton postId={post.id} />
-          </div>
-        </article>
-        <CommentSection postId={post.id}></CommentSection>
+          <CommentSection postId={post.id} />
+        </div>
       </div>
     </main>
   );
