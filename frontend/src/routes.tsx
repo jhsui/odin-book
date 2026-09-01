@@ -21,7 +21,7 @@ const routes: RouteObject[] = [
         index: true,
         element: <Dashboard />,
         loader: async () => {
-          const res = await fetch("http://localhost:3000/posts");
+          const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`);
 
           if (!res.ok) {
             throw new Error("Failed to load posts");
@@ -43,7 +43,7 @@ const routes: RouteObject[] = [
           }
 
           const res = await fetch(
-            `http://localhost:3000/posts/${encodeURIComponent(postId)}`,
+            `${import.meta.env.VITE_BACKEND_URL}/posts/${encodeURIComponent(postId)}`,
           );
 
           if (res.status === 404) {

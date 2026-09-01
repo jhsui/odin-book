@@ -75,6 +75,17 @@ export default function SignInDialog() {
     }
   };
 
+  const signInWithGoogle = async () => {
+    const { error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
+    });
+
+    if (error) {
+      console.error("Google sign-in failed:", error);
+    }
+  };
+
   return (
     <>
       <button
@@ -186,6 +197,10 @@ export default function SignInDialog() {
               {isSubmitting ? "Signing in..." : "Sign in"}
             </button>
           </form>
+
+          <button type="button" onClick={signInWithGoogle}>
+            Sign in with Google
+          </button>
         </div>
       </dialog>
     </>

@@ -23,7 +23,9 @@ export default function PostIndex() {
   } = useQuery<PostListItem[]>({
     queryKey: ["post-index"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:3000/posts/index");
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/posts/index`,
+      );
 
       if (!res.ok) {
         throw new Error("Failed to get post index");

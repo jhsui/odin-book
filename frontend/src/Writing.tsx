@@ -55,7 +55,7 @@ export default function Writing() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("http://localhost:3000/posts", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
         method: "POST",
         credentials: "include",
         headers: {

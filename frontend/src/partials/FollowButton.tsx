@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type UserListItem } from "../UserIndex.tsx";
+import { type UserListItem } from "../UserIndex";
 
 const buttonClasses =
   "inline-flex min-w-24 items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-sm transition active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100";
@@ -16,7 +16,7 @@ export default function FollowButton({
   const mutation = useMutation({
     mutationFn: async (shouldFollow: boolean) => {
       const res = await fetch(
-        `http://localhost:3000/users/me/following/${encodeURIComponent(userId)}`,
+        `${import.meta.env.VITE_BACKEND_URL}/users/me/following/${encodeURIComponent(userId)}`,
         {
           method: shouldFollow ? "PUT" : "DELETE",
           credentials: "include",

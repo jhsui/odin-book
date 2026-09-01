@@ -24,9 +24,12 @@ export default function UserIndex() {
   } = useQuery<UserListItem[]>({
     queryKey: ["user-index"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:3000/users/index", {
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/users/index`,
+        {
+          credentials: "include",
+        },
+      );
 
       if (!res.ok) {
         throw new Error("Failed to get user index");

@@ -186,7 +186,7 @@ const getPostIndex = [
           },
         },
       },
-      orderBy: [{ title: "asc" }, { createdAt: "asc" }, { id: "asc" }],
+      orderBy: [{ createdAt: "desc" }, { title: "asc" }, { id: "asc" }],
     });
 
     return res.json({ posts });
