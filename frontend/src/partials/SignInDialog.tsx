@@ -6,6 +6,8 @@ import {
 } from "react";
 import { authClient } from "../lib/auth-client.ts";
 import { useNavigate } from "react-router";
+import GoogleSignInButton from "./signInButtons/GoogleSignInButton.tsx";
+import GithubSignInButton from "./signInButtons/GithubSignInButton.tsx";
 
 export default function SignInDialog() {
   const navigate = useNavigate();
@@ -72,17 +74,6 @@ export default function SignInDialog() {
       );
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const signInWithGoogle = async () => {
-    const { error } = await authClient.signIn.social({
-      provider: "google",
-      callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
-    });
-
-    if (error) {
-      console.error("Google sign-in failed:", error);
     }
   };
 
@@ -197,11 +188,10 @@ export default function SignInDialog() {
               {isSubmitting ? "Signing in..." : "Sign in"}
             </button>
           </form>
-
-          <button type="button" onClick={signInWithGoogle}>
-            Sign in with Google
-          </button>
         </div>
+
+        <GoogleSignInButton />
+        <GithubSignInButton />
       </dialog>
     </>
   );

@@ -6,6 +6,8 @@ import {
 } from "react";
 import { authClient } from "../lib/auth-client.ts";
 import { useNavigate } from "react-router";
+import GoogleSignInButton from "./signInButtons/GoogleSignInButton.tsx";
+import GithubSignInButton from "./signInButtons/GithubSignInButton.tsx";
 
 export default function SignUpDialog() {
   const navigate = useNavigate();
@@ -84,7 +86,7 @@ export default function SignUpDialog() {
         className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-5 py-3 text-sm font-semibold text-white shadow-xl shadow-indigo-500/20 transition hover:-translate-y-0.5 hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none active:translate-y-0"
         onClick={() => dialogRef.current?.showModal()}
       >
-        Join Sway
+        Sign up
         <svg
           aria-hidden="true"
           viewBox="0 0 20 20"
@@ -244,6 +246,9 @@ export default function SignUpDialog() {
               {isSubmitting ? "Creating account..." : "Create account"}
             </button>
           </form>
+
+          <GoogleSignInButton />
+          <GithubSignInButton />
         </div>
       </dialog>
     </>
