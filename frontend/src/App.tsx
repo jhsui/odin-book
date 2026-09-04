@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import SignInDialog from "./partials/SignInDialog.tsx";
 import SignUpDialog from "./partials/SignUpDialog.tsx";
 import { authClient } from "./lib/auth-client.ts";
+import SignOutButton from "./partials/SignOutButton.tsx";
 
 const conversations = [
   {
@@ -45,12 +46,16 @@ function App() {
           {isPending ? (
             <span className="h-10 w-28 animate-pulse rounded-xl bg-white/10" />
           ) : session ? (
-            <Link
-              to="/dashboard"
-              className="rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm font-semibold transition hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-            >
-              Open dashboard
-            </Link>
+            <>
+              <Link
+                to="/dashboard"
+                className="rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm font-semibold transition hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+              >
+                Open dashboard
+              </Link>
+
+              <SignOutButton />
+            </>
           ) : (
             <SignInDialog />
           )}

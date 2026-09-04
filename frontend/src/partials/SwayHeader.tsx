@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router";
 import { authClient } from "../lib/auth-client";
+import SignOutButton from "./SignOutButton.tsx";
 
 const navigation = [
   { label: "Feed", to: "/dashboard" },
@@ -12,14 +13,6 @@ export default function SwayHeader() {
 
   // todo: is it okay to check auth in this way?
   const { data: session } = authClient.useSession();
-
-  const handleSignOut = async () => {
-    try {
-      await authClient.signOut();
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <nav
@@ -80,11 +73,7 @@ export default function SwayHeader() {
           Write
         </Link>
 
-        {session && (
-          <button type="button" onClick={handleSignOut}>
-            Sign out
-          </button>
-        )}
+        {session && <SignOutButton />}
       </div>
     </nav>
   );
