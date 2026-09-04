@@ -8,6 +8,7 @@ import { authClient } from "../lib/auth-client.ts";
 import { useNavigate } from "react-router";
 import GoogleSignInButton from "./signInButtons/GoogleSignInButton.tsx";
 import GithubSignInButton from "./signInButtons/GithubSignInButton.tsx";
+import GuestSignIn from "./signInButtons/GuestSignIn.tsx";
 
 export default function SignUpDialog() {
   const navigate = useNavigate();
@@ -247,6 +248,7 @@ export default function SignUpDialog() {
             </button>
           </form>
 
+          <GuestSignIn />
           <GoogleSignInButton />
           <GithubSignInButton />
         </div>

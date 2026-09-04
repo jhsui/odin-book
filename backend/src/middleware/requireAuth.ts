@@ -15,6 +15,16 @@ const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
+    if (session.user.isAnonymous) {
+      // return new Response("A registered account is required", {
+      //   status: 403,
+      // });
+
+      return res
+        .status(403)
+        .json({ message: "A registered account is required" });
+    }
+
     res.locals.session = session;
     next();
   } catch (error) {

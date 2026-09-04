@@ -1,6 +1,6 @@
 import { Link, useLoaderData } from "react-router";
 import CommentSection from "./CommentSection";
-import LikeButton from "./partials/likeButton";
+import LikeButton from "./partials/LikeButton.tsx";
 import SwayHeader from "./partials/SwayHeader.tsx";
 import formatDateTime from "./utils/formatDateTime";
 
