@@ -16,9 +16,9 @@ const corsOptions: CorsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
-
 app.use(cors(corsOptions));
 
+// Better Auth route handler
 app.all("/api/auth/{*any}", toNodeHandler(auth));
 
 app.use(express.json());

@@ -6,6 +6,8 @@ import UserIndex from "./UserIndex.tsx";
 import Writing from "./Writing.tsx";
 import RouteError, { NotFound } from "./RouteError.tsx";
 import type { RouteObject } from "react-router";
+import UserProfile from "./UserProfile.tsx";
+import UserOwnProfile from "./UserOwnProfile.tsx";
 
 const routes: RouteObject[] = [
   {
@@ -72,6 +74,15 @@ const routes: RouteObject[] = [
         element: <PostIndex />,
       },
     ],
+  },
+  {
+    path: "user-profile",
+    // what is the user ID from?
+    element: <UserProfile userId={""} />,
+  },
+  {
+    path: "me-profile",
+    element: <UserOwnProfile />,
   },
   {
     path: "*",

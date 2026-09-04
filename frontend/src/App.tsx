@@ -103,6 +103,7 @@ function App() {
               aria-hidden="true"
               className="absolute -inset-3 rounded-4xl border border-white/5 bg-white/2.5"
             />
+
             <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900/90 p-4 shadow-2xl shadow-black/30 backdrop-blur sm:p-5">
               <div className="mb-4 flex items-center justify-between px-1">
                 <div>

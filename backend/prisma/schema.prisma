@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -24,6 +25,8 @@ model User {
   followers UserFollow[] @relation("UserFollowers")
   following UserFollow[] @relation("UserFollowing")
   comments  Comment[]
+
+  isAnonymous Boolean? @default(false)
 
   @@unique([email])
   @@map("user")

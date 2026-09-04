@@ -25,4 +25,6 @@ router.get(
 
 router.get("/users/index", userController.getAllUsers);
 
+router.put("/users/me/avatar", userController.uploadNewAvatar);
+
 export default router;

@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router";
+import { authClient } from "../lib/auth-client";
 
 const navigation = [
   { label: "Feed", to: "/dashboard" },
@@ -8,6 +9,17 @@ const navigation = [
 
 export default function SwayHeader() {
   const { pathname } = useLocation();
+
+  // todo: is it okay to check auth in this way?
+  const { data: session } = authClient.useSession();
+
+  const handleSignOut = async () => {
+    try {
+      await authClient.signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <nav
@@ -67,6 +79,12 @@ export default function SwayHeader() {
           </svg>
           Write
         </Link>
+
+        {session && (
+          <button type="button" onClick={handleSignOut}>
+            Sign out
+          </button>
+        )}
       </div>
     </nav>
   );

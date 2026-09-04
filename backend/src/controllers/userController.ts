@@ -1,8 +1,12 @@
-import { type Request, type Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
 import requireAuth from "../middleware/requireAuth.ts";
 import { auth } from "../lib/auth.ts";
 import { fromNodeHeaders } from "better-auth/node";
+import multer from "multer";
+import path from "node:path";
+import supabase from "../lib/supabase.ts";
+import { randomUUID } from "node:crypto";
 
 const followUser = [
   requireAuth,
@@ -157,4 +161,44 @@ const getFollowStatus = [
   },
 ];
 
-export default { followUser, unfollowUser, getAllUsers, getFollowStatus };
+const upload = multer({ storage: multer.memoryStorage() });
+
+const uploadNewAvatar = [
+  requireAuth,
+
+  upload.single("avatar"),
+
+  async (req: Request, res: Response) => {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ message: "No file received." });
+    }
+
+    const ext = path.extname(file.originalname);
+    const uniqueName = `${randomUUID()}${ext}`;
+
+    const { data, error } = await supabase.storage
+      .from("user-avatars")
+      .upload(uniqueName, file.buffer, {
+        contentType: file.mimetype,
+      });
+
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Upload failed." });
+    }
+
+    res.status(200).json({
+      message: "Avatar uploaded.",
+      path: data.path,
+    });
+  },
+];
+
+export default {
+  followUser,
+  unfollowUser,
+  getAllUsers,
+  getFollowStatus,
+  uploadNewAvatar,
+};
