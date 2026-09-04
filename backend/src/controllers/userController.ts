@@ -162,7 +162,6 @@ const getFollowStatus = [
 ];
 
 const upload = multer({ storage: multer.memoryStorage() });
-
 const uploadNewAvatar = [
   requireAuth,
 
@@ -187,6 +186,20 @@ const uploadNewAvatar = [
       console.error(error);
       return res.status(500).json({ message: "Upload failed." });
     }
+
+    const userId = res.locals.session.user.id;
+    if (typeof userId !== "string" || userId.length === 0) {
+      return res.status(400).json({
+        message: "Bad user id",
+      });
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        image: uniqueName,
+      },
+    });
 
     res.status(200).json({
       message: "Avatar uploaded.",
