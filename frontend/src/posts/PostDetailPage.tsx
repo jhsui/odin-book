@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from "react-router";
 import CommentSection from "../comments/CommentSection.tsx";
 import LikeButton from "./LikeButton.tsx";
-import SwayHeader from "../partials/SwayHeader.tsx";
+import SwayHeader from "../layout/SwayHeader.tsx";
 import formatDateTime from "../utils/formatDateTime.ts";
 
 type Post = {

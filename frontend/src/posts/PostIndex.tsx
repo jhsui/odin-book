@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
-import SwayHeader from "./partials/SwayHeader.tsx";
-import formatDateTime from "./utils/formatDateTime.ts";
+import SwayHeader from "../layout/SwayHeader.tsx";
+import formatDateTime from "../utils/formatDateTime.ts";
 
 type PostListItem = {
   id: string;

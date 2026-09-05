@@ -1,14 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { authClient } from "./lib/auth-client.ts";
-import FollowButton from "./partials/FollowButton";
-import SwayHeader from "./partials/SwayHeader.tsx";
-
-export type UserListItem = {
-  id: string;
-  createdAt: string;
-  name: string;
-  isFollowing: boolean;
-};
+import { authClient } from "../lib/auth-client.ts";
+import FollowButton from "./FollowButton";
+import SwayHeader from "../layout/SwayHeader.tsx";
+import type { UserListItem } from "./types.ts";
 
 export default function UserIndex() {
   const { data: session, isPending: isSessionPending } =

@@ -1,13 +1,13 @@
 import App from "./App.tsx";
 import Dashboard from "./Dashboard.tsx";
-import PostIndex from "./PostIndex.tsx";
-import SinglePost from "./posts/SinglePost.tsx";
-import UserIndex from "./UserIndex.tsx";
-import Writing from "./posts/Writing.tsx";
+import PostIndex from "./posts/PostIndex.tsx";
+import SinglePost from "./posts/PostDetailPage.tsx";
+import UserIndex from "./users/UserIndex.tsx";
+import Writing from "./posts/CreatePostPage.tsx";
 import RouteError, { NotFound } from "./RouteError.tsx";
 import type { RouteObject } from "react-router";
-import UserProfile from "./UserProfile.tsx";
-import UserOwnProfile from "./UserOwnProfile.tsx";
+import UserProfile from "./users/UserProfile.tsx";
+import UserOwnProfile from "./users/MyProfilePage.tsx";
 
 const routes: RouteObject[] = [
   {

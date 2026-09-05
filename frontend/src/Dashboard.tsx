@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import AllPosts from "./posts/AllPosts.tsx";
-import SwayHeader from "./partials/SwayHeader.tsx";
+import SwayHeader from "./layout/SwayHeader.tsx";
 
 export default function Dashboard() {
   return (

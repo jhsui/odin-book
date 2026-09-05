@@ -5,7 +5,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { authClient } from "./lib/auth-client.ts";
+import { authClient } from "../lib/auth-client.ts";
 
 type ProfileData = {};
 

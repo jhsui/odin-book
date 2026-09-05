@@ -1,5 +1,5 @@
 import { useState, type SubmitEventHandler } from "react";
-import checkAuth from "./utils/checkAuth.ts";
+import checkAuth from "../utils/checkAuth.ts";
 
 export default function UserOwnProfile() {
   const [file, setFile] = useState<File | null>(null);

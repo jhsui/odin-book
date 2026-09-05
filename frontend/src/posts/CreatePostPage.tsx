@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from "react";
 import { Link } from "react-router";
 import { authClient } from "../lib/auth-client.ts";
-import SwayHeader from "../partials/SwayHeader.tsx";
+import SwayHeader from "../layout/SwayHeader.tsx";
 
 type Feedback = {
   type: "success" | "error";
