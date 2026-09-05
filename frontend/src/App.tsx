@@ -1,8 +1,8 @@
 import { Link } from "react-router";
-import SignInDialog from "./partials/SignInDialog.tsx";
-import SignUpDialog from "./partials/SignUpDialog.tsx";
+import SignInDialog from "./auth/SignInDialog.tsx";
+import SignUpDialog from "./auth/SignUpDialog.tsx";
 import { authClient } from "./lib/auth-client.ts";
-import SignOutButton from "./partials/SignOutButton.tsx";
+import SignOutButton from "./auth/SignOutButton.tsx";
 
 const conversations = [
   {

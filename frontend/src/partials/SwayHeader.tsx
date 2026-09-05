@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router";
 import { authClient } from "../lib/auth-client";
-import SignOutButton from "./SignOutButton.tsx";
+import SignOutButton from "../auth/SignOutButton.tsx";
 
 const navigation = [
   { label: "Feed", to: "/dashboard" },

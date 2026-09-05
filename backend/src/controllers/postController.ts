@@ -2,11 +2,13 @@ import { writingPostValidator } from "../validators.ts";
 import { matchedData, validationResult } from "express-validator";
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
-import requireAuth from "../middleware/requireAuth.ts";
+import requireAuth, { requireNotAnonymous } from "../middleware/requireAuth.ts";
+import { auth } from "../lib/auth.ts";
+import { fromNodeHeaders } from "better-auth/node";
 
 const createPost = [
   ...writingPostValidator,
-  requireAuth,
+  requireNotAnonymous,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -77,26 +79,15 @@ const getPostById = [
   },
 ];
 
+// anon guest can like posts
 const getLikeStatus = [
-  requireAuth,
   async (req: Request, res: Response) => {
     const { postId } = req.params;
-    const userId = res.locals.session.user.id;
-
     if (typeof postId !== "string" || postId.length === 0) {
       return res.status(400).json({
-        message: "postId must be a non-empty string",
+        message: "Bad postId",
       });
     }
-
-    const existingLike = await prisma.postLike.findUnique({
-      where: {
-        userId_postId: {
-          userId,
-          postId,
-        },
-      },
-    });
 
     const likeCount = await prisma.postLike.count({
       where: {
@@ -104,9 +95,25 @@ const getLikeStatus = [
       },
     });
 
-    if (existingLike) {
-      res.json({ liked: true, likeCount });
-      return;
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
+    });
+
+    if (session) {
+      const userId = session.user.id;
+
+      const existingLike = await prisma.postLike.findUnique({
+        where: {
+          userId_postId: {
+            userId,
+            postId,
+          },
+        },
+      });
+
+      if (existingLike) {
+        return res.json({ liked: true, likeCount });
+      }
     }
 
     return res.json({ liked: false, likeCount });
@@ -152,8 +159,11 @@ const togglePostLike = [
         },
       });
 
-      res.json({ message: "Like cancelled.", currentLike: false, likeCount });
-      return;
+      return res.json({
+        message: "Like cancelled.",
+        currentLike: false,
+        likeCount,
+      });
     }
 
     await prisma.postLike.create({

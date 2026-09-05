@@ -2,11 +2,11 @@ import { commentValidator } from "../validators.ts";
 import { matchedData, validationResult } from "express-validator";
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
-import requireAuth from "../middleware/requireAuth.ts";
+import requireAuth, { requireNotAnonymous } from "../middleware/requireAuth.ts";
 
 const postComment = [
   ...commentValidator,
-  requireAuth,
+  requireNotAnonymous,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

@@ -1,8 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ChangeEvent, type SubmitEventHandler } from "react";
 import { Link } from "react-router";
-import { authClient } from "./lib/auth-client.ts";
-import Comments from "./partials/Comments.tsx";
+import { authClient } from "../lib/auth-client.ts";
+import Comments from "./Comments.tsx";
 
 type Feedback = {
   type: "success" | "error";
@@ -59,6 +59,7 @@ export default function CommentSection({ postId }: { postId: string }) {
       );
 
       if (!res.ok) {
+        // todo: refine ux
         throw new Error("Your comment could not be posted.");
       }
 

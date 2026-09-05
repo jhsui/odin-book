@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
-import requireAuth from "../middleware/requireAuth.ts";
+import requireAuth, { requireNotAnonymous } from "../middleware/requireAuth.ts";
 import { auth } from "../lib/auth.ts";
 import { fromNodeHeaders } from "better-auth/node";
 import multer from "multer";
@@ -9,7 +9,7 @@ import supabase from "../lib/supabase.ts";
 import { randomUUID } from "node:crypto";
 
 const followUser = [
-  requireAuth,
+  requireNotAnonymous,
   async (req: Request, res: Response) => {
     const { followingId } = req.params;
     const followerId = res.locals.session.user.id;
@@ -59,7 +59,7 @@ const followUser = [
 ];
 
 const unfollowUser = [
-  requireAuth,
+  requireNotAnonymous,
   async (req: Request, res: Response) => {
     const { followingId } = req.params;
     const followerId = res.locals.session.user.id;
@@ -163,7 +163,7 @@ const getFollowStatus = [
 
 const upload = multer({ storage: multer.memoryStorage() });
 const uploadNewAvatar = [
-  requireAuth,
+  requireNotAnonymous,
 
   upload.single("avatar"),
 
