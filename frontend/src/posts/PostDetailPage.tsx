@@ -16,7 +16,7 @@ type Post = {
   };
 };
 
-export default function SinglePost() {
+export default function PostDetailPage() {
   const { post } = useLoaderData() as { post: Post };
   const createdAt = formatDateTime(post.createdAt);
   const authorInitial = post.author.name.trim().charAt(0).toUpperCase() || "?";

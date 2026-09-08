@@ -8,7 +8,7 @@ type Feedback = {
   message: string;
 } | null;
 
-export default function Writing() {
+export default function CreatePostPage() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",

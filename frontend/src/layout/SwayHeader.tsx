@@ -74,6 +74,7 @@ export default function SwayHeader() {
         </Link>
 
         {session && <SignOutButton />}
+        <Link to="/my-profile">Profile</Link>
       </div>
     </nav>
   );

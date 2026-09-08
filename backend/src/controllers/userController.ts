@@ -161,6 +161,38 @@ const getFollowStatus = [
   },
 ];
 
+const getAvatar = [
+  requireNotAnonymous,
+  async (_req: Request, res: Response) => {
+    // Prevent caching the response containing the temporary avatar URL
+    res.set("Cache-Control", "no-store");
+
+    const user = await prisma.user.findUnique({
+      where: { id: res.locals.session.user.id },
+      select: { image: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (!user.image || /^https?:\/\//i.test(user.image)) {
+      return res.json({ image: user.image || null });
+    }
+
+    const { data, error } = await supabase.storage
+      .from("user-avatars")
+      .createSignedUrl(user.image, 3600);
+
+    if (error) {
+      console.error("Failed to sign avatar URL:", error.message);
+      return res.status(500).json({ message: "Failed to load avatar." });
+    }
+
+    return res.json({ image: data.signedUrl });
+  },
+];
+
 const upload = multer({ storage: multer.memoryStorage() });
 const uploadNewAvatar = [
   requireNotAnonymous,
@@ -213,5 +245,6 @@ export default {
   unfollowUser,
   getAllUsers,
   getFollowStatus,
+  getAvatar,
   uploadNewAvatar,
 };

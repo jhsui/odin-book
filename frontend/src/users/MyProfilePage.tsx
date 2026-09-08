@@ -1,18 +1,28 @@
 import { useState, type SubmitEventHandler } from "react";
 import checkAuth from "../utils/checkAuth.ts";
+import { useLoaderData, useRevalidator } from "react-router";
 
-export default function UserOwnProfile() {
+export default function MyProfilePage() {
+  const { user } = useLoaderData();
+  const revalidator = useRevalidator();
+
+  // todo: delete
+  console.log(user);
+
   const [file, setFile] = useState<File | null>(null);
 
-  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
-    event.preventDefault();
+  // todo: tanstack mutation?
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
 
     const isAuthenticated = await checkAuth();
     if (!isAuthenticated) {
+      // todo: refine ux
       alert("Please sign in before uploading an avatar.");
       return;
     }
 
+    // todo: refine ux
     if (!file) return;
 
     const formData = new FormData();
@@ -31,6 +41,8 @@ export default function UserOwnProfile() {
       if (!res.ok) {
         throw new Error(`Upload failed (${res.status}): ${await res.text()}`);
       }
+
+      await revalidator.revalidate();
     } catch (error) {
       console.error("Failed to upload avatar:", error);
     }
@@ -40,6 +52,8 @@ export default function UserOwnProfile() {
     <>
       <h1>Your Profile</h1>
 
+      {user.image && <img src={user.image} alt="user avatar" />}
+
       <h2>Upload a new avatar</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <label htmlFor="uploaded-avatar">New Avatar</label>
@@ -48,8 +62,8 @@ export default function UserOwnProfile() {
           accept="image/*"
           name="uploaded-avatar"
           id="uploaded-avatar"
-          onChange={(event) => {
-            setFile(event.currentTarget.files?.[0] ?? null);
+          onChange={(e) => {
+            setFile(e.currentTarget.files?.[0] ?? null);
           }}
         />
 

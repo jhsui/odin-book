@@ -1,13 +1,14 @@
 import App from "./App.tsx";
 import Dashboard from "./Dashboard.tsx";
 import PostIndex from "./posts/PostIndex.tsx";
-import SinglePost from "./posts/PostDetailPage.tsx";
 import UserIndex from "./users/UserIndex.tsx";
-import Writing from "./posts/CreatePostPage.tsx";
 import RouteError, { NotFound } from "./RouteError.tsx";
-import type { RouteObject } from "react-router";
+import { redirect, type RouteObject } from "react-router";
 import UserProfile from "./users/UserProfile.tsx";
-import UserOwnProfile from "./users/MyProfilePage.tsx";
+import MyProfilePage from "./users/MyProfilePage.tsx";
+import CreatePostPage from "./posts/CreatePostPage.tsx";
+import PostDetailPage from "./posts/PostDetailPage.tsx";
+import { authClient } from "./lib/auth-client.ts";
 
 const routes: RouteObject[] = [
   {
@@ -34,7 +35,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "posts/:postId",
-        element: <SinglePost />,
+        element: <PostDetailPage />,
         loader: async ({ params }) => {
           const { postId } = params;
 
@@ -63,7 +64,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "writing",
-        element: <Writing />,
+        element: <CreatePostPage />,
       },
       {
         path: "user-index",
@@ -77,12 +78,38 @@ const routes: RouteObject[] = [
   },
   {
     path: "user-profile",
-    // what is the user ID from?
+    // todo: what is the user ID from?
     element: <UserProfile userId={""} />,
   },
   {
-    path: "me-profile",
-    element: <UserOwnProfile />,
+    path: "my-profile",
+    element: <MyProfilePage />,
+    errorElement: <RouteError />,
+    loader: async () => {
+      const { data: session } = await authClient.getSession();
+
+      // Only signed-in non-anonymous users have profile
+      if (!session || session.user.isAnonymous) {
+        // todo: add feedback in App.tsx
+        return redirect("/?reason=registered-user-required");
+      }
+
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/users/me/avatar`,
+        { credentials: "include" },
+      );
+
+      if (res.status === 401 || res.status === 403) {
+        return redirect("/?reason=registered-user-required");
+      }
+
+      if (!res.ok) {
+        throw new Response("Failed to load avatar.", { status: res.status });
+      }
+
+      const { image } = await res.json();
+      return { user: { ...session.user, image } };
+    },
   },
   {
     path: "*",
