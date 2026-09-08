@@ -7,6 +7,8 @@ import multer from "multer";
 import path from "node:path";
 import supabase from "../lib/supabase.ts";
 import { randomUUID } from "node:crypto";
+import { userNewNameValidator } from "../middleware/validators.ts";
+import { matchedData, validationResult } from "express-validator";
 
 const followUser = [
   requireNotAnonymous,
@@ -240,6 +242,34 @@ const uploadNewAvatar = [
   },
 ];
 
+const changeName = [
+  ...userNewNameValidator,
+  requireNotAnonymous,
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: "New username validation failed",
+        // todo: add error page
+        errors: errors.array(),
+      });
+    }
+
+    const { newName } = matchedData(req);
+    const userId = res.locals.session.user.id;
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name: newName,
+      },
+    });
+
+    return res.json({ message: "Username updated successfully" });
+  },
+];
 export default {
   followUser,
   unfollowUser,
@@ -247,4 +277,5 @@ export default {
   getFollowStatus,
   getAvatar,
   uploadNewAvatar,
+  changeName,
 };

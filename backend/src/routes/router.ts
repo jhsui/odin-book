@@ -27,5 +27,6 @@ router.get("/users/index", userController.getAllUsers);
 
 router.get("/users/me/avatar", userController.getAvatar);
 router.put("/users/me/avatar", userController.uploadNewAvatar);
+router.put("/users/me/name", userController.changeName);
 
 export default router;

@@ -1,4 +1,4 @@
-import { commentValidator } from "../validators.ts";
+import { commentValidator } from "../middleware/validators.ts";
 import { matchedData, validationResult } from "express-validator";
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";

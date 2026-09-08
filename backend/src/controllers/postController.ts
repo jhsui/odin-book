@@ -1,4 +1,4 @@
-import { writingPostValidator } from "../validators.ts";
+import { writingPostValidator } from "../middleware/validators.ts";
 import { matchedData, validationResult } from "express-validator";
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
@@ -13,7 +13,7 @@ const createPost = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
-        message: "Validation failed",
+        message: "Post content validation failed",
         // todo: add error page
         errors: errors.array(),
       });

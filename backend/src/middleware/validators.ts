@@ -8,3 +8,10 @@ export const writingPostValidator = [
 export const commentValidator = [
   body("comment").trim().notEmpty().withMessage("Comment can not be empty."),
 ];
+
+export const userNewNameValidator = [
+  body("newName")
+    .trim()
+    .notEmpty()
+    .withMessage("New username can not be empty."),
+];
