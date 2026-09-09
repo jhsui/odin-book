@@ -95,7 +95,7 @@ const routes: RouteObject[] = [
       }
 
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/users/me/avatar`,
+        `${import.meta.env.VITE_BACKEND_URL}/users/me/profile`,
         { credentials: "include" },
       );
 
@@ -104,11 +104,13 @@ const routes: RouteObject[] = [
       }
 
       if (!res.ok) {
-        throw new Response("Failed to load avatar.", { status: res.status });
+        throw new Response("Failed to fetch user data.", {
+          status: res.status,
+        });
       }
 
-      const { image } = await res.json();
-      return { user: { ...session.user, image } };
+      const { user } = await res.json();
+      return { user };
     },
   },
   {

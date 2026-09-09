@@ -7,11 +7,15 @@ import multer from "multer";
 import path from "node:path";
 import supabase from "../lib/supabase.ts";
 import { randomUUID } from "node:crypto";
-import { userNewNameValidator } from "../middleware/validators.ts";
+import {
+  userIntroValidator,
+  userNewNameValidator,
+} from "../middleware/validators.ts";
 import { matchedData, validationResult } from "express-validator";
 
 const followUser = [
   requireNotAnonymous,
+
   async (req: Request, res: Response) => {
     const { followingId } = req.params;
     const followerId = res.locals.session.user.id;
@@ -62,6 +66,7 @@ const followUser = [
 
 const unfollowUser = [
   requireNotAnonymous,
+
   async (req: Request, res: Response) => {
     const { followingId } = req.params;
     const followerId = res.locals.session.user.id;
@@ -138,6 +143,7 @@ const getAllUsers = [
 
 const getFollowStatus = [
   requireAuth,
+
   async (req: Request, res: Response) => {
     const { followingId } = req.params;
     const followerId = res.locals.session.user.id;
@@ -163,15 +169,21 @@ const getFollowStatus = [
   },
 ];
 
-const getAvatar = [
+const getUserOwnProfile = [
   requireNotAnonymous,
+
   async (_req: Request, res: Response) => {
     // Prevent caching the response containing the temporary avatar URL
     res.set("Cache-Control", "no-store");
 
     const user = await prisma.user.findUnique({
       where: { id: res.locals.session.user.id },
-      select: { image: true },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        intro: true,
+      },
     });
 
     if (!user) {
@@ -179,7 +191,12 @@ const getAvatar = [
     }
 
     if (!user.image || /^https?:\/\//i.test(user.image)) {
-      return res.json({ image: user.image || null });
+      return res.json({
+        user: {
+          ...user,
+          image: user.image || null,
+        },
+      });
     }
 
     const { data, error } = await supabase.storage
@@ -191,9 +208,47 @@ const getAvatar = [
       return res.status(500).json({ message: "Failed to load avatar." });
     }
 
-    return res.json({ image: data.signedUrl });
+    return res.json({
+      user: {
+        ...user,
+        image: data.signedUrl,
+      },
+    });
   },
 ];
+
+// const getAvatar = [
+//   requireNotAnonymous,
+
+//   async (_req: Request, res: Response) => {
+//     // Prevent caching the response containing the temporary avatar URL
+//     res.set("Cache-Control", "no-store");
+
+//     const user = await prisma.user.findUnique({
+//       where: { id: res.locals.session.user.id },
+//       select: { image: true },
+//     });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found." });
+//     }
+
+//     if (!user.image || /^https?:\/\//i.test(user.image)) {
+//       return res.json({ image: user.image || null });
+//     }
+
+//     const { data, error } = await supabase.storage
+//       .from("user-avatars")
+//       .createSignedUrl(user.image, 3600);
+
+//     if (error) {
+//       console.error("Failed to sign avatar URL:", error.message);
+//       return res.status(500).json({ message: "Failed to load avatar." });
+//     }
+
+//     return res.json({ image: data.signedUrl });
+//   },
+// ];
 
 const upload = multer({ storage: multer.memoryStorage() });
 const uploadNewAvatar = [
@@ -270,12 +325,63 @@ const changeName = [
     return res.json({ message: "Username updated successfully" });
   },
 ];
+
+const changeIntro = [
+  requireNotAnonymous,
+
+  ...userIntroValidator,
+
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: "Intro validation failed",
+        errors: errors.array(),
+      });
+    }
+
+    const { intro } = matchedData(req);
+
+    const user = await prisma.user.update({
+      where: { id: res.locals.session.user.id },
+      data: { intro: intro || null },
+      select: { intro: true },
+    });
+
+    return res.json({
+      message: "Intro updated successfully",
+      intro: user.intro,
+    });
+  },
+];
+
+// const getIntro = [
+//   requireNotAnonymous,
+//   async (_req: Request, res: Response) => {
+//     res.set("Cache-Control", "no-store");
+
+//     const user = await prisma.user.findUnique({
+//       where: { id: res.locals.session.user.id },
+//       select: { intro: true },
+//     });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found." });
+//     }
+
+//     return res.json(user);
+//   },
+// ];
+
 export default {
   followUser,
   unfollowUser,
   getAllUsers,
   getFollowStatus,
-  getAvatar,
+
   uploadNewAvatar,
   changeName,
+  changeIntro,
+  getUserOwnProfile,
 };

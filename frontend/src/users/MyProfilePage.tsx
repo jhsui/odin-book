@@ -1,5 +1,6 @@
 import { useState, type SubmitEventHandler } from "react";
 import { useLoaderData, useRevalidator } from "react-router";
+import MyUserIntro from "./MyUserIntro.tsx";
 
 export default function MyProfilePage() {
   const { user } = useLoaderData();
@@ -86,7 +87,7 @@ export default function MyProfilePage() {
 
         <button
           type="button"
-          onClick={() => setShowNameEditor((previous) => !previous)}
+          onClick={() => setShowNameEditor((prev) => !prev)}
         >
           Edit
         </button>
@@ -118,7 +119,7 @@ export default function MyProfilePage() {
       </div>
 
       <div>
-        {user.image && <img src={user.image} alt="user avatar" />}
+        {user.image && <img src={user.image} alt="your avatar" />}
 
         <h2>Upload a new avatar</h2>
 
@@ -139,6 +140,8 @@ export default function MyProfilePage() {
           </button>
         </form>
       </div>
+
+      <MyUserIntro user={user} />
     </>
   );
 }
