@@ -183,6 +183,12 @@ const getUserOwnProfile = [
         name: true,
         image: true,
         intro: true,
+        posts: {
+          orderBy: { createdAt: "desc" },
+        },
+        comments: {
+          orderBy: { createdAt: "desc" },
+        },
       },
     });
 

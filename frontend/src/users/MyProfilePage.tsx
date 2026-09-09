@@ -1,9 +1,11 @@
 import { useState, type SubmitEventHandler } from "react";
 import { useLoaderData, useRevalidator } from "react-router";
 import MyUserIntro from "./MyUserIntro.tsx";
+import type { User } from "./types.ts";
+import formatDateTime from "../utils/formatDateTime.ts";
 
 export default function MyProfilePage() {
-  const { user } = useLoaderData();
+  const { user } = useLoaderData<{ user: User }>();
 
   // todo: delete
   console.log(user);
@@ -142,6 +144,20 @@ export default function MyProfilePage() {
       </div>
 
       <MyUserIntro user={user} />
+
+      {user.posts.map((post) => (
+        <article key={post.id}>
+          <h3>{post.title}</h3>
+          <p>{formatDateTime(post.createdAt)}</p>
+          <p>{post.content}</p>
+        </article>
+      ))}
+
+      {user.comments.map((comment) => (
+        <p key={comment.id}>
+          {comment.content} at {comment.createdAt}
+        </p>
+      ))}
     </>
   );
 }
