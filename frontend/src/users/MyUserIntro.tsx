@@ -35,10 +35,13 @@ export default function MyUserIntro({ user }: { user: User }) {
 
   return (
     <>
-      <p>{user.intro || "You haven't added an intro yet."}</p>
+      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-400">
+        {user.intro || "You haven't added an intro yet."}
+      </p>
       <button
         type="button"
         hidden={showIntroInput}
+        className="mt-3 rounded-lg text-sm font-medium text-indigo-300 transition hover:text-indigo-200 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-900 focus-visible:outline-none"
         // todo: (prev) => !prev or true
         onClick={() => setShowIntroInput(true)}
       >
@@ -46,19 +49,37 @@ export default function MyUserIntro({ user }: { user: User }) {
       </button>
 
       {showIntroInput && (
-        <form onSubmit={handleIntroSubmit}>
-          <label htmlFor="intro">Intro</label>
+        <form onSubmit={handleIntroSubmit} className="mt-4 space-y-3">
+          <label
+            htmlFor="intro"
+            className="block text-sm font-medium text-slate-300"
+          >
+            Introduction
+          </label>
           <textarea
             id="intro"
             name="intro"
+            rows={4}
+            className="block w-full resize-y rounded-xl border border-white/15 bg-slate-950 px-3 py-2.5 text-sm leading-6 text-white focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 focus:outline-none"
             value={intro}
             onChange={(e) => setIntro(e.currentTarget.value)}
           ></textarea>
 
-          <button type="button" onClick={() => setShowIntroInput(false)}>
-            Cancel
-          </button>
-          <button type="submit">Save</button>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setShowIntroInput(false)}
+              className="rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-xl bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
+            >
+              Save
+            </button>
+          </div>
         </form>
       )}
     </>
