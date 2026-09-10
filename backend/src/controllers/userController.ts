@@ -101,11 +101,33 @@ const getAllUsers = [
         select: {
           id: true,
           name: true,
+          image: true,
           createdAt: true,
           isAnonymous: true,
         },
         orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
       });
+
+      await Promise.all(
+        users.map(async (user) => {
+          if (!user.image || /^https?:\/\//i.test(user.image)) {
+            user.image = user.image || null;
+            return;
+          }
+
+          const { data, error } = await supabase.storage
+            .from("user-avatars")
+            .createSignedUrl(user.image, 3600);
+
+          if (error) {
+            console.error(`Failed to sign avatar for ${user.id}:`, error);
+            user.image = null;
+            return;
+          }
+
+          user.image = data.signedUrl;
+        }),
+      );
 
       return res.json({
         users: users.map((user) => ({
@@ -120,6 +142,7 @@ const getAllUsers = [
       select: {
         id: true,
         name: true,
+        image: true,
         createdAt: true,
         followers: {
           where: {
@@ -133,6 +156,27 @@ const getAllUsers = [
       },
       orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
     });
+
+    await Promise.all(
+      users.map(async (user) => {
+        if (!user.image || /^https?:\/\//i.test(user.image)) {
+          user.image = user.image || null;
+          return;
+        }
+
+        const { data, error } = await supabase.storage
+          .from("user-avatars")
+          .createSignedUrl(user.image, 3600);
+
+        if (error) {
+          console.error(`Failed to sign avatar for ${user.id}:`, error);
+          user.image = null;
+          return;
+        }
+
+        user.image = data.signedUrl;
+      }),
+    );
 
     const result = users.map(({ followers, ...user }) => ({
       ...user,

@@ -132,7 +132,14 @@ export default function UserIndex() {
                           aria-hidden="true"
                           className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-100 font-bold text-indigo-700 sm:size-12"
                         >
-                          {initial}
+                          {user.image !== null ? (
+                            <img
+                              src={user.image}
+                              alt={`${user.name}'s avatar`}
+                            />
+                          ) : (
+                            initial
+                          )}
                         </div>
 
                         <div className="min-w-0 flex-1">

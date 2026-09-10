@@ -1,7 +1,8 @@
 export type UserListItem = {
   id: string;
-  createdAt: string;
   name: string;
+  image: string | null;
+  createdAt: string;
   isFollowing: boolean;
   isAnonymous: boolean;
 };
