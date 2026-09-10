@@ -17,7 +17,6 @@ export default function MyProfilePage() {
   const [showNameEditor, setShowNameEditor] = useState(false);
   const [newName, setNewName] = useState("");
 
-  // todo: tanstack mutation?
   const handleAvatarSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 

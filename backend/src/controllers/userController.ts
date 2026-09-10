@@ -169,15 +169,27 @@ const getFollowStatus = [
   },
 ];
 
-const getUserOwnProfile = [
-  requireNotAnonymous,
-
-  async (_req: Request, res: Response) => {
+const getUserProfile = [
+  async (req: Request, res: Response) => {
     // Prevent caching the response containing the temporary avatar URL
     res.set("Cache-Control", "no-store");
 
+    let userId = "";
+
+    if (res.locals.isOwnProfile) {
+      userId = res.locals.session.user.id;
+    } else {
+      const paramId = req.params.userId;
+
+      if (typeof paramId !== "string") {
+        return res.status(400).json({ error: "Invalid user ID" });
+      }
+
+      userId = paramId;
+    }
+
     const user = await prisma.user.findUnique({
-      where: { id: res.locals.session.user.id },
+      where: { id: userId },
       select: {
         id: true,
         name: true,
@@ -221,6 +233,17 @@ const getUserOwnProfile = [
       },
     });
   },
+];
+
+const getUserOwnProfile = [
+  requireNotAnonymous,
+
+  async (_req: Request, res: Response, next: NextFunction) => {
+    res.locals.isOwnProfile = true;
+    next();
+  },
+
+  ...getUserProfile,
 ];
 
 // const getAvatar = [
@@ -390,4 +413,5 @@ export default {
   changeName,
   changeIntro,
   getUserOwnProfile,
+  getUserProfile,
 };

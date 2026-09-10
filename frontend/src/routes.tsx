@@ -4,7 +4,7 @@ import PostIndex from "./posts/PostIndex.tsx";
 import UserIndex from "./users/UserIndex.tsx";
 import RouteError, { NotFound } from "./RouteError.tsx";
 import { redirect, type RouteObject } from "react-router";
-import UserProfile from "./users/UserProfile.tsx";
+import UserProfilePage from "./users/UserProfilePage.tsx";
 import MyProfilePage from "./users/MyProfilePage.tsx";
 import CreatePostPage from "./posts/CreatePostPage.tsx";
 import PostDetailPage from "./posts/PostDetailPage.tsx";
@@ -77,9 +77,8 @@ const routes: RouteObject[] = [
     ],
   },
   {
-    path: "user-profile",
-    // todo: what is the user ID from?
-    element: <UserProfile userId={""} />,
+    path: "user-profile/:userId",
+    element: <UserProfilePage />,
   },
   {
     path: "my-profile",

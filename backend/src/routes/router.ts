@@ -30,4 +30,6 @@ router.put("/users/me/name", userController.changeName);
 router.put("/users/me/intro", userController.changeIntro);
 router.get("/users/me/profile", userController.getUserOwnProfile);
 
+router.get("/users/profile/:userId", userController.getUserProfile);
+
 export default router;
