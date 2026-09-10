@@ -3,6 +3,7 @@ export type UserListItem = {
   createdAt: string;
   name: string;
   isFollowing: boolean;
+  isAnonymous: boolean;
 };
 
 export type User = {

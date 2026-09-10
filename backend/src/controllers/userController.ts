@@ -102,6 +102,7 @@ const getAllUsers = [
           id: true,
           name: true,
           createdAt: true,
+          isAnonymous: true,
         },
         orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
       });
@@ -128,6 +129,7 @@ const getAllUsers = [
             followerId: true,
           },
         },
+        isAnonymous: true,
       },
       orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
     });
@@ -408,7 +410,6 @@ export default {
   unfollowUser,
   getAllUsers,
   getFollowStatus,
-
   uploadNewAvatar,
   changeName,
   changeIntro,

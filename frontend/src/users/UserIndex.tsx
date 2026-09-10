@@ -3,6 +3,7 @@ import { authClient } from "../lib/auth-client.ts";
 import FollowButton from "./FollowButton";
 import SwayHeader from "../layout/SwayHeader.tsx";
 import type { UserListItem } from "./types.ts";
+import { Link } from "react-router";
 
 export default function UserIndex() {
   const { data: session, isPending: isSessionPending } =
@@ -115,55 +116,59 @@ export default function UserIndex() {
           <section className="overflow-hidden rounded-3xl border border-white/10 bg-white text-slate-900 shadow-2xl shadow-black/20">
             {users && users.length > 0 ? (
               <ul className="divide-y divide-slate-100">
-                {users.map((user) => {
-                  const isCurrentUser = session?.user.id === user.id;
-                  const initial =
-                    user.name.trim().charAt(0).toUpperCase() || "?";
+                {users
+                  .filter((user) => !user.isAnonymous)
+                  .map((user) => {
+                    const isCurrentUser = session?.user.id === user.id;
+                    const initial =
+                      user.name.trim().charAt(0).toUpperCase() || "?";
 
-                  return (
-                    <li
-                      key={user.id}
-                      className="flex items-center gap-3 px-4 py-4 transition hover:bg-slate-50 sm:gap-4 sm:px-7 sm:py-5"
-                    >
-                      <div
-                        aria-hidden="true"
-                        className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-100 font-bold text-indigo-700 sm:size-12"
+                    return (
+                      <li
+                        key={user.id}
+                        className="flex items-center gap-3 px-4 py-4 transition hover:bg-slate-50 sm:gap-4 sm:px-7 sm:py-5"
                       >
-                        {initial}
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate font-semibold text-slate-950">
-                          {user.name}
-                        </p>
-                        <p className="mt-0.5 text-xs text-slate-500 sm:text-sm">
-                          Community member
-                        </p>
-                      </div>
-
-                      {isSessionPending ? (
-                        <div className="h-10 w-24 animate-pulse rounded-full bg-slate-200" />
-                      ) : isCurrentUser ? (
-                        <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-600">
-                          You
-                        </span>
-                      ) : session ? (
-                        <FollowButton
-                          userId={user.id}
-                          isFollowing={user.isFollowing}
-                        />
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => alert("Please sign in first.")}
-                          className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none"
+                        <div
+                          aria-hidden="true"
+                          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-100 font-bold text-indigo-700 sm:size-12"
                         >
-                          Follow
-                        </button>
-                      )}
-                    </li>
-                  );
-                })}
+                          {initial}
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate font-semibold text-slate-950">
+                            <Link to={`/user-profile/${user.id}`}>
+                              {user.name}
+                            </Link>
+                          </div>
+                          <p className="mt-0.5 text-xs text-slate-500 sm:text-sm">
+                            Community member
+                          </p>
+                        </div>
+
+                        {isSessionPending ? (
+                          <div className="h-10 w-24 animate-pulse rounded-full bg-slate-200" />
+                        ) : isCurrentUser ? (
+                          <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-600">
+                            You
+                          </span>
+                        ) : session ? (
+                          <FollowButton
+                            userId={user.id}
+                            isFollowing={user.isFollowing}
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => alert("Please sign in first.")}
+                            className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none"
+                          >
+                            Follow
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
               </ul>
             ) : (
               <div className="px-6 py-16 text-center">
