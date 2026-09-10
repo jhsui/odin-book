@@ -96,92 +96,46 @@ const getAllUsers = [
       headers: fromNodeHeaders(req.headers),
     });
 
-    if (!session) {
-      const users = await prisma.user.findMany({
-        select: {
-          id: true,
-          name: true,
-          image: true,
-          createdAt: true,
-          isAnonymous: true,
-        },
-        orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
-      });
-
-      await Promise.all(
-        users.map(async (user) => {
-          if (!user.image || /^https?:\/\//i.test(user.image)) {
-            user.image = user.image || null;
-            return;
-          }
-
-          const { data, error } = await supabase.storage
-            .from("user-avatars")
-            .createSignedUrl(user.image, 3600);
-
-          if (error) {
-            console.error(`Failed to sign avatar for ${user.id}:`, error);
-            user.image = null;
-            return;
-          }
-
-          user.image = data.signedUrl;
-        }),
-      );
-
-      return res.json({
-        users: users.map((user) => ({
-          ...user,
-          isFollowing: false,
-        })),
-      });
-    }
-
-    const currentUserId = session.user.id;
     const users = await prisma.user.findMany({
       select: {
         id: true,
         name: true,
         image: true,
         createdAt: true,
-        followers: {
-          where: {
-            followerId: currentUserId,
-          },
-          select: {
-            followerId: true,
-          },
-        },
         isAnonymous: true,
+        followers: session
+          ? {
+              where: { followerId: session.user.id },
+              select: { followerId: true },
+            }
+          : false,
       },
       orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
     });
 
-    await Promise.all(
-      users.map(async (user) => {
-        if (!user.image || /^https?:\/\//i.test(user.image)) {
-          user.image = user.image || null;
-          return;
+    const result = await Promise.all(
+      users.map(async ({ followers, ...user }) => {
+        let image = user.image || null;
+
+        if (image && !/^https?:\/\//i.test(image)) {
+          const { data, error } = await supabase.storage
+            .from("user-avatars")
+            .createSignedUrl(image, 3600);
+
+          if (error) {
+            console.error(`Failed to sign avatar for ${user.id}:`, error);
+          }
+
+          image = error ? null : data.signedUrl;
         }
 
-        const { data, error } = await supabase.storage
-          .from("user-avatars")
-          .createSignedUrl(user.image, 3600);
-
-        if (error) {
-          console.error(`Failed to sign avatar for ${user.id}:`, error);
-          user.image = null;
-          return;
-        }
-
-        user.image = data.signedUrl;
+        return {
+          ...user,
+          image,
+          isFollowing: (followers?.length ?? 0) > 0,
+        };
       }),
     );
-
-    const result = users.map(({ followers, ...user }) => ({
-      ...user,
-      isFollowing: followers.length > 0,
-    }));
 
     return res.json({ users: result });
   },
