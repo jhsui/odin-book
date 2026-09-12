@@ -7,9 +7,11 @@ const buttonClasses =
 export default function FollowButton({
   userId,
   isFollowing,
+  onFollowChange,
 }: {
   userId: string;
   isFollowing: boolean;
+  onFollowChange?: (isFollowing: boolean) => void | Promise<void>;
 }) {
   const queryClient = useQueryClient();
 
@@ -34,7 +36,7 @@ export default function FollowButton({
       return shouldFollow;
     },
 
-    onSuccess: (newIsFollowing) => {
+    onSuccess: async (newIsFollowing) => {
       queryClient.setQueryData<UserListItem[]>(["user-index"], (users) =>
         users?.map((user) =>
           user.id === userId
@@ -45,6 +47,7 @@ export default function FollowButton({
             : user,
         ),
       );
+      await onFollowChange?.(newIsFollowing);
     },
   });
 

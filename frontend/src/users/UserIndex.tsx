@@ -72,7 +72,7 @@ export default function UserIndex() {
                 key={item}
                 className="flex animate-pulse items-center gap-4 border-b border-slate-100 px-5 py-5 last:border-0 sm:px-7"
               >
-                <div className="size-12 rounded-2xl bg-slate-200" />
+                <div className="size-11 shrink-0 rounded-2xl bg-slate-200 sm:size-12" />
                 <div className="flex-1">
                   <div className="h-4 w-36 rounded bg-slate-200" />
                   <div className="mt-2 h-3 w-24 rounded bg-slate-100" />
@@ -130,12 +130,13 @@ export default function UserIndex() {
                       >
                         <div
                           aria-hidden="true"
-                          className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-100 font-bold text-indigo-700 sm:size-12"
+                          className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-indigo-100 font-bold text-indigo-700 sm:size-12"
                         >
                           {user.image !== null ? (
                             <img
                               src={user.image}
                               alt={`${user.name}'s avatar`}
+                              className="size-full object-cover"
                             />
                           ) : (
                             initial

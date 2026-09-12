@@ -7,11 +7,16 @@ export type UserListItem = {
   isAnonymous: boolean;
 };
 
+export type FollowUser = Pick<UserListItem, "id" | "name" | "image">;
+
 export type User = {
   id: string;
   name: string;
   image: string;
   intro: string;
+
+  followers: { follower: FollowUser }[];
+  following: { following: FollowUser }[];
 
   posts: {
     id: string;

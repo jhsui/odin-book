@@ -106,6 +106,7 @@ const getAllUsers = [
         followers: session
           ? {
               where: { followerId: session.user.id },
+              // Select the user of the current session:
               select: { followerId: true },
             }
           : false,
@@ -113,28 +114,13 @@ const getAllUsers = [
       orderBy: [{ name: "asc" }, { createdAt: "asc" }, { id: "asc" }],
     });
 
+    // Map users that current session user is following
     const result = await Promise.all(
-      users.map(async ({ followers, ...user }) => {
-        let image = user.image || null;
-
-        if (image && !/^https?:\/\//i.test(image)) {
-          const { data, error } = await supabase.storage
-            .from("user-avatars")
-            .createSignedUrl(image, 3600);
-
-          if (error) {
-            console.error(`Failed to sign avatar for ${user.id}:`, error);
-          }
-
-          image = error ? null : data.signedUrl;
-        }
-
-        return {
-          ...user,
-          image,
-          isFollowing: (followers?.length ?? 0) > 0,
-        };
-      }),
+      users.map(async ({ followers, ...user }) => ({
+        ...user,
+        image: await getAvatarUrl(user.image),
+        isFollowing: (followers?.length ?? 0) > 0,
+      })),
     );
 
     return res.json({ users: result });
@@ -169,6 +155,23 @@ const getFollowStatus = [
   },
 ];
 
+export async function getAvatarUrl(
+  path: string | null,
+): Promise<string | null> {
+  if (!path || /^https?:\/\//i.test(path)) return path || null;
+
+  const { data, error } = await supabase.storage
+    .from("user-avatars")
+    .createSignedUrl(path, 3600);
+
+  if (error) {
+    console.error("Failed to sign avatar URL:", error.message);
+    return null;
+  }
+
+  return data.signedUrl;
+}
+
 const getUserProfile = [
   async (req: Request, res: Response) => {
     // Prevent caching the response containing the temporary avatar URL
@@ -201,6 +204,28 @@ const getUserProfile = [
         comments: {
           orderBy: { createdAt: "desc" },
         },
+        followers: {
+          select: {
+            follower: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+        following: {
+          select: {
+            following: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -208,28 +233,30 @@ const getUserProfile = [
       return res.status(404).json({ message: "User not found." });
     }
 
-    if (!user.image || /^https?:\/\//i.test(user.image)) {
-      return res.json({
-        user: {
-          ...user,
-          image: user.image || null,
-        },
-      });
-    }
+    // Get avatar for every user shown in the connections dialog
+    const connectionUsers = [
+      ...user.followers.map(({ follower }) => follower),
+      ...user.following.map(({ following }) => following),
+    ];
 
-    const { data, error } = await supabase.storage
-      .from("user-avatars")
-      .createSignedUrl(user.image, 3600);
+    const avatarUrls = new Map<string | null, Promise<string | null>>();
 
-    if (error) {
-      console.error("Failed to sign avatar URL:", error.message);
-      return res.status(500).json({ message: "Failed to load avatar." });
-    }
+    await Promise.all(
+      connectionUsers.map(async (user) => {
+        const path = user.image;
+
+        if (!avatarUrls.has(path)) {
+          avatarUrls.set(path, getAvatarUrl(path));
+        }
+
+        user.image = await avatarUrls.get(path)!;
+      }),
+    );
 
     return res.json({
       user: {
         ...user,
-        image: data.signedUrl,
+        image: await getAvatarUrl(user.image),
       },
     });
   },
@@ -245,39 +272,6 @@ const getUserOwnProfile = [
 
   ...getUserProfile,
 ];
-
-// const getAvatar = [
-//   requireNotAnonymous,
-
-//   async (_req: Request, res: Response) => {
-//     // Prevent caching the response containing the temporary avatar URL
-//     res.set("Cache-Control", "no-store");
-
-//     const user = await prisma.user.findUnique({
-//       where: { id: res.locals.session.user.id },
-//       select: { image: true },
-//     });
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found." });
-//     }
-
-//     if (!user.image || /^https?:\/\//i.test(user.image)) {
-//       return res.json({ image: user.image || null });
-//     }
-
-//     const { data, error } = await supabase.storage
-//       .from("user-avatars")
-//       .createSignedUrl(user.image, 3600);
-
-//     if (error) {
-//       console.error("Failed to sign avatar URL:", error.message);
-//       return res.status(500).json({ message: "Failed to load avatar." });
-//     }
-
-//     return res.json({ image: data.signedUrl });
-//   },
-// ];
 
 const upload = multer({ storage: multer.memoryStorage() });
 const uploadNewAvatar = [
@@ -327,8 +321,10 @@ const uploadNewAvatar = [
 ];
 
 const changeName = [
-  ...userNewNameValidator,
   requireNotAnonymous,
+
+  ...userNewNameValidator,
+
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -384,24 +380,6 @@ const changeIntro = [
     });
   },
 ];
-
-// const getIntro = [
-//   requireNotAnonymous,
-//   async (_req: Request, res: Response) => {
-//     res.set("Cache-Control", "no-store");
-
-//     const user = await prisma.user.findUnique({
-//       where: { id: res.locals.session.user.id },
-//       select: { intro: true },
-//     });
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found." });
-//     }
-
-//     return res.json(user);
-//   },
-// ];
 
 export default {
   followUser,

@@ -3,6 +3,8 @@ import { matchedData, validationResult } from "express-validator";
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
 import requireAuth, { requireNotAnonymous } from "../middleware/requireAuth.ts";
+import supabase from "../lib/supabase.ts";
+import { getAvatarUrl } from "./userController.ts";
 
 const postComment = [
   ...commentValidator,
@@ -57,11 +59,20 @@ const getComments = [
       include: {
         author: {
           select: {
+            id: true,
             name: true,
+            image: true,
+            isAnonymous: true,
           },
         },
       },
     });
+
+    await Promise.all(
+      comments.map(async (comment) => {
+        comment.author.image = await getAvatarUrl(comment.author.image);
+      }),
+    );
 
     return res.json({ comments });
   },

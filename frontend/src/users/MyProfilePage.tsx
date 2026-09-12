@@ -1,8 +1,9 @@
-import { useState, type SubmitEventHandler } from "react";
+import { useEffect, useRef, useState, type SubmitEventHandler } from "react";
 import { Link, useLoaderData, useRevalidator } from "react-router";
 import SwayHeader from "../layout/SwayHeader.tsx";
 import MyUserIntro from "./MyUserIntro.tsx";
-import type { User } from "./types.ts";
+import FollowButton from "./FollowButton.tsx";
+import type { User, FollowUser } from "./types.ts";
 import formatDateTime from "../utils/formatDateTime.ts";
 
 export default function MyProfilePage() {
@@ -16,6 +17,25 @@ export default function MyProfilePage() {
 
   const [showNameEditor, setShowNameEditor] = useState(false);
   const [newName, setNewName] = useState("");
+
+  const [activeConnections, setActiveConnections] = useState<
+    "followers" | "following" | null
+  >(null);
+
+  // Keep the visible people fixed until the dialog is opened again
+  const [connections, setConnections] = useState<FollowUser[]>([]);
+
+  const connectionsDialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (!activeConnections) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [activeConnections]);
 
   const handleAvatarSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -50,7 +70,6 @@ export default function MyProfilePage() {
   const handleNameSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    // todo: validator in backend
     try {
       if (!newName || !newName.trim()) {
         // todo: ux
@@ -167,6 +186,154 @@ export default function MyProfilePage() {
               )}
             </div>
 
+            <div className="mt-6">
+              <div
+                className="grid grid-cols-2 gap-3"
+                aria-label="Your connections"
+              >
+                {(["followers", "following"] as const).map((kind) => (
+                  <button
+                    key={kind}
+                    type="button"
+                    aria-expanded={activeConnections === kind}
+                    aria-controls="profile-connections"
+                    aria-haspopup="dialog"
+                    onClick={() => {
+                      setConnections(
+                        kind === "followers"
+                          ? user.followers.map(({ follower }) => follower)
+                          : user.following.map(({ following }) => following),
+                      );
+                      setActiveConnections(kind);
+                      connectionsDialogRef.current?.showModal();
+                    }}
+
+                    className={`rounded-2xl border px-4 py-3 text-left transition focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
+                      activeConnections === kind
+                        ? "border-indigo-400/40 bg-indigo-400/15"
+                        : "border-white/10 bg-white/5 hover:border-indigo-400/30 hover:bg-white/10"
+                    }`}
+                  >
+                    <span className="block text-xl font-semibold text-white tabular-nums">
+                      {user[kind].length}
+                    </span>
+
+                    <span className="mt-1 block text-sm text-slate-300">
+                      {kind === "followers" ? "Followers" : "Following"}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              <dialog
+                ref={connectionsDialogRef}
+                id="profile-connections"
+                aria-labelledby="connections-title"
+                onClose={() => setActiveConnections(null)}
+                onClick={(event) => {
+                  if (event.target !== event.currentTarget) return;
+                  const bounds = event.currentTarget.getBoundingClientRect();
+                  if (
+                    event.clientX < bounds.left ||
+                    event.clientX > bounds.right ||
+                    event.clientY < bounds.top ||
+                    event.clientY > bounds.bottom
+                  ) {
+                    event.currentTarget.close();
+                  }
+                }}
+                className="m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-3xl border border-white/10 bg-slate-900 p-0 text-slate-100 shadow-2xl backdrop:bg-slate-950/80 backdrop:backdrop-blur-sm"
+              >
+                <div className="sticky top-0 flex items-center justify-between gap-4 border-b border-white/10 bg-slate-900 px-5 py-4 sm:px-6">
+                  <h2
+                    id="connections-title"
+                    className="flex items-center gap-3 text-lg font-semibold"
+                  >
+                    {activeConnections === "followers"
+                      ? "Followers"
+                      : "Following"}
+                    <span className="rounded-full bg-indigo-400/15 px-2.5 py-1 text-xs text-indigo-300 tabular-nums">
+                      {activeConnections ? user[activeConnections].length : 0}
+                    </span>
+                  </h2>
+
+                  <button
+                    type="button"
+                    aria-label="Close connections"
+                    onClick={() => connectionsDialogRef.current?.close()}
+                    className="flex size-9 shrink-0 items-center justify-center rounded-full text-xl text-slate-400 transition hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                  >
+                    <span aria-hidden="true">x</span>
+                  </button>
+                </div>
+
+                {connections.length ? (
+                  <ul
+                    aria-label={
+                      activeConnections === "followers"
+                        ? "Your followers"
+                        : "People you follow"
+                    }
+                    className="space-y-1 p-3"
+                  >
+                    {connections.map((person) => (
+                      <li key={person.id} className="flex items-center gap-2">
+                        <Link
+                          to={`/user-profile/${person.id}`}
+                          onClick={() => connectionsDialogRef.current?.close()}
+                          className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-200 transition hover:bg-white/5 hover:text-indigo-300 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-indigo-400/15 font-semibold text-indigo-300"
+                          >
+                            {person.name.trim().charAt(0).toUpperCase() || "?"}
+                            {person.image && (
+                              <img
+                                key={person.image}
+                                src={person.image}
+                                alt=""
+                                className="absolute inset-0 size-full object-cover"
+                                onError={(event) => {
+                                  event.currentTarget.style.display = "none";
+                                }}
+                              />
+                            )}
+                          </span>
+
+                          <span className="min-w-0 flex-1 truncate">
+                            {person.name}
+                          </span>
+
+                          <span aria-hidden="true" className="shrink-0">
+                            →
+                          </span>
+                        </Link>
+
+                        {activeConnections === "following" && (
+                          <div className="shrink-0">
+                            <FollowButton
+                              userId={person.id}
+                              isFollowing={user.following.some(
+                                ({ following }) => following.id === person.id,
+                              )}
+                              onFollowChange={() => revalidator.revalidate()}
+                            />
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="px-6 py-10 text-center text-sm leading-6 text-slate-400">
+                    {activeConnections === "followers"
+                      ? "You don't have any followers yet."
+                      : "You aren't following anyone yet."}
+                  </p>
+                )}
+              </dialog>
+            </div>
+
             <div className="mt-7 border-t border-white/10 pt-6">
               <h3 className="font-semibold text-white">Profile photo</h3>
               <p className="mt-1 text-sm leading-6 text-slate-400">
@@ -245,9 +412,6 @@ export default function MyProfilePage() {
                       >
                         {formatDateTime(post.createdAt)}
                       </time>
-                      <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-300">
-                        {post.content}
-                      </p>
                     </article>
                   ))
                 ) : (

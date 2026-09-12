@@ -1,11 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import formatDateTime from "../utils/formatDateTime";
+import { Link } from "react-router";
 
 type Comment = {
   id: string;
   content: string;
   createdAt: string;
-  author: { name: string };
+  author: {
+    id: string;
+    name: string;
+    image: string | null;
+    isAnonymous: boolean;
+  };
 };
 
 export default function Comments({ postId }: { postId: string }) {
@@ -34,15 +40,25 @@ export default function Comments({ postId }: { postId: string }) {
 
   if (isPending) {
     return (
-      <div className="space-y-4" aria-label="Loading comments">
+      <div className="space-y-4" role="status" aria-label="Loading comments">
+        <span className="sr-only">Loading comments…</span>
         {[1, 2].map((item) => (
           <div
             key={item}
-            className="animate-pulse rounded-2xl border border-white/10 bg-white/5 p-5"
+            aria-hidden="true"
+            className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-lg shadow-black/10 motion-safe:animate-pulse sm:p-6"
           >
-            <div className="h-4 w-full rounded bg-white/10" />
-            <div className="mt-3 h-4 w-2/3 rounded bg-white/5" />
-            <div className="mt-5 h-3 w-40 rounded bg-white/5" />
+            <div className="flex items-center gap-3">
+              <div className="size-11 shrink-0 rounded-2xl bg-slate-200" />
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="h-3.5 w-28 max-w-full rounded bg-slate-200" />
+                <div className="h-3 w-40 max-w-full rounded bg-slate-100" />
+              </div>
+            </div>
+            <div className="mt-4 space-y-2.5 sm:ml-14">
+              <div className="h-3.5 w-full rounded bg-slate-100" />
+              <div className="h-3.5 w-2/3 rounded bg-slate-100" />
+            </div>
           </div>
         ))}
       </div>
@@ -51,7 +67,10 @@ export default function Comments({ postId }: { postId: string }) {
 
   if (isError) {
     return (
-      <div className="rounded-2xl border border-red-400/20 bg-red-400/10 p-5 text-center">
+      <div
+        role="alert"
+        className="rounded-2xl border border-red-400/20 bg-red-400/10 p-6 text-center"
+      >
         <p className="text-sm font-medium text-red-200">{error.message}</p>
         <button
           type="button"
@@ -94,34 +113,64 @@ export default function Comments({ postId }: { postId: string }) {
 
   return (
     <ul className="space-y-4" aria-label="Comments">
-      {comments.map((comment) => (
-        <li
-          key={comment.id}
-          className="rounded-2xl border border-white/10 bg-white p-5 text-slate-900 shadow-lg shadow-black/10 sm:p-6"
-        >
-          <p className="leading-7 wrap-break-word whitespace-pre-wrap text-slate-700">
-            {comment.content}
-          </p>
-
-          <div className="mt-5 flex flex-col gap-1 border-t border-slate-100 pt-4 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-            <div className="flex items-center gap-2.5">
-              <span className="flex size-7 items-center justify-center rounded-lg bg-indigo-100 text-xs font-bold text-indigo-700">
-                {comment.author.name.trim().charAt(0).toUpperCase() || "?"}
-              </span>
-              <p className="font-semibold text-slate-900">
-                {comment.author.name}
-              </p>
-            </div>
-
-            <time
-              dateTime={comment.createdAt}
-              className="shrink-0 pl-9 text-xs text-slate-500 sm:pl-0"
+      {comments.map((comment) => {
+        const authorDetails = (
+          <>
+            <span
+              aria-hidden="true"
+              className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-indigo-50 text-sm font-bold text-indigo-600 ring-1 ring-indigo-600/10 ring-inset"
             >
-              {formatDateTime(comment.createdAt)}
-            </time>
-          </div>
-        </li>
-      ))}
+              {comment.author.name.trim().charAt(0).toUpperCase() || "?"}
+              {comment.author.image && (
+                <img
+                  key={comment.author.image}
+                  src={comment.author.image}
+                  alt={`${comment.author.name}'s avatar`}
+                  // wait until the image is near the visible part of the page before loading it
+                  loading="lazy"
+                  className="absolute inset-0 size-full object-cover"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                  }}
+                />
+              )}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-semibold wrap-anywhere text-slate-950 transition group-hover:text-indigo-600">
+                {comment.author.name}
+              </span>
+              <time
+                dateTime={comment.createdAt}
+                className="mt-1 block text-xs leading-5 text-slate-500"
+              >
+                {formatDateTime(comment.createdAt)}
+              </time>
+            </span>
+          </>
+        );
+
+        return (
+          <li key={comment.id}>
+            <article className="min-w-0 rounded-2xl border border-slate-200/80 bg-white p-5 text-slate-900 shadow-lg shadow-black/10 sm:p-6">
+              <header>
+                {comment.author.isAnonymous ? (
+                  <div className="flex items-center gap-3">{authorDetails}</div>
+                ) : (
+                  <Link
+                    to={`/user-profile/${comment.author.id}`}
+                    className="group flex w-fit max-w-full items-center gap-3 rounded-2xl focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-4 focus-visible:outline-none"
+                  >
+                    {authorDetails}
+                  </Link>
+                )}
+              </header>
+              <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-700 sm:ml-14 sm:text-base">
+                {comment.content}
+              </p>
+            </article>
+          </li>
+        );
+      })}
     </ul>
   );
 }
