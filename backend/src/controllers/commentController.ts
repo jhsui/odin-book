@@ -3,7 +3,6 @@ import { matchedData, validationResult } from "express-validator";
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
 import requireAuth, { requireNotAnonymous } from "../middleware/requireAuth.ts";
-import supabase from "../lib/supabase.ts";
 import { getAvatarUrl } from "./userController.ts";
 
 const postComment = [
@@ -78,4 +77,27 @@ const getComments = [
   },
 ];
 
-export default { postComment, getComments };
+const deleteComment = [
+  requireAuth,
+
+  async (req: Request, res: Response) => {
+    const { commentId } = req.params;
+    const userId = res.locals.session.user.id;
+
+    if (typeof commentId !== "string") throw Error("Invalid comment id");
+
+    const comment = await prisma.comment.findUnique({
+      where: { id: commentId },
+    });
+
+    if (!comment || comment.authorId !== userId) {
+      throw Error("User does have the authority to delete this comment");
+    }
+
+    await prisma.comment.delete({ where: { id: commentId } });
+
+    return res.status(204).send();
+  },
+];
+
+export default { postComment, getComments, deleteComment };

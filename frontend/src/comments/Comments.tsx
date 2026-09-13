@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import formatDateTime from "../utils/formatDateTime";
 import { Link } from "react-router";
+import DeleteCommentButton from "./DeleteCommentButton.tsx";
 
-type Comment = {
+export type Comment = {
   id: string;
   content: string;
   createdAt: string;
@@ -135,10 +136,12 @@ export default function Comments({ postId }: { postId: string }) {
                 />
               )}
             </span>
+
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-semibold wrap-anywhere text-slate-950 transition group-hover:text-indigo-600">
                 {comment.author.name}
               </span>
+
               <time
                 dateTime={comment.createdAt}
                 className="mt-1 block text-xs leading-5 text-slate-500"
@@ -164,9 +167,11 @@ export default function Comments({ postId }: { postId: string }) {
                   </Link>
                 )}
               </header>
+
               <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-700 sm:ml-14 sm:text-base">
                 {comment.content}
               </p>
+              <DeleteCommentButton comment={comment} />
             </article>
           </li>
         );
