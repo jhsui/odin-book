@@ -1,9 +1,18 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { authClient } from "../lib/auth-client";
-import type { Comment } from "./Comments.tsx";
 import { useState } from "react";
 
-export default function DeleteCommentButton({ comment }: { comment: Comment }) {
+type DeleteCommentButtonProps = {
+  commentId: string;
+  authorId: string;
+  onDeleted?: () => void | Promise<void>;
+};
+
+export default function DeleteCommentButton({
+  commentId,
+  authorId,
+  onDeleted,
+}: DeleteCommentButtonProps) {
   const queryClient = useQueryClient();
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState("");
@@ -20,7 +29,7 @@ export default function DeleteCommentButton({ comment }: { comment: Comment }) {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/comments/delete/${comment.id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/comments/delete/${commentId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -32,6 +41,7 @@ export default function DeleteCommentButton({ comment }: { comment: Comment }) {
       }
 
       await queryClient.invalidateQueries({ queryKey: ["comments"] });
+      await onDeleted?.();
     } catch (error) {
       setError(
         error instanceof Error ? error.message : "Something went wrong.",
@@ -43,7 +53,7 @@ export default function DeleteCommentButton({ comment }: { comment: Comment }) {
 
   return (
     <>
-      {session && session.user.id === comment.author.id ? (
+      {session && session.user.id === authorId ? (
         <>
           <button type="button" onClick={handleClick} disabled={isDeleting}>
             {isDeleting ? "Deleting..." : "Delete"}

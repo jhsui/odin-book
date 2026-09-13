@@ -5,6 +5,7 @@ import MyUserIntro from "./MyUserIntro.tsx";
 import FollowButton from "./FollowButton.tsx";
 import type { User, FollowUser } from "./types.ts";
 import formatDateTime from "../utils/formatDateTime.ts";
+import DeleteCommentButton from "../comments/DeleteCommentButton.tsx";
 
 export default function MyProfilePage() {
   const { user } = useLoaderData<{ user: User }>();
@@ -452,6 +453,7 @@ export default function MyProfilePage() {
                       <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-300">
                         {comment.content}
                       </p>
+
                       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs">
                         <time
                           dateTime={comment.createdAt}
@@ -459,12 +461,19 @@ export default function MyProfilePage() {
                         >
                           {formatDateTime(comment.createdAt)}
                         </time>
+
                         <Link
                           to={`/dashboard/posts/${comment.postId}`}
                           className="rounded font-medium text-indigo-300 transition hover:text-indigo-200 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
                         >
                           View conversation <span aria-hidden="true">→</span>
                         </Link>
+
+                        <DeleteCommentButton
+                          commentId={comment.id}
+                          authorId={user.id}
+                          onDeleted={() => revalidator.revalidate()}
+                        />
                       </div>
                     </article>
                   ))}

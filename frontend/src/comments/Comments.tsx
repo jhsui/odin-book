@@ -171,7 +171,10 @@ export default function Comments({ postId }: { postId: string }) {
               <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-700 sm:ml-14 sm:text-base">
                 {comment.content}
               </p>
-              <DeleteCommentButton comment={comment} />
+              <DeleteCommentButton
+                commentId={comment.id}
+                authorId={comment.author.id}
+              />
             </article>
           </li>
         );
