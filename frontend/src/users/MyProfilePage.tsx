@@ -104,15 +104,15 @@ export default function MyProfilePage() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.2),transparent_45%),radial-gradient(circle_at_top_right,rgba(14,165,233,0.12),transparent_40%)]"
       />
-      <div className="relative mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-        <div className="mb-12">
+      <div className="relative mx-auto w-full max-w-[100rem] px-4 py-6 sm:px-6 sm:py-10 lg:px-8 xl:px-12">
+        <div className="mb-8 sm:mb-12">
           <SwayHeader />
         </div>
-        <header className="mb-8">
+        <header className="mb-8 border-b border-white/10 pb-8 sm:mb-10">
           <p className="mb-4 inline-flex rounded-full border border-indigo-400/20 bg-indigo-400/10 px-3 py-1 text-xs font-semibold tracking-wider text-indigo-300 uppercase">
             Your space
           </p>
-          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
             Your Profile
           </h1>
           <p className="mt-3 leading-7 text-slate-400">
@@ -120,10 +120,10 @@ export default function MyProfilePage() {
           </p>
         </header>
 
-        <div className="grid items-start gap-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
+        <div className="grid items-start gap-8 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[24rem_minmax(0,1fr)] xl:gap-10">
           <section
             aria-label="Profile settings"
-            className="min-w-0 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7"
+            className="min-w-0 rounded-3xl border border-white/10 bg-linear-to-b from-indigo-400/10 to-white/5 p-5 shadow-xl shadow-black/10 sm:p-7 xl:p-8"
           >
             <div>
               <div className="mb-5">
@@ -206,7 +206,6 @@ export default function MyProfilePage() {
                       setActiveConnections(kind);
                       connectionsDialogRef.current?.showModal();
                     }}
-
                     className={`rounded-2xl border px-4 py-3 text-left transition focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
                       activeConnections === kind
                         ? "border-indigo-400/40 bg-indigo-400/15"
@@ -377,12 +376,12 @@ export default function MyProfilePage() {
             </div>
           </section>
 
-          <div className="min-w-0 space-y-8">
+          <div className="min-w-0 space-y-10 sm:space-y-12">
             <section aria-labelledby="your-posts">
-              <div className="mb-4 flex items-center gap-3">
+              <div className="mb-5 flex items-center gap-3">
                 <h2
                   id="your-posts"
-                  className="text-xl font-semibold text-white"
+                  className="text-xl font-semibold tracking-tight text-white sm:text-2xl"
                 >
                   Your posts
                 </h2>
@@ -391,38 +390,41 @@ export default function MyProfilePage() {
                   {user.posts.length}
                 </span>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {user.posts.length ? (
                   user.posts.map((post) => (
                     <article
                       key={post.id}
-                      className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6"
+                      className="flex min-w-0 flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg shadow-black/10 transition-colors hover:border-indigo-400/25 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-5"
                     >
-                      <h3 className="text-lg font-semibold wrap-anywhere text-white">
-                        <Link
-                          to={`/dashboard/posts/${post.id}`}
-                          className="rounded transition hover:text-indigo-300 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                      <div className="min-w-0">
+                        <h3 className="text-lg leading-7 font-semibold wrap-anywhere text-white">
+                          <Link
+                            to={`/dashboard/posts/${post.id}`}
+                            className="rounded transition hover:text-indigo-300 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                          >
+                            {post.title}
+                          </Link>
+                        </h3>
+                        <time
+                          dateTime={post.createdAt}
+                          className="mt-1 block text-xs leading-5 text-slate-400 sm:text-sm"
                         >
-                          {post.title}
-                        </Link>
-                      </h3>
+                          {formatDateTime(post.createdAt)}
+                        </time>
+                      </div>
 
-                      <time
-                        dateTime={post.createdAt}
-                        className="mt-2 block text-xs text-slate-400"
-                      >
-                        {formatDateTime(post.createdAt)}
-                      </time>
-
-                      <DeletePostButton
-                        postId={post.id}
-                        authorId={user.id}
-                        onDeleted={() => revalidator.revalidate()}
-                      />
+                      <div className="max-w-full shrink-0">
+                        <DeletePostButton
+                          postId={post.id}
+                          authorId={user.id}
+                          onDeleted={() => revalidator.revalidate()}
+                        />
+                      </div>
                     </article>
                   ))
                 ) : (
-                  <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center">
+                  <div className="rounded-3xl border border-dashed border-white/15 bg-white/5 px-6 py-12 text-center">
                     <p className="font-medium text-slate-200">
                       Your story starts here
                     </p>
@@ -441,10 +443,10 @@ export default function MyProfilePage() {
             </section>
 
             <section aria-labelledby="your-comments">
-              <div className="mb-4 flex items-center gap-3">
+              <div className="mb-5 flex items-center gap-3">
                 <h2
                   id="your-comments"
-                  className="text-xl font-semibold text-white"
+                  className="text-xl font-semibold tracking-tight text-white sm:text-2xl"
                 >
                   Your comments
                 </h2>
@@ -453,39 +455,44 @@ export default function MyProfilePage() {
                 </span>
               </div>
               {user.comments.length ? (
-                <div className="divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/5 px-5 sm:px-6">
+                <div className="space-y-5">
                   {user.comments.map((comment) => (
-                    <article key={comment.id} className="py-5">
-                      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-300">
+                    <article
+                      key={comment.id}
+                      className="min-w-0 rounded-3xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-black/10 transition-colors hover:border-sky-400/25 sm:p-7 xl:p-8"
+                    >
+                      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-300 sm:text-base sm:leading-8">
                         {comment.content}
                       </p>
 
-                      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+                      <footer className="mt-5 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 border-t border-white/10 pt-4">
                         <time
                           dateTime={comment.createdAt}
-                          className="text-slate-400"
+                          className="text-xs leading-5 text-slate-400 sm:text-sm"
                         >
                           {formatDateTime(comment.createdAt)}
                         </time>
 
-                        <Link
-                          to={`/dashboard/posts/${comment.postId}`}
-                          className="rounded font-medium text-indigo-300 transition hover:text-indigo-200 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-                        >
-                          View conversation <span aria-hidden="true">→</span>
-                        </Link>
+                        <div className="flex max-w-full flex-wrap items-center gap-x-4 gap-y-2 [&>div]:mt-0">
+                          <Link
+                            to={`/dashboard/posts/${comment.postId}`}
+                            className="inline-flex min-h-9 items-center gap-2 rounded-lg py-2 text-xs font-semibold text-indigo-300 transition hover:text-indigo-200 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:outline-none"
+                          >
+                            View conversation <span aria-hidden="true">→</span>
+                          </Link>
 
-                        <DeleteCommentButton
-                          commentId={comment.id}
-                          authorId={user.id}
-                          onDeleted={() => revalidator.revalidate()}
-                        />
-                      </div>
+                          <DeleteCommentButton
+                            commentId={comment.id}
+                            authorId={user.id}
+                            onDeleted={() => revalidator.revalidate()}
+                          />
+                        </div>
+                      </footer>
                     </article>
                   ))}
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center">
+                <div className="rounded-3xl border border-dashed border-white/15 bg-white/5 px-6 py-12 text-center">
                   <p className="font-medium text-slate-200">No comments yet</p>
                   <p className="mt-2 text-sm leading-6 text-slate-400">
                     Join a conversation and your replies will appear here.
