@@ -290,7 +290,7 @@ export default function MyProfilePage() {
                               <img
                                 key={person.image}
                                 src={person.image}
-                                alt=""
+                                alt={`User ${person.name}'s avatar`}
                                 className="absolute inset-0 size-full object-cover"
                                 onError={(event) => {
                                   event.currentTarget.style.display = "none";
@@ -308,17 +308,15 @@ export default function MyProfilePage() {
                           </span>
                         </Link>
 
-                        {activeConnections === "following" && (
-                          <div className="shrink-0">
-                            <FollowButton
-                              userId={person.id}
-                              isFollowing={user.following.some(
-                                ({ following }) => following.id === person.id,
-                              )}
-                              onFollowChange={() => revalidator.revalidate()}
-                            />
-                          </div>
-                        )}
+                        <div className="shrink-0">
+                          <FollowButton
+                            userId={person.id}
+                            isFollowing={user.following.some(
+                              ({ following }) => following.id === person.id,
+                            )}
+                            onFollowChange={() => revalidator.revalidate()}
+                          />
+                        </div>
                       </li>
                     ))}
                   </ul>

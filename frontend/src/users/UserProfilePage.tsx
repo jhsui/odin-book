@@ -127,9 +127,11 @@ export default function UserProfilePage() {
                 >
                   {user.name}
                 </h1>
+
                 <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-300">
                   {user.intro || "No introduction yet."}
                 </p>
+
                 <dl className="mt-6 grid grid-cols-2 gap-4 border-t border-white/10 pt-6">
                   <div>
                     <dt className="text-xs text-slate-400">Posts</dt>
@@ -137,10 +139,25 @@ export default function UserProfilePage() {
                       {user.posts.length}
                     </dd>
                   </div>
+
                   <div>
                     <dt className="text-xs text-slate-400">Comments</dt>
                     <dd className="mt-1 text-2xl font-semibold text-white">
                       {user.comments.length}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="text-xs text-slate-400">Followers</dt>
+                    <dd className="mt-1 text-2xl font-semibold text-white">
+                      {user.followers.length}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="text-xs text-slate-400">Following</dt>
+                    <dd className="mt-1 text-2xl font-semibold text-white">
+                      {user.following.length}
                     </dd>
                   </div>
                 </dl>
@@ -188,7 +205,7 @@ export default function UserProfilePage() {
                     <div className="rounded-2xl border border-dashed border-white/15 px-6 py-10 text-center">
                       <p className="font-medium text-slate-200">No posts yet</p>
                       <p className="mt-2 text-sm leading-6 text-slate-400">
-                        Posts shared by {user.name} will appear here.
+                        Posts written by {user.name} will appear here.
                       </p>
                     </div>
                   )}

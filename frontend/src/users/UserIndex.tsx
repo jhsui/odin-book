@@ -145,10 +145,17 @@ export default function UserIndex() {
 
                         <div className="min-w-0 flex-1">
                           <div className="truncate font-semibold text-slate-950">
-                            <Link to={`/user-profile/${user.id}`}>
-                              {user.name}
-                            </Link>
+                            {isSessionPending ? (
+                              <p>{user.name}</p>
+                            ) : isCurrentUser ? (
+                              <Link to={`/my-profile`}>{user.name}</Link>
+                            ) : (
+                              <Link to={`/user-profile/${user.id}`}>
+                                {user.name}
+                              </Link>
+                            )}
                           </div>
+
                           <p className="mt-0.5 text-xs text-slate-500 sm:text-sm">
                             Community member
                           </p>

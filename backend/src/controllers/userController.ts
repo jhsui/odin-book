@@ -233,7 +233,7 @@ const getUserProfile = [
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Get avatar for every user shown in the connections dialog
+    // Get avatar for every user shown in the connections dialog.
     const connectionUsers = [
       ...user.followers.map(({ follower }) => follower),
       ...user.following.map(({ following }) => following),
