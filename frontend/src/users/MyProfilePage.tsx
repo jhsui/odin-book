@@ -6,12 +6,10 @@ import FollowButton from "./FollowButton.tsx";
 import type { User, FollowUser } from "./types.ts";
 import formatDateTime from "../utils/formatDateTime.ts";
 import DeleteCommentButton from "../comments/DeleteCommentButton.tsx";
+import { DeletePostButton } from "../posts/DeletePostButton.tsx";
 
 export default function MyProfilePage() {
   const { user } = useLoaderData<{ user: User }>();
-
-  // todo: delete
-  console.log(user);
 
   const [file, setFile] = useState<File | null>(null);
   const revalidator = useRevalidator();
@@ -388,6 +386,7 @@ export default function MyProfilePage() {
                 >
                   Your posts
                 </h2>
+
                 <span className="rounded-full bg-indigo-400/10 px-2.5 py-1 text-xs font-semibold text-indigo-300">
                   {user.posts.length}
                 </span>
@@ -407,12 +406,19 @@ export default function MyProfilePage() {
                           {post.title}
                         </Link>
                       </h3>
+
                       <time
                         dateTime={post.createdAt}
                         className="mt-2 block text-xs text-slate-400"
                       >
                         {formatDateTime(post.createdAt)}
                       </time>
+
+                      <DeletePostButton
+                        postId={post.id}
+                        authorId={user.id}
+                        onDeleted={() => revalidator.revalidate()}
+                      />
                     </article>
                   ))
                 ) : (

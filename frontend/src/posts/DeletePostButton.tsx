@@ -6,8 +6,8 @@ import { useNavigate } from "react-router";
 type DeletePostButtonProps = {
   postId: string;
   authorId: string;
-  // ?
   onDeleted?: () => void | Promise<void>;
+  // ?
   ifRedirect?: boolean;
 };
 
