@@ -1,26 +1,32 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { authClient } from "../lib/auth-client.ts";
 import { useState } from "react";
+import { authClient } from "../lib/auth-client.ts";
+import { useNavigate } from "react-router";
 
-type DeleteCommentButtonProps = {
-  commentId: string;
+type DeletePostButtonProps = {
+  postId: string;
   authorId: string;
+  // ?
   onDeleted?: () => void | Promise<void>;
+  ifRedirect?: boolean;
 };
 
-export default function DeleteCommentButton({
-  commentId,
+export function DeletePostButton({
+  postId,
   authorId,
   onDeleted,
-}: DeleteCommentButtonProps) {
+  ifRedirect = false,
+}: DeletePostButtonProps) {
   const queryClient = useQueryClient();
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   const { data: session } = authClient.useSession();
 
   const handleClick = async () => {
-    if (!window.confirm("Are you sure you want to delete this comment?")) {
+    if (!window.confirm("Are you sure you want to delete this post?")) {
       return;
     }
 
@@ -29,7 +35,7 @@ export default function DeleteCommentButton({
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/comments/delete/${commentId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/posts/delete/${postId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -37,11 +43,21 @@ export default function DeleteCommentButton({
       );
 
       if (!res.ok) {
-        throw new Error("Failed to delete this comment");
+        throw new Error("Failed to delete this post");
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["comments"] });
+      // revalidate tanstack query
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["post-index"] }),
+        queryClient.invalidateQueries({ queryKey: ["user-profile"] }),
+      ]);
+
+      // revalidate loader
       await onDeleted?.();
+
+      if (ifRedirect) {
+        navigate(-1);
+      }
     } catch (error) {
       setError(error instanceof Error ? error.message : "Something went wrong");
     } finally {
@@ -54,7 +70,7 @@ export default function DeleteCommentButton({
       {session && session.user.id === authorId ? (
         <>
           <button type="button" onClick={handleClick} disabled={isDeleting}>
-            {isDeleting ? "Deleting..." : "Delete"}
+            {isDeleting ? "Deleting..." : "Delete post"}
           </button>
           {error && <p role="alert">{error}</p>}
         </>

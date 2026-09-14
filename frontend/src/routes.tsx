@@ -87,7 +87,7 @@ const routes: RouteObject[] = [
     loader: async () => {
       const { data: session } = await authClient.getSession();
 
-      // Only signed-in non-anonymous users have profile
+      // Only signed-in non-anonymous users have profile.
       if (!session || session.user.isAnonymous) {
         // todo: add feedback in App.tsx
         return redirect("/?reason=registered-user-required");

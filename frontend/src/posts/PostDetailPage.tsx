@@ -3,6 +3,7 @@ import CommentSection from "../comments/CommentSection.tsx";
 import LikeButton from "./LikeButton.tsx";
 import SwayHeader from "../layout/SwayHeader.tsx";
 import formatDateTime from "../utils/formatDateTime.ts";
+import { DeletePostButton } from "./DeletePostButton.tsx";
 
 type Post = {
   id: string;
@@ -12,7 +13,9 @@ type Post = {
   updatedAt: string;
   authorId: string;
   author: {
+    id: string;
     name: string;
+    image: string | null;
   };
 };
 
@@ -55,13 +58,23 @@ export default function PostDetailPage() {
               </h1>
 
               <div className="mt-7 flex items-center gap-3">
-                <span className="flex size-10 items-center justify-center rounded-2xl bg-indigo-100 text-sm font-bold text-indigo-700">
-                  {authorInitial}
-                </span>
-                <div>
+                <Link to={`/user-profile/${post.author.id}`}>
+                  <span className="flex size-10 items-center justify-center rounded-2xl bg-indigo-100 text-sm font-bold text-indigo-700">
+                    {authorInitial}
+                  </span>
+                  {/* todo: cover the initial if applicable */}
+                  {post.author.image && (
+                    <img
+                      src={post.author.image}
+                      alt={`${post.author.name}'s avatar`}
+                    />
+                  )}
                   <p className="text-sm font-semibold text-slate-900">
                     {post.author.name}
                   </p>
+                </Link>
+
+                <div>
                   <time
                     dateTime={post.createdAt}
                     className="mt-0.5 block text-xs text-slate-500"
@@ -81,6 +94,11 @@ export default function PostDetailPage() {
             <footer className="flex items-center justify-between gap-4 border-t border-slate-100 bg-slate-50/70 px-5 py-5 sm:px-10">
               <p className="text-sm text-slate-500">Was this worth sharing?</p>
               <LikeButton postId={post.id} />
+              <DeletePostButton
+                postId={post.id}
+                authorId={post.author.id}
+                ifRedirect={true}
+              />
             </footer>
           </article>
 

@@ -127,7 +127,7 @@ export default function Comments({ postId }: { postId: string }) {
                   key={comment.author.image}
                   src={comment.author.image}
                   alt={`${comment.author.name}'s avatar`}
-                  // wait until the image is near the visible part of the page before loading it
+                  // Wait until the image is near the visible part of the page before loading it.
                   loading="lazy"
                   className="absolute inset-0 size-full object-cover"
                   onError={(event) => {

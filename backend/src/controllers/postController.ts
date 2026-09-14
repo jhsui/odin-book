@@ -5,6 +5,7 @@ import { prisma } from "../lib/prisma.ts";
 import requireAuth, { requireNotAnonymous } from "../middleware/requireAuth.ts";
 import { auth } from "../lib/auth.ts";
 import { fromNodeHeaders } from "better-auth/node";
+import { getAvatarUrl } from "./userController.ts";
 
 const createPost = [
   ...writingPostValidator,
@@ -63,7 +64,9 @@ const getPostById = [
       include: {
         author: {
           select: {
+            id: true,
             name: true,
+            image: true,
           },
         },
       },
@@ -74,6 +77,8 @@ const getPostById = [
         error: "Post not found",
       });
     }
+
+    post.author.image = await getAvatarUrl(post.author.image);
 
     return res.json({ post });
   },
@@ -160,7 +165,7 @@ const togglePostLike = [
       });
 
       return res.json({
-        message: "Like cancelled.",
+        message: "Like cancelled",
         currentLike: false,
         likeCount,
       });
@@ -179,7 +184,7 @@ const togglePostLike = [
       },
     });
 
-    return res.json({ message: "Liked.", currentLike: true, likeCount });
+    return res.json({ message: "Liked", currentLike: true, likeCount });
   },
 ];
 
@@ -203,6 +208,29 @@ const getPostIndex = [
   },
 ];
 
+const deletePost = [
+  requireNotAnonymous,
+
+  async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const userId = res.locals.session.user.id;
+
+    if (typeof postId !== "string") throw Error("Invalid post id.");
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post || post.authorId !== userId) {
+      throw Error("User does have the authority to delete this post.");
+    }
+
+    await prisma.post.delete({ where: { id: postId } });
+
+    return res.status(204).send();
+  },
+];
+
 export default {
   createPost,
   getAllPosts,
@@ -210,4 +238,5 @@ export default {
   getLikeStatus,
   togglePostLike,
   getPostIndex,
+  deletePost,
 };
