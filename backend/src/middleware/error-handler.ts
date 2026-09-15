@@ -14,6 +14,13 @@ const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
     return;
   }
 
+  if (error?.type === "entity.too.large") {
+    res.status(413).json({
+      message: "Request is too large. Please shorten your input and try again.",
+    });
+    return;
+  }
+
   console.error(error);
 
   res.status(500).json({
