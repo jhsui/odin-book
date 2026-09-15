@@ -8,10 +8,16 @@ import formatDateTime from "../utils/formatDateTime.ts";
 import DeleteCommentButton from "../comments/DeleteCommentButton.tsx";
 import { DeletePostButton } from "../posts/DeletePostButton.tsx";
 
+const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5 MiB
+const AVATAR_SIZE_ERROR =
+  "This file is too large. Choose an image of 5 MiB or smaller.";
+
 export default function MyProfilePage() {
   const { user } = useLoaderData<{ user: User }>();
 
   const [file, setFile] = useState<File | null>(null);
+  const [avatarError, setAvatarError] = useState("");
+
   const revalidator = useRevalidator();
 
   const [showNameEditor, setShowNameEditor] = useState(false);
@@ -21,7 +27,7 @@ export default function MyProfilePage() {
     "followers" | "following" | null
   >(null);
 
-  // Keep the visible people fixed until the dialog is opened again
+  // Keep the visible people fixed until the dialog is opened again.
   const [connections, setConnections] = useState<FollowUser[]>([]);
 
   const connectionsDialogRef = useRef<HTMLDialogElement>(null);
@@ -39,10 +45,10 @@ export default function MyProfilePage() {
   const handleAvatarSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    // todo: refine ux
     if (!file) return;
+    setAvatarError("");
 
-    // Package for multer
+    // Package for multer.
     const formData = new FormData();
     formData.append("avatar", file);
 
@@ -56,6 +62,11 @@ export default function MyProfilePage() {
         },
       );
 
+      if (res.status === 413) {
+        setAvatarError(AVATAR_SIZE_ERROR);
+        return;
+      }
+
       if (!res.ok) {
         throw new Error(`Upload failed (${res.status}): ${await res.text()}`);
       }
@@ -63,6 +74,7 @@ export default function MyProfilePage() {
       await revalidator.revalidate();
     } catch (error) {
       console.error("Failed to upload avatar:", error);
+      setAvatarError("Couldn't upload your photo. Please try again.");
     }
   };
 
@@ -352,11 +364,38 @@ export default function MyProfilePage() {
                   accept="image/*"
                   name="uploaded-avatar"
                   id="uploaded-avatar"
+                  aria-describedby={
+                    avatarError
+                      ? "avatar-size-hint avatar-error"
+                      : "avatar-size-hint"
+                  }
                   className="block w-full min-w-0 rounded-xl border border-dashed border-white/20 bg-slate-950/50 p-3 text-xs text-slate-400 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-indigo-400/15 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-indigo-300 hover:file:bg-indigo-400/25 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
                   onChange={(e) => {
-                    setFile(e.currentTarget.files?.[0] ?? null);
+                    const selectedFile = e.currentTarget.files?.[0] ?? null;
+
+                    if (selectedFile && selectedFile.size > MAX_AVATAR_SIZE) {
+                      setFile(null);
+                      setAvatarError(AVATAR_SIZE_ERROR);
+                      return;
+                    }
+
+                    setFile(selectedFile);
+                    setAvatarError("");
                   }}
                 />
+
+                <p id="avatar-size-hint" className="text-xs text-slate-400">
+                  Maximum file size: 5 MiB.
+                </p>
+                {avatarError && (
+                  <p
+                    id="avatar-error"
+                    role="alert"
+                    className="rounded-xl border border-rose-400/20 bg-rose-400/10 px-3 py-2 text-sm text-rose-300"
+                  >
+                    {avatarError}
+                  </p>
+                )}
 
                 <button
                   type="submit"
