@@ -22,6 +22,8 @@ export default function MyProfilePage() {
 
   const [showNameEditor, setShowNameEditor] = useState(false);
   const [newName, setNewName] = useState("");
+  const [nameError, setNameError] = useState("");
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const [activeConnections, setActiveConnections] = useState<
     "followers" | "following" | null
@@ -81,13 +83,15 @@ export default function MyProfilePage() {
   const handleNameSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    try {
-      if (!newName || !newName.trim()) {
-        // todo: ux
-        console.error("New username can not be empty");
-        return;
-      }
+    if (!newName.trim()) {
+      setNameError("Username can not be empty.");
+      nameInputRef.current?.focus();
+      return;
+    }
 
+    setNameError("");
+
+    try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/users/me/name`,
         {
@@ -103,6 +107,8 @@ export default function MyProfilePage() {
           `Update username failed (${res.status}): ${await res.text()}`,
         );
       }
+
+      setNewName("");
       // todo: use Form to revalidate?
       await revalidator.revalidate();
     } catch (error) {
@@ -160,7 +166,11 @@ export default function MyProfilePage() {
                 aria-expanded={showNameEditor}
                 aria-controls="name-editor"
                 className="mt-2 rounded-lg text-sm font-medium text-indigo-300 transition hover:text-indigo-200 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-900 focus-visible:outline-none"
-                onClick={() => setShowNameEditor((prev) => !prev)}
+                onClick={() => {
+                  setNewName("");
+                  setNameError("");
+                  setShowNameEditor((prev) => !prev);
+                }}
               >
                 {showNameEditor ? "Cancel editing" : "Edit name"}
               </button>
@@ -169,7 +179,11 @@ export default function MyProfilePage() {
                   id="name-editor"
                   className="mt-4 rounded-2xl border border-white/10 bg-slate-950/50 p-4"
                 >
-                  <form onSubmit={handleNameSubmit} className="space-y-3">
+                  <form
+                    noValidate
+                    onSubmit={handleNameSubmit}
+                    className="space-y-3"
+                  >
                     <label
                       htmlFor="new-name"
                       className="block text-sm font-medium text-slate-300"
@@ -177,15 +191,33 @@ export default function MyProfilePage() {
                       New username
                     </label>
                     <input
+                      ref={nameInputRef}
                       type="text"
                       id="new-name"
                       name="new-name"
+                      required
+                      aria-invalid={Boolean(nameError) || undefined}
+                      aria-describedby={nameError ? "name-error" : undefined}
                       placeholder="Type your new username"
-                      className="w-full min-w-0 rounded-xl border border-white/15 bg-slate-950 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 focus:outline-none"
+                      className="w-full min-w-0 rounded-xl border border-white/15 bg-slate-950 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 focus:outline-none aria-invalid:border-rose-400 aria-invalid:focus:border-rose-400 aria-invalid:focus:ring-rose-400"
+                      value={newName}
                       onChange={(e) => {
                         setNewName(e.currentTarget.value);
+                        if (e.currentTarget.value.trim()) {
+                          setNameError("");
+                        }
                       }}
                     />
+
+                    {nameError && (
+                      <p
+                        id="name-error"
+                        role="alert"
+                        className="text-sm leading-5 text-rose-300"
+                      >
+                        {nameError}
+                      </p>
+                    )}
                     <button
                       type="submit"
                       className="w-full rounded-xl bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
