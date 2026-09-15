@@ -14,20 +14,20 @@ export default function AllPosts() {
   const { posts } = useLoaderData() as PostsLoaderData;
 
   return (
-    <div>
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-slate-900">All posts</h2>
+    <div className="min-w-0">
+      <div className="border-b border-slate-100 px-4 py-4 sm:px-7 sm:py-5">
+        <h2 className="font-semibold text-slate-900">All posts</h2>
       </div>
 
       {posts.length > 0 ? (
-        <ul className="divide-y divide-slate-200">
+        <ul className="divide-y divide-slate-100">
           {posts.map((post) => (
             <li key={post.id}>
               <Link
                 to={`posts/${post.id}`}
-                className="group flex items-center justify-between gap-4 rounded-xl px-3 py-4 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none"
+                className="group flex min-w-0 items-center justify-between gap-4 px-4 py-4 transition hover:bg-slate-50 focus-visible:bg-indigo-50 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none focus-visible:ring-inset sm:px-7 sm:py-5"
               >
-                <span className="font-medium text-slate-800 transition group-hover:text-indigo-600">
+                <span className="min-w-0 flex-1 leading-6 font-medium wrap-anywhere text-slate-800 transition group-hover:text-indigo-600">
                   {post.title}
                 </span>
 
@@ -35,7 +35,7 @@ export default function AllPosts() {
                   aria-hidden="true"
                   viewBox="0 0 20 20"
                   fill="currentColor"
-                  className="h-5 w-5 shrink-0 text-slate-400 transition group-hover:translate-x-1 group-hover:text-indigo-600"
+                  className="size-5 shrink-0 text-slate-400 transition group-hover:translate-x-1 group-hover:text-indigo-600"
                 >
                   <path
                     fillRule="evenodd"
@@ -48,7 +48,7 @@ export default function AllPosts() {
           ))}
         </ul>
       ) : (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 px-6 py-12 text-center">
+        <div className="px-6 py-16 text-center sm:px-7">
           <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600">
             <svg
               aria-hidden="true"

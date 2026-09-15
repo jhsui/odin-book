@@ -32,33 +32,42 @@ function App() {
       />
 
       <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-5 py-6 sm:px-8 lg:px-10">
-        <header className="flex items-center justify-between">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5 sm:pb-6">
           <Link
             to="/"
-            className="flex items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+            className="flex shrink-0 items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
           >
-            <span className="flex size-11 items-center justify-center rounded-2xl bg-indigo-500 text-xl font-black shadow-lg shadow-indigo-500/25">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-500 text-xl font-black shadow-lg shadow-indigo-500/20">
               S
             </span>
             <span className="text-xl font-bold tracking-tight">Sway</span>
           </Link>
 
-          {isPending ? (
-            <span className="h-10 w-28 animate-pulse rounded-xl bg-white/10" />
-          ) : session ? (
-            <>
-              <Link
-                to="/dashboard"
-                className="rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm font-semibold transition hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+          <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2 sm:gap-3">
+            {isPending ? (
+              <span
+                role="status"
+                className="h-10 w-28 rounded-xl bg-white/10 motion-safe:animate-pulse"
               >
-                Open dashboard
-              </Link>
+                <span className="sr-only">Loading account…</span>
+              </span>
+            ) : session ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="rounded-xl border border-indigo-400/25 bg-indigo-400/10 px-4 py-2.5 text-sm font-semibold text-indigo-200 transition hover:border-indigo-400/50 hover:bg-indigo-400/20 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                >
+                  Open dashboard
+                </Link>
 
-              <SignOutButton />
-            </>
-          ) : (
-            <SignInDialog />
-          )}
+                <div className="[&>button]:cursor-pointer [&>button]:rounded-xl [&>button]:px-3 [&>button]:py-2.5 [&>button]:text-sm [&>button]:font-medium [&>button]:text-slate-400 [&>button]:transition [&>button:focus-visible]:ring-2 [&>button:focus-visible]:ring-indigo-400 [&>button:focus-visible]:outline-none [&>button:hover]:bg-white/5 [&>button:hover]:text-white">
+                  <SignOutButton />
+                </div>
+              </>
+            ) : (
+              <SignInDialog />
+            )}
+          </div>
         </header>
 
         <div className="grid flex-1 items-center gap-16 py-16 lg:grid-cols-[1fr_0.9fr] lg:py-20">
