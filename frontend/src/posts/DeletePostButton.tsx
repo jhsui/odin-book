@@ -56,7 +56,13 @@ export function DeletePostButton({
       await onDeleted?.();
 
       if (ifRedirect) {
-        navigate(-1);
+        const historyIndex = window.history.state?.idx ?? 0;
+
+        if (historyIndex > 0) {
+          navigate(-1);
+        } else {
+          navigate("/dashboard", { replace: true });
+        }
       }
     } catch (error) {
       setError(error instanceof Error ? error.message : "Something went wrong");
