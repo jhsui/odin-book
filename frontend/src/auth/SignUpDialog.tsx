@@ -105,15 +105,16 @@ export default function SignUpDialog() {
       <dialog
         ref={dialogRef}
         aria-labelledby="signup-title"
+        aria-describedby="signup-description"
         onClick={handleBackdropClick}
-        className="m-auto w-[calc(100%-2rem)] max-w-md rounded-3xl border border-slate-200 bg-white p-0 text-slate-900 shadow-2xl backdrop:bg-slate-950/80 backdrop:backdrop-blur-sm"
+        className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-3xl border border-slate-200 bg-white p-0 text-slate-900 shadow-2xl shadow-black/35 backdrop:bg-slate-950/75 backdrop:backdrop-blur-sm"
       >
-        <div className="relative max-h-[calc(100vh-2rem)] overflow-y-auto p-6 sm:p-8">
+        <div className="relative">
           <button
             type="button"
             onClick={closeDialog}
             aria-label="Close sign up dialog"
-            className="absolute top-5 right-5 flex size-9 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
+            className="absolute top-4 right-4 flex size-9 cursor-pointer items-center justify-center rounded-full border border-slate-200/80 bg-white/80 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none sm:top-5 sm:right-5"
           >
             <svg
               aria-hidden="true"
@@ -125,132 +126,160 @@ export default function SignUpDialog() {
             </svg>
           </button>
 
-          <div className="mb-7">
-            <span className="flex size-11 items-center justify-center rounded-2xl bg-indigo-50 font-black text-indigo-600 ring-1 ring-indigo-100">
+          <div className="border-b border-slate-100 bg-linear-to-br from-indigo-50 via-white to-white p-5 sm:p-7">
+            <span
+              aria-hidden="true"
+              className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-lg font-black text-white shadow-lg shadow-indigo-600/20"
+            >
               S
             </span>
             <h2
               id="signup-title"
-              className="mt-5 text-2xl font-bold tracking-tight text-slate-950"
+              className="mt-4 text-2xl font-bold tracking-tight text-slate-950"
             >
               Join the conversation
             </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+            <p
+              id="signup-description"
+              className="mt-2 text-sm leading-6 text-slate-500"
+            >
               Create your account and start sharing ideas.
             </p>
           </div>
 
-          <form className="grid gap-4" onSubmit={handleSubmit}>
-            <div>
-              <label
-                className="mb-2 block text-sm font-semibold text-slate-700"
-                htmlFor="signup-email"
-              >
-                Email address
-              </label>
-              <input
-                className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
-                type="email"
-                id="signup-email"
-                name="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                required
-                disabled={isSubmitting}
-                aria-invalid={Boolean(formError) || undefined}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label
-                className="mb-2 block text-sm font-semibold text-slate-700"
-                htmlFor="signup-username"
-              >
-                Display name
-              </label>
-              <input
-                className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
-                type="text"
-                id="signup-username"
-                name="username"
-                autoComplete="name"
-                placeholder="How people will know you"
-                required
-                disabled={isSubmitting}
-                aria-invalid={Boolean(formError) || undefined}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label
-                  className="mb-2 block text-sm font-semibold text-slate-700"
-                  htmlFor="signup-password"
-                >
-                  Password
-                </label>
-                <input
-                  className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
-                  type="password"
-                  id="signup-password"
-                  name="password"
-                  autoComplete="new-password"
-                  placeholder="Create password"
-                  required
-                  disabled={isSubmitting}
-                  aria-invalid={Boolean(formError) || undefined}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div>
-                <label
-                  className="mb-2 block text-sm font-semibold text-slate-700"
-                  htmlFor="signup-confirm-password"
-                >
-                  Confirm
-                </label>
-                <input
-                  className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
-                  type="password"
-                  id="signup-confirm-password"
-                  name="confirmPassword"
-                  autoComplete="new-password"
-                  placeholder="Repeat password"
-                  required
-                  disabled={isSubmitting}
-                  aria-invalid={Boolean(formError) || undefined}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            {formError && (
-              <p
-                role="alert"
-                className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
-              >
-                {formError}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          <div className="p-5 sm:p-7">
+            <form
+              className="grid gap-4"
+              onSubmit={handleSubmit}
+              aria-busy={isSubmitting}
             >
-              {isSubmitting && (
-                <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              )}
-              {isSubmitting ? "Creating account..." : "Create account"}
-            </button>
-          </form>
+              <div>
+                <label
+                  className="mb-2 block text-sm font-semibold text-slate-700"
+                  htmlFor="signup-email"
+                >
+                  Email address
+                </label>
+                <input
+                  className="min-h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-base text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10 sm:text-sm"
+                  type="email"
+                  id="signup-email"
+                  name="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  required
+                  disabled={isSubmitting}
+                  aria-invalid={Boolean(formError) || undefined}
+                  onChange={handleChange}
+                />
+              </div>
 
-          <GuestSignIn />
-          <GoogleSignInButton />
-          <GithubSignInButton />
+              <div>
+                <label
+                  className="mb-2 block text-sm font-semibold text-slate-700"
+                  htmlFor="signup-username"
+                >
+                  Display name
+                </label>
+                <input
+                  className="min-h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-base text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10 sm:text-sm"
+                  type="text"
+                  id="signup-username"
+                  name="username"
+                  autoComplete="name"
+                  placeholder="How people will know you"
+                  required
+                  disabled={isSubmitting}
+                  aria-invalid={Boolean(formError) || undefined}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="min-w-0">
+                  <label
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    htmlFor="signup-password"
+                  >
+                    Password
+                  </label>
+                  <input
+                    className="min-h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-base text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10 sm:text-sm"
+                    type="password"
+                    id="signup-password"
+                    name="password"
+                    autoComplete="new-password"
+                    placeholder="Create password"
+                    required
+                    disabled={isSubmitting}
+                    aria-invalid={Boolean(formError) || undefined}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className="min-w-0">
+                  <label
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    htmlFor="signup-confirm-password"
+                  >
+                    Confirm
+                  </label>
+                  <input
+                    className="min-h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-base text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10 sm:text-sm"
+                    type="password"
+                    id="signup-confirm-password"
+                    name="confirmPassword"
+                    autoComplete="new-password"
+                    placeholder="Repeat password"
+                    required
+                    disabled={isSubmitting}
+                    aria-invalid={Boolean(formError) || undefined}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              {formError && (
+                <p
+                  role="alert"
+                  className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm leading-6 font-medium wrap-anywhere text-rose-700"
+                >
+                  {formError}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="mt-1 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/15 transition focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none enabled:cursor-pointer enabled:hover:bg-indigo-500 enabled:active:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSubmitting && (
+                  <span
+                    aria-hidden="true"
+                    className="size-4 rounded-full border-2 border-white/30 border-t-white motion-safe:animate-spin"
+                  />
+                )}
+                {isSubmitting ? "Creating account..." : "Create account"}
+              </button>
+            </form>
+
+            <div className="mt-6">
+              <div className="flex items-center gap-3">
+                <span aria-hidden="true" className="h-px flex-1 bg-slate-200" />
+                <p className="text-xs font-medium text-slate-500">
+                  Or continue with
+                </p>
+                <span aria-hidden="true" className="h-px flex-1 bg-slate-200" />
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <GoogleSignInButton disabled={isSubmitting} />
+                <GithubSignInButton disabled={isSubmitting} />
+              </div>
+              <div className="mt-3">
+                <GuestSignIn disabled={isSubmitting} />
+              </div>
+            </div>
+          </div>
         </div>
       </dialog>
     </>

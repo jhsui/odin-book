@@ -196,9 +196,6 @@ export default function UserProfilePage() {
                         >
                           {formatDateTime(post.createdAt)}
                         </time>
-                        <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-300">
-                          {post.content}
-                        </p>
                       </article>
                     ))
                   ) : (

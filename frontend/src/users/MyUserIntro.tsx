@@ -21,7 +21,7 @@ export default function MyUserIntro({ user }: { user: User }) {
     );
 
     if (!res.ok) {
-      throw new Error("Failed to update intro");
+      throw new Error("Failed to update intro.");
     }
 
     const updated = await res.json();

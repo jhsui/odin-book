@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UserListItem } from "./types.ts";
+import { useEffect, useRef } from "react";
 
 const buttonClasses =
   "inline-flex min-w-24 items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-sm transition active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100";
@@ -14,6 +15,7 @@ export default function FollowButton({
   onFollowChange?: (isFollowing: boolean) => void | Promise<void>;
 }) {
   const queryClient = useQueryClient();
+  const errorNoticeRef = useRef<HTMLParagraphElement>(null);
 
   const mutation = useMutation({
     mutationFn: async (shouldFollow: boolean) => {
@@ -30,7 +32,7 @@ export default function FollowButton({
           message?: string;
         } | null;
 
-        throw new Error(body?.message ?? "Failed to update follow status");
+        throw new Error(body?.message ?? "Failed to update follow status.");
       }
 
       return shouldFollow;
@@ -51,8 +53,27 @@ export default function FollowButton({
     },
   });
 
+  // Remove the error message after 3s.
+  const { isError, reset } = mutation;
+  useEffect(() => {
+    if (!isError) return;
+
+    const notice = errorNoticeRef.current;
+    if (notice && !notice.matches(":popover-open")) {
+      notice.showPopover();
+    }
+
+    const timerId = setTimeout(() => {
+      reset();
+    }, 3000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [isError, reset]);
+
   return (
-    <div className="flex flex-col items-end gap-1.5">
+    <div className="inline-flex shrink-0">
       <button
         type="button"
         aria-pressed={isFollowing}
@@ -71,8 +92,10 @@ export default function FollowButton({
 
       {mutation.isError && (
         <p
+          ref={errorNoticeRef}
+          popover="manual"
           role="alert"
-          className="max-w-52 text-right text-xs font-medium text-red-600"
+          className="fixed inset-x-4 top-auto bottom-4 mx-auto my-0 max-h-[calc(100dvh-2rem)] w-auto max-w-sm overflow-y-auto rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm leading-6 font-medium wrap-anywhere text-rose-700 shadow-lg shadow-black/15"
         >
           {mutation.error.message}
         </p>

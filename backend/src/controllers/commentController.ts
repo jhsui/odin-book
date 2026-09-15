@@ -7,7 +7,9 @@ import { getAvatarUrl } from "./userController.ts";
 
 const postComment = [
   ...commentValidator,
-  requireNotAnonymous,
+
+  requireAuth,
+
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
