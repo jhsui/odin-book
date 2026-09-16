@@ -35,7 +35,7 @@ export function DeletePostButton({
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/delete/${postId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/posts/${postId}`,
         {
           method: "DELETE",
           credentials: "include",

@@ -9,13 +9,13 @@ router.get("/posts", postController.getAllPosts);
 router.post("/posts", postController.createPost);
 router.get("/posts/index", postController.getPostIndex);
 router.get("/posts/:postId", postController.getPostById);
-router.delete("/posts/delete/:postId", postController.deletePost);
+router.delete("/posts/:postId", postController.deletePost);
 router.get("/posts/:postId/likes/me", postController.getLikeStatus);
 router.post("/posts/:postId/likes/me", postController.togglePostLike);
 
 router.get("/posts/:postId/comments", commentController.getComments);
 router.post("/posts/:postId/comments", commentController.postComment);
-router.delete("/comments/delete/:commentId", commentController.deleteComment);
+router.delete("/comments/:commentId", commentController.deleteComment);
 
 router.get("/users/index", userController.getAllUsers);
 router.put("/users/me/avatar", userController.uploadNewAvatar);

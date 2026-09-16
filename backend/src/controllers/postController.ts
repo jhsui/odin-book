@@ -221,8 +221,14 @@ const deletePost = [
       where: { id: postId },
     });
 
-    if (!post || post.authorId !== userId) {
-      throw Error("User does have the authority to delete this post.");
+    if (!post) {
+      return res.status(404).json({ message: "Post not found." });
+    }
+
+    if (post.authorId !== userId) {
+      return res.status(403).json({
+        message: "You do not have permission to delete this post.",
+      });
     }
 
     await prisma.post.delete({ where: { id: postId } });

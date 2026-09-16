@@ -29,7 +29,7 @@ export default function DeleteCommentButton({
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/comments/delete/${commentId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/comments/${commentId}`,
         {
           method: "DELETE",
           credentials: "include",

@@ -92,8 +92,14 @@ const deleteComment = [
       where: { id: commentId },
     });
 
-    if (!comment || comment.authorId !== userId) {
-      throw Error("User does have the authority to delete this comment");
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found." });
+    }
+
+    if (comment.authorId !== userId) {
+      return res.status(403).json({
+        message: "You do not have permission to delete this comment.",
+      });
     }
 
     await prisma.comment.delete({ where: { id: commentId } });
