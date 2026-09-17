@@ -1,0 +1,23 @@
+{
+	admin off
+	persist_config off
+	auto_https off
+}
+
+:{$PORT:8080} {
+	encode gzip zstd
+
+	@api path /api/auth /api/auth/* /posts /posts/* /comments /comments/* /users /users/*
+
+	handle @api {
+		reverse_proxy https://sway-backend-production-1828.up.railway.app {
+			header_up Host sway-backend-production-1828.up.railway.app
+		}
+	}
+
+	handle {
+		root * /app/dist
+		try_files {path} /index.html
+		file_server
+	}
+}
