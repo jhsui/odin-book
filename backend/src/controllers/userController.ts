@@ -12,6 +12,7 @@ import {
   userNewNameValidator,
 } from "../middleware/validators.ts";
 import { matchedData, validationResult } from "express-validator";
+import { getImageUrl } from "./utils.ts";
 
 const followUser = [
   requireNotAnonymous,
@@ -118,7 +119,7 @@ const getAllUsers = [
     const result = await Promise.all(
       users.map(async ({ followers, ...user }) => ({
         ...user,
-        image: await getAvatarUrl(user.image),
+        image: await getImageUrl(user.image, "user-avatars"),
         isFollowing: (followers?.length ?? 0) > 0,
       })),
     );
@@ -154,23 +155,6 @@ const getFollowStatus = [
     return res.json({ isFollowing });
   },
 ];
-
-export async function getAvatarUrl(
-  path: string | null,
-): Promise<string | null> {
-  if (!path || /^https?:\/\//i.test(path)) return path || null;
-
-  const { data, error } = await supabase.storage
-    .from("user-avatars")
-    .createSignedUrl(path, 3600);
-
-  if (error) {
-    console.error("Failed to sign avatar URL:", error.message);
-    return null;
-  }
-
-  return data.signedUrl;
-}
 
 const getUserProfile = [
   async (req: Request, res: Response) => {
@@ -246,7 +230,7 @@ const getUserProfile = [
         const path = user.image;
 
         if (!avatarUrls.has(path)) {
-          avatarUrls.set(path, getAvatarUrl(path));
+          avatarUrls.set(path, getImageUrl(path, "user-avatars"));
         }
 
         user.image = await avatarUrls.get(path)!;
@@ -256,7 +240,7 @@ const getUserProfile = [
     return res.json({
       user: {
         ...user,
-        image: await getAvatarUrl(user.image),
+        image: await getImageUrl(user.image, "user-avatars"),
       },
     });
   },

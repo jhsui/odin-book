@@ -17,10 +17,19 @@ type Post = {
     name: string;
     image: string | null;
   };
+  images: {
+    id: string;
+    path: string;
+    position: number;
+  }[];
 };
 
 export default function PostDetailPage() {
   const { post } = useLoaderData() as { post: Post };
+
+  // todo: delete
+  console.log(post);
+
   const createdAt = formatDateTime(post.createdAt);
   const authorInitial = post.author.name.trim().charAt(0).toUpperCase() || "?";
 
@@ -100,6 +109,16 @@ export default function PostDetailPage() {
             </header>
 
             <div className="px-5 py-8 sm:px-10 sm:py-10">
+              <ul>
+                {post.images.map((img) => (
+                  <li key={img.position}>
+                    <img
+                      src={img.path}
+                      alt={`Post image ${img.position + 1}`}
+                    />
+                  </li>
+                ))}
+              </ul>
               <p className="text-base leading-8 wrap-anywhere whitespace-pre-wrap text-slate-700 sm:text-lg sm:leading-9">
                 {post.content}
               </p>

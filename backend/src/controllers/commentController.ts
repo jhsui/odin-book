@@ -2,8 +2,8 @@ import { commentValidator } from "../middleware/validators.ts";
 import { matchedData, validationResult } from "express-validator";
 import { type Request, type Response } from "express";
 import { prisma } from "../lib/prisma.ts";
-import requireAuth, { requireNotAnonymous } from "../middleware/requireAuth.ts";
-import { getAvatarUrl } from "./userController.ts";
+import requireAuth from "../middleware/requireAuth.ts";
+import { getImageUrl } from "./utils.ts";
 
 const postComment = [
   ...commentValidator,
@@ -71,7 +71,10 @@ const getComments = [
 
     await Promise.all(
       comments.map(async (comment) => {
-        comment.author.image = await getAvatarUrl(comment.author.image);
+        comment.author.image = await getImageUrl(
+          comment.author.image,
+          "user-avatars",
+        );
       }),
     );
 

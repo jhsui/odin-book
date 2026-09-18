@@ -5,11 +5,11 @@ import { prisma } from "../lib/prisma.ts";
 import requireAuth, { requireNotAnonymous } from "../middleware/requireAuth.ts";
 import { auth } from "../lib/auth.ts";
 import { fromNodeHeaders } from "better-auth/node";
-import { getAvatarUrl } from "./userController.ts";
 import multer from "multer";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import supabase from "../lib/supabase.ts";
+import { getImageUrl } from "./utils.ts";
 
 const uploadPostImages = multer({
   storage: multer.memoryStorage(),
@@ -30,7 +30,7 @@ const createPost = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
-        message: "Post content validation failed",
+        message: "Post content validation failed.",
         errors: errors.array(),
       });
     }
@@ -48,25 +48,25 @@ const createPost = [
       },
     });
 
-    const images = req.files;
+    const images = Array.isArray(req.files) ? req.files : [];
+    let savedCount = 0;
 
-    if (Array.isArray(images) && images.length > 0) {
-      for (const [position, img] of images.entries()) {
-        const ext = path.extname(img.originalname);
-        const uniqueName = `${randomUUID()}${ext}`;
+    for (const [position, img] of images.entries()) {
+      const ext = path.extname(img.originalname);
+      const uniqueName = `${randomUUID()}${ext}`;
 
+      let uploadedToStorage = false;
+
+      try {
         const { error } = await supabase.storage
           .from("post-images")
           .upload(uniqueName, img.buffer, {
             contentType: img.mimetype,
           });
 
-        if (error) {
-          console.error(error);
-          continue;
-          // todo: allow other imgs to upload
-          // return res.status(500).json({ message: "Failed to upload image." });
-        }
+        if (error) throw error;
+
+        uploadedToStorage = true;
 
         await prisma.post.update({
           where: {
@@ -81,11 +81,39 @@ const createPost = [
             },
           },
         });
+
+        savedCount++;
+      } catch (error) {
+        console.error("Failed to save post image:", error);
+
+        if (uploadedToStorage) {
+          try {
+            const { error: cleanupError } = await supabase.storage
+              .from("post-images")
+              .remove([uniqueName]);
+
+            if (cleanupError) throw cleanupError;
+          } catch (cleanupError) {
+            console.error(
+              "Failed to clean up uploaded image:",
+              uniqueName,
+              cleanupError,
+            );
+          }
+        }
       }
     }
 
+    const failedCount = images.length - savedCount;
+
     return res.status(201).json({
-      message: "Post submitted successfully",
+      postId: post.id,
+      savedCount,
+      failedCount,
+      message:
+        failedCount > 0
+          ? `Post created; ${savedCount} of ${images.length} images saved.`
+          : "Post submitted successfully.",
     });
   },
 ];
@@ -107,7 +135,7 @@ const getPostById = [
     const { postId } = req.params;
 
     if (typeof postId !== "string" || postId.length === 0) {
-      return res.status(400).json({ error: "Invalid post ID" });
+      return res.status(400).json({ error: "Invalid post ID." });
     }
 
     const post = await prisma.post.findUnique({
@@ -120,22 +148,40 @@ const getPostById = [
             image: true,
           },
         },
+        images: {
+          select: {
+            id: true,
+            path: true,
+            position: true,
+          },
+          orderBy: { position: "asc" },
+        },
       },
     });
 
     if (!post) {
       return res.status(404).json({
-        error: "Post not found",
+        error: "Post not found.",
       });
     }
 
-    post.author.image = await getAvatarUrl(post.author.image);
+    post.author.image = await getImageUrl(post.author.image, "user-avatars");
+
+    if (post.images && post.images.length > 0) {
+      for (const imgObj of post.images) {
+        // todo: is it the way to get it?
+        const tempPath = await getImageUrl(imgObj.path, "post-images");
+        if (tempPath) {
+          imgObj.path = tempPath;
+        }
+      }
+    }
 
     return res.json({ post });
   },
 ];
 
-// Anon guest can like posts.
+// Anonymous guest can like posts.
 const getLikeStatus = [
   async (req: Request, res: Response) => {
     const { postId } = req.params;
@@ -186,7 +232,7 @@ const togglePostLike = [
 
     if (typeof postId !== "string" || postId.length === 0) {
       return res.status(400).json({
-        message: "postId must be a non-empty string",
+        message: "postId must be a non-empty string.",
       });
     }
 
@@ -216,7 +262,7 @@ const togglePostLike = [
       });
 
       return res.json({
-        message: "Like cancelled",
+        message: "Like cancelled.",
         currentLike: false,
         likeCount,
       });
@@ -270,6 +316,15 @@ const deletePost = [
 
     const post = await prisma.post.findUnique({
       where: { id: postId },
+      include: {
+        images: {
+          select: {
+            id: true,
+            path: true,
+          },
+          orderBy: { position: "asc" },
+        },
+      },
     });
 
     if (!post) {
@@ -280,6 +335,20 @@ const deletePost = [
       return res.status(403).json({
         message: "You do not have permission to delete this post.",
       });
+    }
+
+    const images = Array.isArray(post.images) ? post.images : [];
+
+    for (const { path } of images) {
+      try {
+        const { error: cleanupError } = await supabase.storage
+          .from("post-images")
+          .remove([path]);
+
+        if (cleanupError) throw cleanupError;
+      } catch (cleanupError) {
+        console.error("Failed to clean up uploaded image:", path, cleanupError);
+      }
     }
 
     await prisma.post.delete({ where: { id: postId } });
