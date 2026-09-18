@@ -96,6 +96,8 @@ model Post {
   likes    PostLike[]
   comments Comment[]
 
+  images PostImage[]
+
   @@index([authorId, createdAt])
   @@map("post")
 }
@@ -112,6 +114,18 @@ model PostLike {
   @@id([userId, postId])
   @@index([postId])
   @@map("post_like")
+}
+
+model PostImage {
+  id       String @id @default(cuid())
+  path     String @unique
+  position Int
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@map("post_image")
 }
 
 model Comment {

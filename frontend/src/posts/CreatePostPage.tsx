@@ -3,16 +3,26 @@ import { Link } from "react-router";
 import { authClient } from "../lib/auth-client.ts";
 import SwayHeader from "../layout/SwayHeader.tsx";
 
+const MAX_POST_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MiB
+
 type Feedback = {
   type: "success" | "error";
   message: string;
 } | null;
 
+type PostFormData = {
+  title: string;
+  content: string;
+  images: File[];
+};
+
 export default function CreatePostPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PostFormData>({
     title: "",
     content: "",
+    images: [],
   });
+
   const [feedback, setFeedback] = useState<Feedback>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -55,13 +65,18 @@ export default function CreatePostPage() {
     setIsSubmitting(true);
 
     try {
+      const body = new FormData();
+
+      body.append("title", formData.title);
+      body.append("content", formData.content);
+      for (const image of formData.images) {
+        body.append("images", image);
+      }
+
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        body,
       });
 
       const data = (await res.json()) as { message?: string };
@@ -70,7 +85,12 @@ export default function CreatePostPage() {
         throw new Error(data.message ?? `Request failed: ${res.status}`);
       }
 
-      setFormData({ title: "", content: "" });
+      setFormData({
+        title: "",
+        content: "",
+        images: [],
+      });
+
       setFeedback({
         type: "success",
         message: data.message ?? "Your post has been published.",
@@ -167,6 +187,7 @@ export default function CreatePostPage() {
                     {formData.content.length.toLocaleString()} characters
                   </span>
                 </div>
+
                 <textarea
                   name="content"
                   id="content"
@@ -178,6 +199,58 @@ export default function CreatePostPage() {
                   aria-invalid={feedback?.type === "error" || undefined}
                   className="resize-y rounded-xl border border-slate-300 bg-slate-50 px-4 py-3.5 leading-7 text-slate-950 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60"
                   onChange={handleChange}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="post-images">Upload image(s)</label>
+                <input
+                  id="post-images"
+
+                  type="file"
+
+                  accept="image/jpeg,image/png,image/webp"
+
+                  multiple
+
+                  disabled={inputsDisabled}
+
+                  onChange={(event) => {
+                    const input = event.currentTarget;
+                    const images = Array.from(input.files ?? []);
+
+                    const hasOverSizedImage = images.some(
+                      (image) => image.size > MAX_POST_IMAGE_SIZE,
+                    );
+
+                    if (hasOverSizedImage) {
+                      input.value = "";
+
+                      setFeedback({
+                        type: "error",
+                        message: "Each image can not be larger than 5 MiB.",
+                      });
+                      return;
+                    }
+
+                    if (formData.images.length + images.length > 4) {
+                      input.value = "";
+
+                      setFeedback({
+                        type: "error",
+                        message: "You can only upload 4 images at maximum.",
+                      });
+                      return;
+                    }
+
+                    setFeedback(null);
+                    setFormData((prev) => ({
+                      ...prev,
+                      images: [...prev.images, ...images],
+                    }));
+                    // todo: ?
+                    input.value = "";
+                  }}
                 />
               </div>
 

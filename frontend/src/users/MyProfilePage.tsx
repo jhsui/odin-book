@@ -50,9 +50,9 @@ export default function MyProfilePage() {
     if (!file) return;
     setAvatarError("");
 
-    // Package for multer.
-    const formData = new FormData();
-    formData.append("avatar", file);
+    // Package avatar for multer.
+    const avatarData = new FormData();
+    avatarData.append("avatar", file);
 
     try {
       const res = await fetch(
@@ -60,7 +60,7 @@ export default function MyProfilePage() {
         {
           method: "PUT",
           credentials: "include",
-          body: formData,
+          body: avatarData,
         },
       );
 
@@ -393,9 +393,9 @@ export default function MyProfilePage() {
                 </label>
                 <input
                   type="file"
-                  accept="image/*"
-                  name="uploaded-avatar"
+                  accept="image/jpeg,image/png,image/webp"
                   id="uploaded-avatar"
+                  name="uploaded-avatar"
                   aria-describedby={
                     avatarError
                       ? "avatar-size-hint avatar-error"

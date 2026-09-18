@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["autoincrement", "revalidator", "supabase", "VITE"]
+  "cSpell.words": [
+    "autoincrement",
+    "cuid",
+    "revalidator",
+    "supabase",
+    "uidx",
+    "VITE"
+  ]
 }

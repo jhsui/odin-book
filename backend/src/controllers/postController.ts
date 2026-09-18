@@ -6,16 +6,31 @@ import requireAuth, { requireNotAnonymous } from "../middleware/requireAuth.ts";
 import { auth } from "../lib/auth.ts";
 import { fromNodeHeaders } from "better-auth/node";
 import { getAvatarUrl } from "./userController.ts";
+import multer from "multer";
+import path from "node:path";
+import { randomUUID } from "node:crypto";
+import supabase from "../lib/supabase.ts";
+
+const uploadPostImages = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    files: 4, // Maximum 4 images.
+    fileSize: 5 * 1024 * 1024, // 5 MiB per image.
+  },
+});
 
 const createPost = [
-  ...writingPostValidator,
   requireNotAnonymous,
+
+  uploadPostImages.array("images", 4),
+
+  ...writingPostValidator,
+
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         message: "Post content validation failed",
-        // todo: add error page
         errors: errors.array(),
       });
     }
@@ -32,6 +47,42 @@ const createPost = [
         },
       },
     });
+
+    const images = req.files;
+
+    if (Array.isArray(images) && images.length > 0) {
+      for (const [position, img] of images.entries()) {
+        const ext = path.extname(img.originalname);
+        const uniqueName = `${randomUUID()}${ext}`;
+
+        const { error } = await supabase.storage
+          .from("post-images")
+          .upload(uniqueName, img.buffer, {
+            contentType: img.mimetype,
+          });
+
+        if (error) {
+          console.error(error);
+          continue;
+          // todo: allow other imgs to upload
+          // return res.status(500).json({ message: "Failed to upload image." });
+        }
+
+        await prisma.post.update({
+          where: {
+            id: post.id,
+          },
+          data: {
+            images: {
+              create: {
+                path: uniqueName,
+                position,
+              },
+            },
+          },
+        });
+      }
+    }
 
     return res.status(201).json({
       message: "Post submitted successfully",
@@ -84,7 +135,7 @@ const getPostById = [
   },
 ];
 
-// anon guest can like posts
+// Anon guest can like posts.
 const getLikeStatus = [
   async (req: Request, res: Response) => {
     const { postId } = req.params;
