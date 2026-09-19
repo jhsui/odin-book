@@ -18,11 +18,33 @@ export function PostImageGallery({ images }: { images: Post["images"] }) {
       aria-label="Post images"
       className="relative mb-8 overflow-hidden rounded-2xl bg-slate-950 sm:mb-10"
     >
-      <img
-        src={image.path}
-        alt={`Post image ${index + 1}`}
-        className="h-80 w-full object-contain sm:h-128"
-      />
+      <div
+        className="flex w-full transition-transform duration-300 ease-out motion-reduce:transition-none"
+        style={{ transform: `translateX(${-index * 100}%)` }}
+      >
+        {images.map((item, slideIndex) => (
+          <div
+            key={item.id}
+            aria-hidden={slideIndex !== index}
+            className="relative w-full min-w-0 flex-none overflow-hidden"
+          >
+            {/* Decorative background */}
+            <img
+              src={item.path}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 size-full scale-110 object-cover opacity-100 blur-xl"
+            />
+
+            {/* Main image */}
+            <img
+              src={item.path}
+              alt={`Post image ${slideIndex + 1}`}
+              className="relative h-80 w-full object-contain sm:h-128"
+            />
+          </div>
+        ))}
+      </div>
 
       {images.length > 1 && (
         <>
