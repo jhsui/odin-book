@@ -125,7 +125,7 @@ export default function CreatePostPage() {
         <div className="mb-8">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 rounded-lg text-sm font-medium text-slate-400 transition hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+            className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-sm font-medium text-slate-300 transition hover:border-indigo-400/30 hover:bg-indigo-400/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
           >
             <span aria-hidden="true">←</span>
             Back to feed
@@ -140,7 +140,7 @@ export default function CreatePostPage() {
         </div>
 
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_17rem]">
-          <section className="rounded-3xl border border-white/10 bg-white p-5 text-slate-900 shadow-2xl shadow-black/20 sm:p-8">
+          <section className="min-w-0 rounded-3xl border border-white/10 bg-white p-5 text-slate-900 shadow-2xl shadow-black/20 sm:p-8">
             {!isSessionPending && !session && (
               <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 sm:flex-row sm:items-center sm:justify-between">
                 <p>Sign in to publish your writing.</p>
@@ -202,19 +202,36 @@ export default function CreatePostPage() {
                 />
               </div>
 
-              <div>
-                <label htmlFor="post-images">Upload image(s)</label>
+              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4 sm:p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <label
+                    htmlFor="post-images"
+                    className="text-sm font-semibold text-slate-800"
+                  >
+                    Post images
+                    <span className="ml-2 text-xs font-normal text-slate-500">
+                      Optional
+                    </span>
+                  </label>
+                  <span className="rounded-full bg-white px-2.5 py-1 text-xs font-medium text-indigo-700 ring-1 ring-indigo-100">
+                    {formData.images.length} / 4 selected
+                  </span>
+                </div>
+                <p
+                  id="post-images-help"
+                  className="mt-2 text-xs leading-5 text-slate-500"
+                >
+                  You can add up to 4 images. JPEG, PNG or WebP, up to 5 MiB
+                  each.
+                </p>
                 <input
                   id="post-images"
-
                   type="file"
-
                   accept="image/jpeg,image/png,image/webp"
-
                   multiple
-
                   disabled={inputsDisabled}
-
+                  aria-describedby="post-images-help"
+                  className="mt-4 block w-full min-w-0 cursor-pointer rounded-xl border border-indigo-100 bg-white p-2 text-sm text-slate-500 shadow-sm transition file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-indigo-600 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-white file:transition hover:border-indigo-300 hover:file:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 disabled:file:cursor-not-allowed"
                   onChange={(event) => {
                     const input = event.currentTarget;
                     const images = Array.from(input.files ?? []);
@@ -255,37 +272,56 @@ export default function CreatePostPage() {
                     console.log(formData);
                   }}
                 />
+                {formData.images.length > 0 && (
+                  <ul aria-label="Selected images" className="mt-4 space-y-2">
+                    {formData.images.map((img, index) => (
+                      <li
+                        key={img.name}
+                        className="flex min-w-0 flex-wrap items-center gap-3 rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-xs font-semibold text-indigo-600 ring-1 ring-indigo-100 ring-inset"
+                        >
+                          {index + 1}
+                        </span>
+                        <div className="min-w-0 flex-1 basis-24">
+                          <p className="text-sm leading-5 font-medium wrap-anywhere text-slate-800">
+                            {img.name}
+                          </p>
+                          <p className="mt-0.5 text-xs text-slate-500">
+                            {(img.size / (1024 * 1024)).toFixed(2)} MiB
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          disabled={inputsDisabled}
+                          aria-label={`Remove ${img.name}`}
+                          className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg border border-rose-200 bg-rose-50 px-3 text-xs font-semibold text-rose-700 transition hover:border-rose-300 hover:bg-rose-100 focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                          onClick={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              images: prev.images.filter((i) => i !== img),
+                            }))
+                          }
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
-              <ul>
-                {formData.images.map((img) => (
-                  <li key={img.name}>
-                    <p>{img.name}</p>
-                    <button
-                      type="button"
-                      disabled={inputsDisabled}
-                      onClick={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          images: prev.images.filter((i) => i !== img),
-                        }))
-                      }
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-
               <div className="flex flex-col-reverse gap-4 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
-                <div className="min-h-6" aria-live="polite">
+                <div className="min-h-6 min-w-0 flex-1" aria-live="polite">
                   {feedback && (
                     <p
                       role={feedback.type === "error" ? "alert" : "status"}
-                      className={`text-sm font-medium ${
+                      className={`rounded-xl border px-3.5 py-3 text-sm leading-6 font-medium wrap-anywhere ${
                         feedback.type === "success"
-                          ? "text-emerald-600"
-                          : "text-red-600"
+                          ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                          : "border-rose-200 bg-rose-50 text-rose-800"
                       }`}
                     >
                       {feedback.message}
