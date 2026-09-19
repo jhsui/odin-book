@@ -250,9 +250,32 @@ export default function CreatePostPage() {
                     }));
                     // todo: ?
                     input.value = "";
+
+                    // todo: delete
+                    console.log(formData);
                   }}
                 />
               </div>
+
+              <ul>
+                {formData.images.map((img) => (
+                  <li key={img.name}>
+                    <p>{img.name}</p>
+                    <button
+                      type="button"
+                      disabled={inputsDisabled}
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          images: prev.images.filter((i) => i !== img),
+                        }))
+                      }
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
 
               <div className="flex flex-col-reverse gap-4 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-h-6" aria-live="polite">
