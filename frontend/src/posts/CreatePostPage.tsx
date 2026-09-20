@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { authClient } from "../lib/auth-client.ts";
 import SwayHeader from "../layout/SwayHeader.tsx";
 
@@ -31,6 +31,8 @@ export default function CreatePostPage() {
     error: sessionError,
     isPending: isSessionPending,
   } = authClient.useSession();
+
+  const navigate = useNavigate();
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -79,7 +81,10 @@ export default function CreatePostPage() {
         body,
       });
 
-      const data = (await res.json()) as { message?: string };
+      const data = (await res.json()) as {
+        postId: string;
+        message: string;
+      };
 
       if (!res.ok) {
         throw new Error(data.message ?? `Request failed: ${res.status}`);
@@ -95,6 +100,8 @@ export default function CreatePostPage() {
         type: "success",
         message: data.message ?? "Your post has been published.",
       });
+
+      navigate(`/posts/${data.postId}`);
     } catch (error) {
       setFeedback({
         type: "error",

@@ -34,35 +34,6 @@ const routes: RouteObject[] = [
         },
       },
       {
-        path: "posts/:postId",
-        element: <PostDetailPage />,
-        loader: async ({ params }) => {
-          const { postId } = params;
-
-          if (!postId) {
-            throw new Response("Post ID is required", {
-              status: 400,
-            });
-          }
-
-          const res = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/posts/${encodeURIComponent(postId)}`,
-          );
-
-          if (res.status === 404) {
-            throw new Response("Post not found", { status: 404 });
-          }
-
-          if (!res.ok) {
-            throw new Response("Failed to load post", {
-              status: res.status,
-            });
-          }
-
-          return res.json();
-        },
-      },
-      {
         path: "writing",
         element: <CreatePostPage />,
       },
@@ -75,6 +46,35 @@ const routes: RouteObject[] = [
         element: <PostIndex />,
       },
     ],
+  },
+  {
+    path: "posts/:postId",
+    element: <PostDetailPage />,
+    loader: async ({ params }) => {
+      const { postId } = params;
+
+      if (!postId) {
+        throw new Response("Post ID is required", {
+          status: 400,
+        });
+      }
+
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/posts/${encodeURIComponent(postId)}`,
+      );
+
+      if (res.status === 404) {
+        throw new Response("Post not found", { status: 404 });
+      }
+
+      if (!res.ok) {
+        throw new Response("Failed to load post", {
+          status: res.status,
+        });
+      }
+
+      return res.json();
+    },
   },
   {
     path: "user-profile/:userId",

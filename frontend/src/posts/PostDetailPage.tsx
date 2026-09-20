@@ -28,9 +28,6 @@ export type Post = {
 export default function PostDetailPage() {
   const { post } = useLoaderData() as { post: Post };
 
-  // todo: delete
-  console.log(post);
-
   const createdAt = formatDateTime(post.createdAt);
   const authorInitial = post.author.name.trim().charAt(0).toUpperCase() || "?";
 
