@@ -2,6 +2,7 @@
 
 :root {
   font-family:
+    "Roboto Variable",
     Inter,
     ui-sans-serif,
     system-ui,
@@ -16,7 +17,7 @@
 }
 
 html {
-  /* background: #020617; */
+  background: #020617;
 }
 
 body {
