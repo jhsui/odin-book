@@ -124,7 +124,6 @@ export default function Comments({ postId }: { postId: string }) {
               {comment.author.name.trim().charAt(0).toUpperCase() || "?"}
               {comment.author.image && (
                 <img
-                  key={comment.author.image}
                   src={comment.author.image}
                   alt={`${comment.author.name}'s avatar`}
                   // Wait until the image is near the visible part of the page before loading it.
