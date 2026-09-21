@@ -10,7 +10,7 @@ const navigation = [
   { label: "Explore", to: "/dashboard/post-index" },
 ];
 
-export default function SwayHeader() {
+export default function SwayHeader({ compact = false }: { compact?: boolean }) {
   const { pathname } = useLocation();
   const isProfileActive = pathname === "/my-profile";
 
@@ -20,7 +20,9 @@ export default function SwayHeader() {
 
   return (
     <nav
-      className={`flex flex-wrap items-center gap-x-3 gap-y-4 border-b border-white/10 pb-5 sm:gap-x-4 sm:pb-6 ${
+      className={`flex flex-wrap items-center gap-x-3 gap-y-4 sm:gap-x-4 ${
+        compact ? "py-3" : "border-b border-white/10 pb-5 sm:pb-6"
+      } ${
         isAnonymous ? "lg:flex-nowrap lg:gap-x-6" : "md:flex-nowrap md:gap-x-6"
       }`}
       aria-label="Main navigation"

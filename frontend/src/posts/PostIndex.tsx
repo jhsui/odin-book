@@ -2,14 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import SwayHeader from "../layout/SwayHeader.tsx";
 import formatDateTime from "../utils/formatDateTime.ts";
+import type { Post } from "./types.ts";
 
-type PostListItem = {
-  id: string;
-  title: string;
-  createdAt: string;
-  author: {
-    name: string;
-  };
+type PostListItem = Pick<Post, "id" | "title" | "createdAt"> & {
+  author: Pick<Post["author"], "name">;
 };
 
 export default function PostIndex() {

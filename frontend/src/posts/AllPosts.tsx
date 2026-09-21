@@ -1,17 +1,8 @@
-import { Link, useLoaderData } from "react-router";
+import { Link } from "react-router";
+import type { Post } from "./types.ts";
 
-type Post = {
-  id: string;
-  title: string;
-};
-
-type PostsLoaderData = {
-  posts: Post[];
-};
-
-export default function AllPosts() {
+export default function AllPosts({ posts }: { posts: Post[] }) {
   // todo: pagination
-  const { posts } = useLoaderData() as PostsLoaderData;
 
   return (
     <div className="min-w-0">
@@ -24,7 +15,7 @@ export default function AllPosts() {
           {posts.map((post) => (
             <li key={post.id}>
               <Link
-                to={`posts/${post.id}`}
+                to={`/posts/${post.id}`}
                 className="group flex min-w-0 items-center justify-between gap-4 px-4 py-4 transition hover:bg-slate-50 focus-visible:bg-indigo-50 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none focus-visible:ring-inset sm:px-7 sm:py-5"
               >
                 <span className="min-w-0 flex-1 leading-6 font-medium wrap-anywhere text-slate-800 transition group-hover:text-indigo-600">

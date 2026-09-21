@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Post } from "./PostDetailPage";
+import type { Post } from "./types.ts";
 
 export function PostImageGallery({ images }: { images: Post["images"] }) {
   const [selectedIndex, setSelectedIndex] = useState(0);

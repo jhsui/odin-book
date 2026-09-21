@@ -5,25 +5,7 @@ import SwayHeader from "../layout/SwayHeader.tsx";
 import formatDateTime from "../utils/formatDateTime.ts";
 import { DeletePostButton } from "./DeletePostButton.tsx";
 import { PostImageGallery } from "./PostImageGallery.tsx";
-
-export type Post = {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  authorId: string;
-  author: {
-    id: string;
-    name: string;
-    image: string | null;
-  };
-  images: {
-    id: string;
-    path: string;
-    position: number;
-  }[];
-};
+import type { Post } from "./types.ts";
 
 export default function PostDetailPage() {
   const { post } = useLoaderData() as { post: Post };

@@ -121,11 +121,37 @@ const createPost = [
 const getAllPosts = [
   async (req: Request, res: Response) => {
     const posts = await prisma.post.findMany({
+      take: 10,
       // todo: allow to switch sort
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        images: {
+          orderBy: { position: "asc" },
+        },
+        comments: {},
+      },
     });
+
+    for (const post of posts) {
+      post.author.image = await getImageUrl(post.author.image, "user-avatars");
+      for (const image of post.images) {
+        const url = await getImageUrl(image.path, "post-images");
+
+        if (url) {
+          image.path = url;
+        }
+      }
+    }
+
     return res.json({ posts });
   },
 ];
