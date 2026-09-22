@@ -9,7 +9,7 @@ import multer from "multer";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import supabase from "../lib/supabase.ts";
-import { getImageUrl } from "./utils.ts";
+import { batchGetImageUrls, getImageUrl } from "./utils.ts";
 
 const uploadPostImages = multer({
   storage: multer.memoryStorage(),
@@ -192,21 +192,34 @@ const getPostsForDashboard = [
       },
     });
 
-    for (let post of posts) {
-      post.author.image = await getImageUrl(post.author.image, "user-avatars");
-      for (const image of post.images) {
-        const url = await getImageUrl(image.path, "post-images");
+    // Gather paths from the entire page.
+    const avatarPaths = posts.map((post) => post.author.image);
 
-        if (url) {
-          image.path = url;
-        }
+    // Flat arrays into one array.
+    const imagePaths = posts.flatMap((post) =>
+      post.images.map((image) => image.path),
+    );
+
+    // Start the two batch requests together.
+    const [avatarUrls, imageUrls] = await Promise.all([
+      batchGetImageUrls(avatarPaths, "user-avatars"),
+      batchGetImageUrls(imagePaths, "post-images"),
+    ]);
+
+    for (const post of posts) {
+      if (post.author.image) {
+        post.author.image = avatarUrls.get(post.author.image) ?? null;
+      }
+
+      for (const image of post.images) {
+        image.path = imageUrls.get(image.path) ?? image.path;
       }
     }
 
     return res.json({
       data: posts,
       currentPage: currentPage,
-      nextPage: currentPage < totalPages ? currentPage + 1 : null,
+      nextPage: currentPage + 1 < totalPages ? currentPage + 1 : null,
     });
   },
 ];

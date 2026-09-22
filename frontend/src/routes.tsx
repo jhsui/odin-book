@@ -1,5 +1,5 @@
 import App from "./App.tsx";
-// import Dashboard from "./Dashboard.tsx";
+import Dashboard from "./Dashboard.tsx";
 import PostIndex from "./posts/PostIndex.tsx";
 import UserIndex from "./users/UserIndex.tsx";
 import RouteError, { NotFound } from "./RouteError.tsx";
@@ -9,7 +9,6 @@ import MyProfilePage from "./users/MyProfilePage.tsx";
 import CreatePostPage from "./posts/CreatePostPage.tsx";
 import PostDetailPage from "./posts/PostDetailPage.tsx";
 import { authClient } from "./lib/auth-client.ts";
-import Dashboard2 from "./Dashboard2.tsx";
 
 const routes: RouteObject[] = [
   {
@@ -23,7 +22,7 @@ const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Dashboard2 />,
+        element: <Dashboard />,
       },
       {
         path: "writing",

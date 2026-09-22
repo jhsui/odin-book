@@ -26,7 +26,6 @@ export default function PostCard({ post }: { post: PostDash }) {
             {authorInitial}
             {post.author.image && (
               <img
-                key={post.author.image}
                 src={post.author.image}
                 alt=""
                 loading="lazy"
