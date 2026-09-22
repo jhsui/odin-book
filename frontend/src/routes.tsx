@@ -1,5 +1,5 @@
 import App from "./App.tsx";
-import Dashboard from "./Dashboard.tsx";
+// import Dashboard from "./Dashboard.tsx";
 import PostIndex from "./posts/PostIndex.tsx";
 import UserIndex from "./users/UserIndex.tsx";
 import RouteError, { NotFound } from "./RouteError.tsx";
@@ -9,6 +9,7 @@ import MyProfilePage from "./users/MyProfilePage.tsx";
 import CreatePostPage from "./posts/CreatePostPage.tsx";
 import PostDetailPage from "./posts/PostDetailPage.tsx";
 import { authClient } from "./lib/auth-client.ts";
+import Dashboard2 from "./Dashboard2.tsx";
 
 const routes: RouteObject[] = [
   {
@@ -22,16 +23,7 @@ const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Dashboard />,
-        loader: async () => {
-          const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`);
-
-          if (!res.ok) {
-            throw new Error("Failed to load posts");
-          }
-
-          return res.json();
-        },
+        element: <Dashboard2 />,
       },
       {
         path: "writing",

@@ -6,6 +6,7 @@ import userController from "../controllers/userController.ts";
 const router = Router();
 
 router.get("/posts", postController.getAllPosts);
+router.get("/posts/dashboard", postController.getPostsForDashboard);
 router.post("/posts", postController.createPost);
 router.get("/posts/index", postController.getPostIndex);
 router.get("/posts/:postId", postController.getPostById);

@@ -67,6 +67,7 @@ const getComments = [
           },
         },
       },
+      orderBy: { createdAt: "desc" },
     });
 
     await Promise.all(

@@ -121,7 +121,6 @@ const createPost = [
 const getAllPosts = [
   async (req: Request, res: Response) => {
     const posts = await prisma.post.findMany({
-      take: 10,
       // todo: allow to switch sort
       orderBy: {
         createdAt: "desc",
@@ -153,6 +152,62 @@ const getAllPosts = [
     }
 
     return res.json({ posts });
+  },
+];
+
+// For tanstack query.
+// pageParam from 1.
+const getPostsForDashboard = [
+  async (req: Request, res: Response) => {
+    const { pageParam } = req.query;
+    const currentPage = Number(pageParam);
+
+    const LIMIT = 10;
+    const totalPosts = await prisma.post.count();
+    const totalPages = Math.ceil(totalPosts / LIMIT);
+
+    const posts = await prisma.post.findMany({
+      skip: LIMIT * currentPage,
+      take: LIMIT,
+      // todo: allow to switch sort
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        images: {
+          orderBy: { position: "asc" },
+        },
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    });
+
+    for (let post of posts) {
+      post.author.image = await getImageUrl(post.author.image, "user-avatars");
+      for (const image of post.images) {
+        const url = await getImageUrl(image.path, "post-images");
+
+        if (url) {
+          image.path = url;
+        }
+      }
+    }
+
+    return res.json({
+      data: posts,
+      currentPage: currentPage,
+      nextPage: currentPage < totalPages ? currentPage + 1 : null,
+    });
   },
 ];
 
@@ -391,4 +446,5 @@ export default {
   togglePostLike,
   getPostIndex,
   deletePost,
+  getPostsForDashboard,
 };
