@@ -23,6 +23,7 @@ const conversations = [
 
 function App() {
   const { data: session, isPending } = authClient.useSession();
+  const isAnonymous = session?.user.isAnonymous === true;
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
@@ -53,6 +54,26 @@ function App() {
               </span>
             ) : session ? (
               <>
+                {isAnonymous && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-300/20 bg-sky-300/10 px-2.5 py-1 text-xs font-medium text-sky-200">
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      className="size-3.5"
+                    >
+                      <circle cx="10" cy="6.25" r="2.75" />
+                      <path
+                        strokeLinecap="round"
+                        d="M4.5 16a5.5 5.5 0 0 1 11 0"
+                      />
+                    </svg>
+                    Guest
+                  </span>
+                )}
+
                 <Link
                   to="/dashboard"
                   className="rounded-xl border border-indigo-400/25 bg-indigo-400/10 px-4 py-2.5 text-sm font-semibold text-indigo-200 transition hover:border-indigo-400/50 hover:bg-indigo-400/20 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
@@ -65,7 +86,13 @@ function App() {
                 </div>
               </>
             ) : (
-              <SignInDialog />
+              <>
+                {/* SVG is hidden here. */}
+                <div className="flex items-center gap-2 [&>button]:inline-flex [&>button]:h-10 [&>button]:cursor-pointer [&>button]:items-center [&>button]:justify-center [&>button]:px-3 [&>button]:py-2 [&>button]:whitespace-nowrap [&>button>svg]:hidden">
+                  <SignInDialog />
+                  <SignUpDialog />
+                </div>
+              </>
             )}
           </div>
         </header>

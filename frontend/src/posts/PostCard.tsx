@@ -67,7 +67,6 @@ export default function PostCard({ post }: { post: PostDash }) {
       </h2>
 
       <Link to={postUrl} aria-label={`Read post: ${post.title}`}>
-        {/* todo: cut the content */}
         {post.images.length <= 0 && (
           <p className="mt-2 line-clamp-3 text-sm leading-6 wrap-anywhere whitespace-pre-wrap text-slate-600">
             {post.content}
@@ -86,6 +85,7 @@ export default function PostCard({ post }: { post: PostDash }) {
 
       <footer className="mt-4 flex min-w-0 flex-wrap items-start gap-2">
         <LikeButton postId={post.id} />
+        {/* todo: locate comment section */}
         <Link
           to={postUrl}
           aria-label={`View comments on ${post.title}`}

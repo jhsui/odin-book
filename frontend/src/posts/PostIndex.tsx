@@ -117,7 +117,7 @@ export default function PostIndex() {
             {posts.map((post, index) => (
               <li key={post.id}>
                 <Link
-                  to={`/dashboard/posts/${post.id}`}
+                  to={`/posts/${post.id}`}
                   className="group flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:-translate-y-0.5 hover:border-indigo-400/40 hover:bg-white/8 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none sm:gap-6 sm:p-6"
                 >
                   <span className="hidden min-w-10 pt-1 text-sm font-semibold text-slate-600 tabular-nums sm:block">

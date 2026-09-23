@@ -31,7 +31,7 @@ const requireNotAnonymous = async (
   if (!session || session.user.isAnonymous) {
     return res
       .status(403)
-      .json({ message: "A registered account is required" });
+      .json({ message: "A registered account is required." });
   }
 
   res.locals.session = session;

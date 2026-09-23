@@ -31,7 +31,7 @@ export default function PostDetailPage() {
             className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-sm font-medium text-slate-300 transition hover:border-indigo-400/30 hover:bg-indigo-400/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
           >
             <span aria-hidden="true">←</span>
-            Back to feed
+            Back to Feed
           </Link>
 
           <article className="mt-6 min-w-0 overflow-hidden rounded-3xl border border-white/10 bg-white text-slate-900 shadow-2xl shadow-black/25 sm:mt-8">
