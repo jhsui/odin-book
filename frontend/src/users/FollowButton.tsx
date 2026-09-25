@@ -39,6 +39,10 @@ export default function FollowButton({
     },
 
     onSuccess: async (newIsFollowing) => {
+      await queryClient.cancelQueries({
+        queryKey: ["user-index"],
+      });
+
       queryClient.setQueryData<UserListItem[]>(["user-index"], (users) =>
         users?.map((user) =>
           user.id === userId

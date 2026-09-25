@@ -26,6 +26,7 @@ export default function CommentSection({ postId }: { postId: string }) {
     error: sessionError,
     isPending: isSessionPending,
   } = authClient.useSession();
+
   const queryClient = useQueryClient();
 
   const handleCommentSubmit: SubmitEventHandler<HTMLFormElement> = async (
@@ -78,7 +79,6 @@ export default function CommentSection({ postId }: { postId: string }) {
       // Prevent an older feed request from overwriting this update.
       await queryClient.cancelQueries({
         queryKey: ["posts-for-dashboard"],
-        exact: true,
       });
 
       queryClient.setQueryData<InfiniteData<DashboardPage, number>>(
