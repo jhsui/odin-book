@@ -37,12 +37,12 @@ export default function FollowButton({
 
       return shouldFollow;
     },
-
-    onSuccess: async (newIsFollowing) => {
+    onMutate: async () => {
       await queryClient.cancelQueries({
         queryKey: ["user-index"],
       });
-
+    },
+    onSuccess: async (newIsFollowing) => {
       queryClient.setQueryData<UserListItem[]>(["user-index"], (users) =>
         users?.map((user) =>
           user.id === userId

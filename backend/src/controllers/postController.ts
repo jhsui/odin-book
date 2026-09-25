@@ -328,8 +328,7 @@ const getLikeStatus = [
   },
 ];
 
-// todo: separate
-const togglePostLike = [
+const putPostLike = [
   requireAuth,
 
   async (req: Request, res: Response) => {
@@ -342,40 +341,15 @@ const togglePostLike = [
       });
     }
 
-    const existingLike = await prisma.postLike.findUnique({
+    await prisma.postLike.upsert({
       where: {
         userId_postId: {
           userId,
           postId,
         },
       },
-    });
-
-    if (existingLike) {
-      await prisma.postLike.delete({
-        where: {
-          userId_postId: {
-            userId,
-            postId,
-          },
-        },
-      });
-
-      const likeCount = await prisma.postLike.count({
-        where: {
-          postId,
-        },
-      });
-
-      return res.json({
-        message: "Like cancelled.",
-        currentLike: false,
-        likeCount,
-      });
-    }
-
-    await prisma.postLike.create({
-      data: {
+      update: {},
+      create: {
         userId,
         postId,
       },
@@ -387,7 +361,45 @@ const togglePostLike = [
       },
     });
 
-    return res.json({ message: "Liked", currentLike: true, likeCount });
+    return res.json({
+      message: "Liked.",
+      currentLike: true,
+      likeCount,
+    });
+  },
+];
+
+const deletePostLike = [
+  requireAuth,
+
+  async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const userId = res.locals.session.user.id;
+
+    if (typeof postId !== "string" || postId.length === 0) {
+      return res.status(400).json({
+        message: "postId must be a non-empty string.",
+      });
+    }
+
+    await prisma.postLike.deleteMany({
+      where: {
+        userId,
+        postId,
+      },
+    });
+
+    const likeCount = await prisma.postLike.count({
+      where: {
+        postId,
+      },
+    });
+
+    return res.json({
+      message: "Like cancelled.",
+      currentLike: false,
+      likeCount,
+    });
   },
 ];
 
@@ -468,7 +480,8 @@ export default {
   getAllPosts,
   getPostById,
   getLikeStatus,
-  togglePostLike,
+  putPostLike,
+  deletePostLike,
   getPostIndex,
   deletePost,
   getPostsForDashboard,
