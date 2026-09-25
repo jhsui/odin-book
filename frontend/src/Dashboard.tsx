@@ -28,9 +28,10 @@ export default function Dashboard() {
     status,
     error,
     isFetching,
-    isFetchingNextPage,
+    // isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
+    isFetchNextPageError,
   } = useInfiniteQuery({
     queryKey: ["posts-for-dashboard"],
     queryFn: fetchSomePosts,
@@ -43,14 +44,14 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    if (inView && hasNextPage && !isFetching) {
+    if (inView && hasNextPage && !isFetching && !isFetchNextPageError) {
       fetchNextPage();
     }
-  }, [fetchNextPage, inView, hasNextPage, isFetching]);
+  }, [fetchNextPage, inView, hasNextPage, isFetching, isFetchNextPageError]);
 
   return status === "pending" ? (
     <p>Loading...</p>
-  ) : status === "error" ? (
+  ) : status === "error" && !data ? (
     <p>Error: {error.message}</p>
   ) : (
     <>
@@ -169,7 +170,21 @@ export default function Dashboard() {
                 ))}
 
                 <div ref={ref}>
-                  {isFetching || isFetchingNextPage ? "Loading..." : null}
+                  {isFetching && <p>Loading...</p>}
+
+                  {isFetchNextPageError && (
+                    <div>
+                      <p role="alert">Couldn't load more posts.</p>
+
+                      <button
+                        type="button"
+                        disabled={isFetching}
+                        onClick={() => fetchNextPage()}
+                      >
+                        Try again
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (

@@ -27,6 +27,7 @@ const createPost = [
   ...writingPostValidator,
 
   async (req: Request, res: Response) => {
+    // Validate title and content.
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -38,6 +39,7 @@ const createPost = [
     const { title, content } = matchedData(req);
     const userId = res.locals.session.user.id;
 
+    let postSaved = false;
     const post = await prisma.post.create({
       data: {
         title,
@@ -47,15 +49,16 @@ const createPost = [
         },
       },
     });
+    postSaved = true;
 
     const images = Array.isArray(req.files) ? req.files : [];
-    let savedCount = 0;
+
+    const imageSaved: string[] = [];
 
     for (const [position, img] of images.entries()) {
       const ext = path.extname(img.originalname);
+      // Image name to be stored in Supabase.
       const uniqueName = `${randomUUID()}${ext}`;
-
-      let uploadedToStorage = false;
 
       try {
         const { error } = await supabase.storage
@@ -64,9 +67,11 @@ const createPost = [
             contentType: img.mimetype,
           });
 
-        if (error) throw error;
+        if (error) {
+          throw error; // If the error is truthy, jump straight to catch.
+        }
 
-        uploadedToStorage = true;
+        imageSaved.push(uniqueName);
 
         await prisma.post.update({
           where: {
@@ -81,39 +86,46 @@ const createPost = [
             },
           },
         });
-
-        savedCount++;
       } catch (error) {
         console.error("Failed to save post image:", error);
-
-        if (uploadedToStorage) {
+        // Remove the image saved in Supabase.
+        imageSaved.forEach(async (uniqueName) => {
           try {
             const { error: cleanupError } = await supabase.storage
               .from("post-images")
               .remove([uniqueName]);
 
             if (cleanupError) throw cleanupError;
-          } catch (cleanupError) {
+          } catch (cleanupImageError) {
             console.error(
               "Failed to clean up uploaded image:",
               uniqueName,
-              cleanupError,
+              cleanupImageError,
+            );
+          }
+        });
+
+        // Clear up post in the database.
+        if (postSaved) {
+          try {
+            await prisma.post.delete({
+              where: { id: post.id },
+            });
+          } catch (cleanupPostError) {
+            console.error(
+              "Failed to clean up uploaded post:",
+              post.title,
+              cleanupPostError,
             );
           }
         }
       }
     }
 
-    const failedCount = images.length - savedCount;
-
     return res.status(201).json({
       postId: post.id,
-      savedCount,
-      failedCount,
-      message:
-        failedCount > 0
-          ? `Post created; ${savedCount} of ${images.length} images saved.`
-          : "Post submitted successfully.",
+
+      message: "Post submitted successfully.",
     });
   },
 ];
