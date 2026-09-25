@@ -135,7 +135,6 @@ export default function Dashboard() {
                 Newest first
               </span>
             </div>
-
             {canWrite && (
               <Link
                 to="/dashboard/writing"
@@ -158,8 +157,8 @@ export default function Dashboard() {
                 </span>
               </Link>
             )}
-
-            {data.pages.length > 0 ? (
+            {/* Check if posts exists instead of pages. */}
+            {data.pages.some((page) => page.data.length > 0) ? (
               <div className="flex flex-col gap-2">
                 {data.pages.map((page, i) => (
                   <React.Fragment key={i}>
