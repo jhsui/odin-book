@@ -274,6 +274,32 @@ const uploadNewAvatar = [
     if (!file) {
       return res.status(400).json({ message: "No file received." });
     }
+    const userId = res.locals.session.user.id;
+    if (typeof userId !== "string" || userId.length === 0) {
+      return res.status(400).json({
+        message: "Bad user id",
+      });
+    }
+
+    // Clear last avatar storage.
+    const { image } = await prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: {
+        image: true,
+      },
+    });
+
+    if (image) {
+      try {
+        const { error } = await supabase.storage
+          .from("user-avatars")
+          .remove([image]);
+
+        if (error) throw error;
+      } catch (error) {
+        console.error("Failed to clean up last user avatar:", error);
+      }
+    }
 
     const ext = path.extname(file.originalname);
     const uniqueName = `${randomUUID()}${ext}`;
@@ -287,13 +313,6 @@ const uploadNewAvatar = [
     if (error) {
       console.error(error);
       return res.status(500).json({ message: "Upload failed." });
-    }
-
-    const userId = res.locals.session.user.id;
-    if (typeof userId !== "string" || userId.length === 0) {
-      return res.status(400).json({
-        message: "Bad user id",
-      });
     }
 
     await prisma.user.update({
