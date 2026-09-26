@@ -89,7 +89,8 @@ const createPost = [
       } catch (error) {
         console.error("Failed to save post image:", error);
         // Remove the image saved in Supabase.
-        imageSaved.forEach(async (uniqueName) => {
+        // Use for...of to await the finish of the remove.
+        for (const uniqueName of imageSaved) {
           try {
             const { error: cleanupError } = await supabase.storage
               .from("post-images")
@@ -103,7 +104,7 @@ const createPost = [
               cleanupImageError,
             );
           }
-        });
+        }
 
         // Clear up post in the database.
         if (postSaved) {
@@ -119,12 +120,15 @@ const createPost = [
             );
           }
         }
+
+        return res.status(500).json({
+          message: "Failed to submit the post. Please try again later.",
+        });
       }
     }
 
     return res.status(201).json({
       postId: post.id,
-
       message: "Post submitted successfully.",
     });
   },
