@@ -55,7 +55,6 @@ export default function Dashboard() {
     <p>Error: {error.message}</p>
   ) : (
     <>
-      (
       <main className="min-h-screen bg-slate-100 text-slate-900">
         <a
           href="#feed"
@@ -291,7 +290,6 @@ export default function Dashboard() {
           </aside>
         </div>
       </main>
-      )
     </>
   );
 }

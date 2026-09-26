@@ -69,12 +69,9 @@ export default function LikeButton({ postId }: { postId: string }) {
         likeCount: data.likeCount,
       };
     },
-
-    onMutate: async () => {
+    onSuccess: async (updatedLikeData) => {
       await queryClient.cancelQueries({ queryKey });
-    },
 
-    onSuccess: (updatedLikeData) => {
       queryClient.setQueryData(queryKey, updatedLikeData);
     },
   });

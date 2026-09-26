@@ -345,18 +345,14 @@ const putPostLike = [
       });
     }
 
-    await prisma.postLike.upsert({
-      where: {
-        userId_postId: {
+    await prisma.postLike.createMany({
+      data: [
+        {
           userId,
           postId,
         },
-      },
-      update: {},
-      create: {
-        userId,
-        postId,
-      },
+      ],
+      skipDuplicates: true,
     });
 
     const likeCount = await prisma.postLike.count({
