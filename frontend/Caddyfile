@@ -7,7 +7,7 @@
 :{$PORT:8080} {
 	encode gzip zstd
 
-	@api path /api/auth /api/auth/* /posts /posts/* /comments /comments/* /users /users/*
+	@api path /api /api/*
 
 	handle @api {
 		reverse_proxy https://sway-backend-production-1828.up.railway.app {

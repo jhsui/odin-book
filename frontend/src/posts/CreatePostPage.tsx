@@ -75,7 +75,7 @@ export default function CreatePostPage() {
         body.append("images", image);
       }
 
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/posts`, {
         method: "POST",
         credentials: "include",
         body,

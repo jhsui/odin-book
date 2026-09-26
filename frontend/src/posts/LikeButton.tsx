@@ -28,7 +28,7 @@ export default function LikeButton({ postId }: { postId: string }) {
     enabled: Boolean(userId),
     queryFn: async (): Promise<LikeData> => {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/${encodeURIComponent(postId)}/likes/me`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/posts/${encodeURIComponent(postId)}/likes/me`,
         {
           credentials: "include",
         },
@@ -48,7 +48,7 @@ export default function LikeButton({ postId }: { postId: string }) {
   const toggleLike = useMutation({
     mutationFn: async (): Promise<LikeData> => {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/${encodeURIComponent(postId)}/likes/me`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/posts/${encodeURIComponent(postId)}/likes/me`,
         {
           method: liked ? "DELETE" : "PUT",
           credentials: "include",

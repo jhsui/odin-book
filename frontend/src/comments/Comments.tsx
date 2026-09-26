@@ -27,7 +27,7 @@ export default function Comments({ postId }: { postId: string }) {
     queryKey: ["comments", postId],
     queryFn: async (): Promise<Comment[]> => {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/${encodeURIComponent(postId)}/comments`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/posts/${encodeURIComponent(postId)}/comments`,
       );
 
       if (!res.ok) {

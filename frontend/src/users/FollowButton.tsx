@@ -20,7 +20,7 @@ export default function FollowButton({
   const mutation = useMutation({
     mutationFn: async (shouldFollow: boolean) => {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/users/me/following/${encodeURIComponent(userId)}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/me/following/${encodeURIComponent(userId)}`,
         {
           method: shouldFollow ? "PUT" : "DELETE",
           credentials: "include",

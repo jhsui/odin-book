@@ -55,7 +55,7 @@ export default function CommentSection({ postId }: { postId: string }) {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/${encodeURIComponent(postId)}/comments`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/posts/${encodeURIComponent(postId)}/comments`,
         {
           method: "POST",
           credentials: "include",

@@ -28,7 +28,7 @@ export default function MyUserIntro({ user }: { user: User }) {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/users/me/intro`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/me/intro`,
         {
           method: "PUT",
           credentials: "include",

@@ -20,7 +20,7 @@ export default function PostIndex() {
     queryKey: ["post-index"],
     queryFn: async () => {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/index`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/posts/index`,
       );
 
       if (!res.ok) {

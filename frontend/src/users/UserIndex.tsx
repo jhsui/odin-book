@@ -20,7 +20,7 @@ export default function UserIndex() {
     queryKey: ["user-index"],
     queryFn: async () => {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/users/index`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/index`,
         {
           credentials: "include",
         },

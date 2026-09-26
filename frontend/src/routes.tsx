@@ -51,7 +51,7 @@ const routes: RouteObject[] = [
       }
 
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/${encodeURIComponent(postId)}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/posts/${encodeURIComponent(postId)}`,
       );
 
       if (res.status === 404) {
@@ -85,7 +85,7 @@ const routes: RouteObject[] = [
       }
 
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/users/me/profile`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/me/profile`,
         { credentials: "include" },
       );
 

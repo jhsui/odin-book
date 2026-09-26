@@ -13,7 +13,7 @@ export default function Dashboard() {
 
   const fetchSomePosts = async ({ pageParam }: { pageParam: number }) => {
     const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/posts/dashboard/?pageParam=${pageParam}`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/posts/dashboard/?pageParam=${pageParam}`,
     );
 
     if (!res.ok) {

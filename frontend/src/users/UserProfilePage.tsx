@@ -20,7 +20,7 @@ export default function UserProfilePage() {
 
     queryFn: async (): Promise<User> => {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/users/profile/${userId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/profile/${userId}`,
       );
 
       if (!res.ok) {

@@ -56,7 +56,7 @@ export default function MyProfilePage() {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/users/me/avatar`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/me/avatar`,
         {
           method: "PUT",
           credentials: "include",
@@ -93,7 +93,7 @@ export default function MyProfilePage() {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/users/me/name`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/me/name`,
         {
           method: "PUT",
           credentials: "include",
