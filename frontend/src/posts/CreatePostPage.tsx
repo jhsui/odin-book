@@ -135,7 +135,7 @@ export default function CreatePostPage() {
             className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-sm font-medium text-slate-300 transition hover:border-indigo-400/30 hover:bg-indigo-400/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
           >
             <span aria-hidden="true">←</span>
-            Back to feed
+            Back to Feed
           </Link>
           <h1 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Write something worth sharing
@@ -274,9 +274,6 @@ export default function CreatePostPage() {
                     }));
                     // todo: ?
                     input.value = "";
-
-                    // todo: delete
-                    console.log(formData);
                   }}
                 />
                 {formData.images.length > 0 && (

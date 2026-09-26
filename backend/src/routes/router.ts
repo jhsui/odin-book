@@ -6,12 +6,14 @@ import userController from "../controllers/userController.ts";
 const router = Router();
 
 router.get("/posts", postController.getAllPosts);
+router.get("/posts/dashboard", postController.getPostsForDashboard);
 router.post("/posts", postController.createPost);
 router.get("/posts/index", postController.getPostIndex);
 router.get("/posts/:postId", postController.getPostById);
 router.delete("/posts/:postId", postController.deletePost);
 router.get("/posts/:postId/likes/me", postController.getLikeStatus);
-router.post("/posts/:postId/likes/me", postController.togglePostLike);
+router.put("/posts/:postId/likes/me", postController.putPostLike);
+router.delete("/posts/:postId/likes/me", postController.deletePostLike);
 
 router.get("/posts/:postId/comments", commentController.getComments);
 router.post("/posts/:postId/comments", commentController.postComment);

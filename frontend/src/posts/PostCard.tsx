@@ -26,7 +26,6 @@ export default function PostCard({ post }: { post: PostDash }) {
             {authorInitial}
             {post.author.image && (
               <img
-                key={post.author.image}
                 src={post.author.image}
                 alt=""
                 loading="lazy"
@@ -68,7 +67,6 @@ export default function PostCard({ post }: { post: PostDash }) {
       </h2>
 
       <Link to={postUrl} aria-label={`Read post: ${post.title}`}>
-        {/* todo: cut the content */}
         {post.images.length <= 0 && (
           <p className="mt-2 line-clamp-3 text-sm leading-6 wrap-anywhere whitespace-pre-wrap text-slate-600">
             {post.content}
@@ -87,6 +85,7 @@ export default function PostCard({ post }: { post: PostDash }) {
 
       <footer className="mt-4 flex min-w-0 flex-wrap items-start gap-2">
         <LikeButton postId={post.id} />
+        {/* todo: locate comment section */}
         <Link
           to={postUrl}
           aria-label={`View comments on ${post.title}`}
@@ -104,7 +103,7 @@ export default function PostCard({ post }: { post: PostDash }) {
           >
             <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z" />
           </svg>
-          Comments <span>{post.comments?.length}</span>
+          Comments <span>{post._count.comments}</span>
         </Link>
       </footer>
     </article>

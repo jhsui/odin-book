@@ -1,4 +1,4 @@
-import { type Comment } from "../comments/Comments.tsx";
+// import { type Comment } from "../comments/Comments.tsx";
 
 export type Post = {
   id: string;
@@ -19,4 +19,8 @@ export type Post = {
   }[];
 };
 
-export type PostDash = Post & { comments: Comment[] };
+export type PostDash = Post & {
+  _count: {
+    comments: number;
+  };
+};

@@ -67,9 +67,10 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
         }`}
       >
         {navigation.map((item) => {
+          // Check if the button should have highlight
           const isActive =
             item.to === "/dashboard"
-              ? pathname === item.to || pathname.startsWith("/dashboard/posts/")
+              ? pathname === item.to
               : pathname.startsWith(item.to);
 
           return (

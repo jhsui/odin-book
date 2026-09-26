@@ -50,11 +50,8 @@ export default function LikeButton({ postId }: { postId: string }) {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/posts/${encodeURIComponent(postId)}/likes/me`,
         {
-          method: "POST",
+          method: liked ? "DELETE" : "PUT",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
         },
       );
 
@@ -72,8 +69,9 @@ export default function LikeButton({ postId }: { postId: string }) {
         likeCount: data.likeCount,
       };
     },
+    onSuccess: async (updatedLikeData) => {
+      await queryClient.cancelQueries({ queryKey });
 
-    onSuccess: (updatedLikeData) => {
       queryClient.setQueryData(queryKey, updatedLikeData);
     },
   });

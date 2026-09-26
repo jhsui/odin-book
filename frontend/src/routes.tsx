@@ -23,15 +23,6 @@ const routes: RouteObject[] = [
       {
         index: true,
         element: <Dashboard />,
-        loader: async () => {
-          const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`);
-
-          if (!res.ok) {
-            throw new Error("Failed to load posts");
-          }
-
-          return res.json();
-        },
       },
       {
         path: "writing",

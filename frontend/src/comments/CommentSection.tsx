@@ -1,8 +1,15 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ChangeEvent, type SubmitEventHandler } from "react";
 import { Link } from "react-router";
 import { authClient } from "../lib/auth-client.ts";
 import Comments from "./Comments.tsx";
+import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
+import type { PostDash } from "../posts/types.ts";
+
+type DashboardPage = {
+  data: PostDash[];
+  currentPage: number;
+  nextPage: number | null;
+};
 
 type Feedback = {
   type: "success" | "error";
@@ -19,6 +26,7 @@ export default function CommentSection({ postId }: { postId: string }) {
     error: sessionError,
     isPending: isSessionPending,
   } = authClient.useSession();
+
   const queryClient = useQueryClient();
 
   const handleCommentSubmit: SubmitEventHandler<HTMLFormElement> = async (
@@ -63,14 +71,49 @@ export default function CommentSection({ postId }: { postId: string }) {
         throw new Error("Your comment could not be posted.");
       }
 
-      const { message } = (await res.json()) as { message?: string };
+      const { message, commentCount } = (await res.json()) as {
+        message: string;
+        commentCount: number;
+      };
+
+      // Prevent an older feed request from overwriting this update.
+      await queryClient.cancelQueries({
+        queryKey: ["posts-for-dashboard"],
+      });
+
+      queryClient.setQueryData<InfiniteData<DashboardPage, number>>(
+        ["posts-for-dashboard"],
+        (old) => {
+          // The user might not have loaded the dashboard yet.
+          if (!old) return old;
+
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((post) => {
+                if (post.id !== postId) return post;
+
+                return {
+                  ...post,
+                  _count: { comments: commentCount },
+                };
+              }),
+            })),
+          };
+        },
+      );
 
       setComment("");
       setFeedback({
         type: "success",
         message: message ?? "Your comment has been posted.",
       });
-      await queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+
+      // Refresh the actual comment list separately.
+      await queryClient.invalidateQueries({
+        queryKey: ["comments", postId],
+      });
     } catch (error) {
       setFeedback({
         type: "error",

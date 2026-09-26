@@ -469,7 +469,7 @@ export default function MyProfilePage() {
                       <div className="min-w-0">
                         <h3 className="text-lg leading-7 font-semibold wrap-anywhere text-white">
                           <Link
-                            to={`/dashboard/posts/${post.id}`}
+                            to={`/posts/${post.id}`}
                             className="rounded transition hover:text-indigo-300 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
                           >
                             {post.title}
@@ -544,7 +544,7 @@ export default function MyProfilePage() {
 
                         <div className="flex max-w-full flex-wrap items-center gap-x-4 gap-y-2 [&>div]:mt-0">
                           <Link
-                            to={`/dashboard/posts/${comment.postId}`}
+                            to={`/posts/${comment.postId}`}
                             className="inline-flex min-h-9 items-center gap-2 rounded-lg py-2 text-xs font-semibold text-indigo-300 transition hover:text-indigo-200 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:outline-none"
                           >
                             View conversation <span aria-hidden="true">→</span>

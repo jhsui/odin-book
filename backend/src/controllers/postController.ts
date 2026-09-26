@@ -9,7 +9,7 @@ import multer from "multer";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import supabase from "../lib/supabase.ts";
-import { getImageUrl } from "./utils.ts";
+import { batchGetImageUrls, getImageUrl } from "./utils.ts";
 
 const uploadPostImages = multer({
   storage: multer.memoryStorage(),
@@ -27,6 +27,7 @@ const createPost = [
   ...writingPostValidator,
 
   async (req: Request, res: Response) => {
+    // Validate title and content.
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -38,6 +39,7 @@ const createPost = [
     const { title, content } = matchedData(req);
     const userId = res.locals.session.user.id;
 
+    let postSaved = false;
     const post = await prisma.post.create({
       data: {
         title,
@@ -47,15 +49,16 @@ const createPost = [
         },
       },
     });
+    postSaved = true;
 
     const images = Array.isArray(req.files) ? req.files : [];
-    let savedCount = 0;
+
+    const imageSaved: string[] = [];
 
     for (const [position, img] of images.entries()) {
       const ext = path.extname(img.originalname);
+      // Image name to be stored in Supabase.
       const uniqueName = `${randomUUID()}${ext}`;
-
-      let uploadedToStorage = false;
 
       try {
         const { error } = await supabase.storage
@@ -64,9 +67,11 @@ const createPost = [
             contentType: img.mimetype,
           });
 
-        if (error) throw error;
+        if (error) {
+          throw error; // If the error is truthy, jump straight to catch.
+        }
 
-        uploadedToStorage = true;
+        imageSaved.push(uniqueName);
 
         await prisma.post.update({
           where: {
@@ -81,39 +86,50 @@ const createPost = [
             },
           },
         });
-
-        savedCount++;
       } catch (error) {
         console.error("Failed to save post image:", error);
-
-        if (uploadedToStorage) {
+        // Remove the image saved in Supabase.
+        // Use for...of to await the finish of the remove.
+        for (const uniqueName of imageSaved) {
           try {
             const { error: cleanupError } = await supabase.storage
               .from("post-images")
               .remove([uniqueName]);
 
             if (cleanupError) throw cleanupError;
-          } catch (cleanupError) {
+          } catch (cleanupImageError) {
             console.error(
               "Failed to clean up uploaded image:",
               uniqueName,
-              cleanupError,
+              cleanupImageError,
             );
           }
         }
+
+        // Clear up post in the database.
+        if (postSaved) {
+          try {
+            await prisma.post.delete({
+              where: { id: post.id },
+            });
+          } catch (cleanupPostError) {
+            console.error(
+              "Failed to clean up uploaded post:",
+              post.title,
+              cleanupPostError,
+            );
+          }
+        }
+
+        return res.status(500).json({
+          message: "Failed to submit the post. Please try again later.",
+        });
       }
     }
 
-    const failedCount = images.length - savedCount;
-
     return res.status(201).json({
       postId: post.id,
-      savedCount,
-      failedCount,
-      message:
-        failedCount > 0
-          ? `Post created; ${savedCount} of ${images.length} images saved.`
-          : "Post submitted successfully.",
+      message: "Post submitted successfully.",
     });
   },
 ];
@@ -121,7 +137,6 @@ const createPost = [
 const getAllPosts = [
   async (req: Request, res: Response) => {
     const posts = await prisma.post.findMany({
-      take: 10,
       // todo: allow to switch sort
       orderBy: {
         createdAt: "desc",
@@ -153,6 +168,75 @@ const getAllPosts = [
     }
 
     return res.json({ posts });
+  },
+];
+
+// For tanstack query.
+// pageParam from 1.
+const getPostsForDashboard = [
+  async (req: Request, res: Response) => {
+    const { pageParam } = req.query;
+    const currentPage = Number(pageParam);
+
+    const LIMIT = 10;
+    const totalPosts = await prisma.post.count();
+    const totalPages = Math.ceil(totalPosts / LIMIT);
+
+    const posts = await prisma.post.findMany({
+      skip: LIMIT * currentPage,
+      take: LIMIT,
+      // todo: allow to switch sort
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        images: {
+          orderBy: { position: "asc" },
+        },
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    });
+
+    // Gather paths from the entire page.
+    const avatarPaths = posts.map((post) => post.author.image);
+
+    // Flat arrays into one array.
+    const imagePaths = posts.flatMap((post) =>
+      post.images.map((image) => image.path),
+    );
+
+    // Start the two batch requests together.
+    const [avatarUrls, imageUrls] = await Promise.all([
+      batchGetImageUrls(avatarPaths, "user-avatars"),
+      batchGetImageUrls(imagePaths, "post-images"),
+    ]);
+
+    for (const post of posts) {
+      if (post.author.image) {
+        post.author.image = avatarUrls.get(post.author.image) ?? null;
+      }
+
+      for (const image of post.images) {
+        image.path = imageUrls.get(image.path) ?? image.path;
+      }
+    }
+
+    return res.json({
+      data: posts,
+      currentPage: currentPage,
+      nextPage: currentPage + 1 < totalPages ? currentPage + 1 : null,
+    });
   },
 ];
 
@@ -248,8 +332,7 @@ const getLikeStatus = [
   },
 ];
 
-// todo: separate
-const togglePostLike = [
+const putPostLike = [
   requireAuth,
 
   async (req: Request, res: Response) => {
@@ -262,40 +345,45 @@ const togglePostLike = [
       });
     }
 
-    const existingLike = await prisma.postLike.findUnique({
-      where: {
-        userId_postId: {
+    await prisma.postLike.createMany({
+      data: [
+        {
           userId,
           postId,
         },
+      ],
+      skipDuplicates: true,
+    });
+
+    const likeCount = await prisma.postLike.count({
+      where: {
+        postId,
       },
     });
 
-    if (existingLike) {
-      await prisma.postLike.delete({
-        where: {
-          userId_postId: {
-            userId,
-            postId,
-          },
-        },
-      });
+    return res.json({
+      message: "Liked.",
+      currentLike: true,
+      likeCount,
+    });
+  },
+];
 
-      const likeCount = await prisma.postLike.count({
-        where: {
-          postId,
-        },
-      });
+const deletePostLike = [
+  requireAuth,
 
-      return res.json({
-        message: "Like cancelled.",
-        currentLike: false,
-        likeCount,
+  async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const userId = res.locals.session.user.id;
+
+    if (typeof postId !== "string" || postId.length === 0) {
+      return res.status(400).json({
+        message: "postId must be a non-empty string.",
       });
     }
 
-    await prisma.postLike.create({
-      data: {
+    await prisma.postLike.deleteMany({
+      where: {
         userId,
         postId,
       },
@@ -307,7 +395,11 @@ const togglePostLike = [
       },
     });
 
-    return res.json({ message: "Liked", currentLike: true, likeCount });
+    return res.json({
+      message: "Like cancelled.",
+      currentLike: false,
+      likeCount,
+    });
   },
 ];
 
@@ -388,7 +480,9 @@ export default {
   getAllPosts,
   getPostById,
   getLikeStatus,
-  togglePostLike,
+  putPostLike,
+  deletePostLike,
   getPostIndex,
   deletePost,
+  getPostsForDashboard,
 };

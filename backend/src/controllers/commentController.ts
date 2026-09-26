@@ -28,20 +28,28 @@ const postComment = [
       return res.status(400).json({ error: "Invalid post ID" });
     }
 
-    await prisma.comment.create({
-      data: {
-        content: comment,
-        author: {
-          connect: { id: userId },
+    // If creation fail, count will omit too.
+    const commentCount = await prisma.$transaction(async (tx) => {
+      await tx.comment.create({
+        data: {
+          content: comment,
+          author: {
+            connect: { id: userId },
+          },
+          post: {
+            connect: { id: postId },
+          },
         },
-        post: {
-          connect: { id: postId },
-        },
-      },
+      });
+
+      return tx.comment.count({
+        where: { postId },
+      });
     });
 
     return res.status(201).json({
       message: "Comment submitted successfully",
+      commentCount,
     });
   },
 ];
@@ -67,6 +75,7 @@ const getComments = [
           },
         },
       },
+      orderBy: { createdAt: "desc" },
     });
 
     await Promise.all(
