@@ -282,6 +282,14 @@ const uploadNewAvatar = [
       });
     }
 
+    // Clear last avatar storage.
+    const { image: lastAvatar } = await prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: {
+        image: true,
+      },
+    });
+
     const ext = path.extname(file.originalname);
     const uniqueName = `${randomUUID()}${ext}`;
 
@@ -300,14 +308,6 @@ const uploadNewAvatar = [
       where: { id: userId },
       data: {
         image: uniqueName,
-      },
-    });
-
-    // Clear last avatar storage.
-    const { image: lastAvatar } = await prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: {
-        image: true,
       },
     });
 
