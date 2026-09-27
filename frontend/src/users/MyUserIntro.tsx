@@ -71,14 +71,14 @@ export default function MyUserIntro({ user }: { user: User }) {
 
   return (
     <>
-      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-400">
+      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-600">
         {user.intro || "You haven't added an intro yet."}
       </p>
 
       <button
         type="button"
         hidden={showIntroInput}
-        className="mt-3 rounded-lg text-sm font-medium text-indigo-300 transition hover:text-indigo-200 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-900 focus-visible:outline-none"
+        className="ui-link mt-3 min-h-11 py-2 text-sm font-semibold"
         onClick={() => {
           setIntro(user.intro ?? "");
           setError("");
@@ -90,10 +90,7 @@ export default function MyUserIntro({ user }: { user: User }) {
 
       {showIntroInput && (
         <form onSubmit={handleIntroSubmit} className="mt-4 space-y-3">
-          <label
-            htmlFor="intro"
-            className="block text-sm font-medium text-slate-300"
-          >
+          <label htmlFor="intro" className="ui-label">
             Introduction
           </label>
 
@@ -105,7 +102,7 @@ export default function MyUserIntro({ user }: { user: User }) {
             disabled={isSaving}
             aria-invalid={Boolean(error) || undefined}
             aria-describedby={error ? "intro-help intro-error" : "intro-help"}
-            className="block w-full resize-y rounded-xl border border-white/15 bg-slate-950 px-3 py-2.5 text-sm leading-6 text-white focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 focus:outline-none"
+            className="ui-input resize-y leading-6"
             value={intro}
             onChange={(e) => {
               setIntro(e.currentTarget.value);
@@ -113,13 +110,13 @@ export default function MyUserIntro({ user }: { user: User }) {
             }}
           ></textarea>
 
-          <p id="intro-help" className="text-xs text-slate-400">
+          <p id="intro-help" className="text-xs text-slate-500">
             {intro.length.toLocaleString()} /{" "}
             {MAX_INTRO_LENGTH.toLocaleString()} characters
           </p>
 
           {error && (
-            <p id="intro-error" role="alert" className="text-sm text-red-300">
+            <p id="intro-error" role="alert" className="text-sm text-rose-700">
               {error}
             </p>
           )}
@@ -133,7 +130,7 @@ export default function MyUserIntro({ user }: { user: User }) {
                 setError("");
                 setShowIntroInput(false);
               }}
-              className="rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+              className="ui-button-secondary"
             >
               Cancel
             </button>
@@ -141,7 +138,7 @@ export default function MyUserIntro({ user }: { user: User }) {
             <button
               type="submit"
               disabled={isSaving}
-              className="rounded-xl bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
+              className="ui-button-primary"
             >
               {isSaving ? "Saving..." : "Save"}
             </button>

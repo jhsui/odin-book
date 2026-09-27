@@ -2,8 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UserListItem } from "./types.ts";
 import { useEffect, useRef } from "react";
 
-const buttonClasses =
-  "inline-flex min-w-24 items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-sm transition active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100";
+const buttonClasses = "min-w-24 gap-2";
 
 export default function FollowButton({
   userId,
@@ -84,8 +83,8 @@ export default function FollowButton({
         onClick={() => mutation.mutate(!isFollowing)}
         className={`${buttonClasses} ${
           isFollowing
-            ? "border-slate-300 bg-white text-slate-700 hover:border-red-300 hover:bg-red-50 hover:text-red-700"
-            : "border-indigo-600 bg-indigo-600 text-white hover:border-indigo-500 hover:bg-indigo-500"
+            ? "ui-button-secondary hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700"
+            : "ui-button-primary"
         }`}
       >
         {mutation.isPending && <SpinnerIcon />}

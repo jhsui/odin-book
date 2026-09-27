@@ -22,7 +22,7 @@ export default function GithubSignInButton({
       onClick={signInWithGithub}
       disabled={disabled}
       aria-label="Continue with GitHub"
-      className="inline-flex min-h-11 w-full min-w-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold whitespace-nowrap text-slate-700 transition focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none enabled:cursor-pointer enabled:hover:border-slate-300 enabled:hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+      className="ui-button-secondary w-full min-w-0 px-3 whitespace-nowrap"
     >
       <svg
         aria-hidden="true"

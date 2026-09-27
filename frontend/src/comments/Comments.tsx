@@ -47,10 +47,10 @@ export default function Comments({ postId }: { postId: string }) {
           <div
             key={item}
             aria-hidden="true"
-            className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-lg shadow-black/10 motion-safe:animate-pulse sm:p-6"
+            className="ui-card p-5 motion-safe:animate-pulse sm:p-6"
           >
             <div className="flex items-center gap-3">
-              <div className="size-11 shrink-0 rounded-2xl bg-slate-200" />
+              <div className="size-11 shrink-0 rounded-full bg-slate-200" />
               <div className="min-w-0 flex-1 space-y-2">
                 <div className="h-3.5 w-28 max-w-full rounded bg-slate-200" />
                 <div className="h-3 w-40 max-w-full rounded bg-slate-100" />
@@ -70,14 +70,14 @@ export default function Comments({ postId }: { postId: string }) {
     return (
       <div
         role="alert"
-        className="rounded-2xl border border-red-400/20 bg-red-400/10 p-6 text-center"
+        className="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-center"
       >
-        <p className="text-sm font-medium text-red-200">{error.message}</p>
+        <p className="text-sm font-medium text-rose-700">{error.message}</p>
         <button
           type="button"
           disabled={isFetching}
           onClick={() => void refetch()}
-          className="mt-4 rounded-lg bg-white px-3.5 py-2 text-xs font-semibold text-slate-900 transition hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none disabled:opacity-60"
+          className="ui-button-secondary mt-4"
         >
           {isFetching ? "Trying again..." : "Try again"}
         </button>
@@ -87,8 +87,8 @@ export default function Comments({ postId }: { postId: string }) {
 
   if (comments.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-white/15 px-6 py-10 text-center">
-        <span className="mx-auto flex size-11 items-center justify-center rounded-2xl bg-indigo-400/10 text-indigo-300 ring-1 ring-indigo-400/20">
+      <div className="ui-empty">
+        <span className="mx-auto flex size-11 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
           <svg
             aria-hidden="true"
             viewBox="0 0 20 20"
@@ -102,7 +102,7 @@ export default function Comments({ postId }: { postId: string }) {
             />
           </svg>
         </span>
-        <p className="mt-4 text-sm font-medium text-slate-300">
+        <p className="mt-4 text-sm font-semibold text-slate-900">
           No comments yet
         </p>
         <p className="mt-1 text-sm text-slate-500">
@@ -119,7 +119,7 @@ export default function Comments({ postId }: { postId: string }) {
           <>
             <span
               aria-hidden="true"
-              className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-indigo-50 text-sm font-bold text-indigo-600 ring-1 ring-indigo-600/10 ring-inset"
+              className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-50 text-sm font-bold text-indigo-600 ring-1 ring-indigo-600/10 ring-inset"
             >
               {comment.author.name.trim().charAt(0).toUpperCase() || "?"}
               {comment.author.image && (
@@ -137,7 +137,7 @@ export default function Comments({ postId }: { postId: string }) {
             </span>
 
             <span className="min-w-0 flex-1">
-              <span className="block text-sm font-semibold wrap-anywhere text-slate-950 transition group-hover:text-indigo-600">
+              <span className="block text-sm font-semibold wrap-anywhere text-slate-900 transition group-hover:text-indigo-600">
                 {comment.author.name}
               </span>
 
@@ -153,21 +153,21 @@ export default function Comments({ postId }: { postId: string }) {
 
         return (
           <li key={comment.id}>
-            <article className="min-w-0 rounded-2xl border border-slate-200/80 bg-white p-5 text-slate-900 shadow-lg shadow-black/10 sm:p-6">
+            <article className="ui-card min-w-0 p-5 sm:p-6">
               <header>
                 {comment.author.isAnonymous ? (
                   <div className="flex items-center gap-3">{authorDetails}</div>
                 ) : (
                   <Link
                     to={`/user-profile/${comment.author.id}`}
-                    className="group flex w-fit max-w-full items-center gap-3 rounded-2xl focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-4 focus-visible:outline-none"
+                    className="group flex w-fit max-w-full items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-4 focus-visible:outline-none"
                   >
                     {authorDetails}
                   </Link>
                 )}
               </header>
 
-              <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-700 sm:ml-14 sm:text-base">
+              <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-600 sm:ml-14 sm:text-base">
                 {comment.content}
               </p>
 

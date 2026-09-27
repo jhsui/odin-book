@@ -1,4 +1,5 @@
 import {
+  useId,
   useRef,
   useState,
   type ChangeEvent,
@@ -12,6 +13,7 @@ import GuestSignIn from "./signInButtons/GuestSignIn.tsx";
 
 export default function SignUpDialog() {
   const navigate = useNavigate();
+  const id = useId();
 
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
@@ -84,7 +86,7 @@ export default function SignUpDialog() {
     <>
       <button
         type="button"
-        className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-5 py-3 text-sm font-semibold text-white shadow-xl shadow-indigo-500/20 transition hover:-translate-y-0.5 hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none active:translate-y-0"
+        className="ui-button-primary focus-visible:ring-offset-slate-950"
         onClick={() => dialogRef.current?.showModal()}
       >
         Sign up
@@ -104,17 +106,17 @@ export default function SignUpDialog() {
 
       <dialog
         ref={dialogRef}
-        aria-labelledby="signup-title"
-        aria-describedby="signup-description"
+        aria-labelledby={`${id}-title`}
+        aria-describedby={`${id}-description`}
         onClick={handleBackdropClick}
-        className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-3xl border border-slate-200 bg-white p-0 text-slate-900 shadow-2xl shadow-black/35 backdrop:bg-slate-950/75 backdrop:backdrop-blur-sm"
+        className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white p-0 text-slate-900 shadow-xl backdrop:bg-slate-950/60 backdrop:backdrop-blur-sm"
       >
         <div className="relative">
           <button
             type="button"
             onClick={closeDialog}
             aria-label="Close sign up dialog"
-            className="absolute top-4 right-4 flex size-9 cursor-pointer items-center justify-center rounded-full border border-slate-200/80 bg-white/80 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none sm:top-5 sm:right-5"
+            className="absolute top-4 right-4 flex size-11 cursor-pointer items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none sm:top-5 sm:right-5"
           >
             <svg
               aria-hidden="true"
@@ -126,114 +128,109 @@ export default function SignUpDialog() {
             </svg>
           </button>
 
-          <div className="border-b border-slate-100 bg-linear-to-br from-indigo-50 via-white to-white p-5 sm:p-7">
+          <div className="border-b border-slate-200 p-6 sm:p-8">
             <span
               aria-hidden="true"
-              className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-lg font-black text-white shadow-lg shadow-indigo-600/20"
+              className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-lg font-black text-white"
             >
               S
             </span>
             <h2
-              id="signup-title"
+              id={`${id}-title`}
               className="mt-4 text-2xl font-bold tracking-tight text-slate-950"
             >
               Join the conversation
             </h2>
             <p
-              id="signup-description"
+              id={`${id}-description`}
               className="mt-2 text-sm leading-6 text-slate-500"
             >
               Create your account and start sharing ideas.
             </p>
           </div>
 
-          <div className="p-5 sm:p-7">
+          <div className="p-6 sm:p-8">
             <form
               className="grid gap-4"
               onSubmit={handleSubmit}
               aria-busy={isSubmitting}
             >
               <div>
-                <label
-                  className="mb-2 block text-sm font-semibold text-slate-700"
-                  htmlFor="signup-email"
-                >
+                <label className="ui-label" htmlFor={`${id}-email`}>
                   Email address
                 </label>
                 <input
-                  className="min-h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-base text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10 sm:text-sm"
+                  className="ui-input aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10"
                   type="email"
-                  id="signup-email"
+                  id={`${id}-email`}
                   name="email"
                   autoComplete="email"
                   placeholder="you@example.com"
                   required
                   disabled={isSubmitting}
                   aria-invalid={Boolean(formError) || undefined}
+                  aria-describedby={formError ? `${id}-error` : undefined}
                   onChange={handleChange}
                 />
               </div>
 
               <div>
-                <label
-                  className="mb-2 block text-sm font-semibold text-slate-700"
-                  htmlFor="signup-username"
-                >
+                <label className="ui-label" htmlFor={`${id}-username`}>
                   Display name
                 </label>
                 <input
-                  className="min-h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-base text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10 sm:text-sm"
+                  className="ui-input aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10"
                   type="text"
-                  id="signup-username"
+                  id={`${id}-username`}
                   name="username"
                   autoComplete="name"
                   placeholder="How people will know you"
                   required
                   disabled={isSubmitting}
                   aria-invalid={Boolean(formError) || undefined}
+                  aria-describedby={formError ? `${id}-error` : undefined}
                   onChange={handleChange}
                 />
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="min-w-0">
-                  <label
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                    htmlFor="signup-password"
-                  >
+                  <label className="ui-label" htmlFor={`${id}-password`}>
                     Password
                   </label>
                   <input
-                    className="min-h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-base text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10 sm:text-sm"
+                    className="ui-input aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10"
                     type="password"
-                    id="signup-password"
+                    id={`${id}-password`}
                     name="password"
                     autoComplete="new-password"
                     placeholder="Create password"
                     required
                     disabled={isSubmitting}
                     aria-invalid={Boolean(formError) || undefined}
+                    aria-describedby={formError ? `${id}-error` : undefined}
                     onChange={handleChange}
                   />
                 </div>
 
                 <div className="min-w-0">
                   <label
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                    htmlFor="signup-confirm-password"
+                    className="ui-label"
+                    htmlFor={`${id}-confirm-password`}
                   >
                     Confirm
                   </label>
                   <input
-                    className="min-h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-base text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10 sm:text-sm"
+                    className="ui-input aria-invalid:border-rose-300 aria-invalid:bg-rose-50/40 aria-invalid:focus:border-rose-500 aria-invalid:focus:ring-rose-500/10"
                     type="password"
-                    id="signup-confirm-password"
+                    id={`${id}-confirm-password`}
                     name="confirmPassword"
                     autoComplete="new-password"
                     placeholder="Repeat password"
                     required
                     disabled={isSubmitting}
                     aria-invalid={Boolean(formError) || undefined}
+                    aria-describedby={formError ? `${id}-error` : undefined}
                     onChange={handleChange}
                   />
                 </div>
@@ -242,6 +239,7 @@ export default function SignUpDialog() {
               {formError && (
                 <p
                   role="alert"
+                  id={`${id}-error`}
                   className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm leading-6 font-medium wrap-anywhere text-rose-700"
                 >
                   {formError}
@@ -251,7 +249,7 @@ export default function SignUpDialog() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-1 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/15 transition focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none enabled:cursor-pointer enabled:hover:bg-indigo-500 enabled:active:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="ui-button-primary mt-1 w-full"
               >
                 {isSubmitting && (
                   <span

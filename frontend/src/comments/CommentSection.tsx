@@ -135,23 +135,20 @@ export default function CommentSection({ postId }: { postId: string }) {
   };
 
   return (
-    <section className="w-full py-10 sm:py-12" aria-labelledby="comments-title">
+    <section className="w-full py-8 sm:py-10" aria-labelledby="comments-title">
       <div className="mb-6">
         <h2
           id="comments-title"
-          className="text-2xl font-bold tracking-tight text-white"
+          className="text-2xl font-bold tracking-tight text-slate-900"
         >
           Join the conversation
         </h2>
-        <p className="mt-2 text-sm text-slate-400">
+        <p className="mt-2 text-sm leading-6 text-slate-600">
           Add your perspective or respond to what others shared.
         </p>
       </div>
 
-      <form
-        onSubmit={handleCommentSubmit}
-        className="mb-8 rounded-3xl border border-white/10 bg-white p-5 text-slate-900 shadow-xl shadow-black/15 sm:p-6"
-      >
+      <form onSubmit={handleCommentSubmit} className="ui-card mb-6 p-5 sm:p-6">
         {!isSessionPending && !session && (
           <div className="mb-5 flex flex-col gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 sm:flex-row sm:items-center sm:justify-between">
             <p>Sign in to add your voice.</p>
@@ -164,10 +161,7 @@ export default function CommentSection({ postId }: { postId: string }) {
           </div>
         )}
 
-        <label
-          htmlFor="comment"
-          className="mb-2 block text-sm font-semibold text-slate-700"
-        >
+        <label htmlFor="comment" className="ui-label mb-2">
           Your comment
         </label>
 
@@ -181,7 +175,7 @@ export default function CommentSection({ postId }: { postId: string }) {
           aria-invalid={feedback?.type === "error" || undefined}
           placeholder="What would you add to this conversation?"
           onChange={handleChange}
-          className="w-full resize-y rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 leading-7 text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+          className="ui-input resize-y leading-7"
         />
 
         <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -203,7 +197,7 @@ export default function CommentSection({ postId }: { postId: string }) {
           <button
             type="submit"
             disabled={isSessionPending || isSubmitting}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+            className="ui-button-primary"
           >
             {isSubmitting && <SpinnerIcon />}
             {isSubmitting ? "Posting..." : "Post comment"}

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "../lib/auth-client.ts";
 
 const baseButtonClasses =
-  "inline-flex min-w-24 items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex min-h-11 min-w-24 items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
 
 type LikeData = {
   liked: boolean;
@@ -81,7 +81,7 @@ export default function LikeButton({ postId }: { postId: string }) {
       <button
         type="button"
         disabled
-        className={`${baseButtonClasses} border-slate-200 bg-slate-100 text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400`}
+        className={`${baseButtonClasses} border-slate-200 bg-slate-100 text-slate-500`}
       >
         <SpinnerIcon />
         Loading
@@ -94,7 +94,7 @@ export default function LikeButton({ postId }: { postId: string }) {
       <button
         type="button"
         onClick={() => alert("Please sign in first.")}
-        className={`${baseButtonClasses} border-slate-300 bg-white text-slate-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-rose-800 dark:hover:bg-rose-950 dark:hover:text-rose-300`}
+        className={`${baseButtonClasses} border-slate-200 bg-white text-slate-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600`}
       >
         <HeartIcon filled={false} />
         Like
@@ -139,10 +139,10 @@ export default function LikeButton({ postId }: { postId: string }) {
         }`}
         disabled={toggleLike.isPending}
         onClick={() => toggleLike.mutate()}
-        className={`${baseButtonClasses} active:scale-95 ${
+        className={`${baseButtonClasses} ${
           liked
-            ? "border-rose-500 bg-rose-500 text-white hover:bg-rose-600"
-            : "border-slate-300 bg-white text-slate-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
+            ? "border-rose-600 bg-rose-600 text-white hover:bg-rose-700"
+            : "border-slate-200 bg-white text-slate-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
         }`}
       >
         {toggleLike.isPending ? <SpinnerIcon /> : <HeartIcon filled={liked} />}

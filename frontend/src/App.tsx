@@ -29,16 +29,16 @@ function App() {
     <main className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(99,102,241,0.24),transparent_32%),radial-gradient(circle_at_85%_70%,rgba(14,165,233,0.14),transparent_28%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(99,102,241,0.12),transparent_45%)]"
       />
 
-      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-5 py-6 sm:px-8 lg:px-10">
+      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-6 sm:px-6 lg:px-8">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5 sm:pb-6">
           <Link
             to="/"
             className="flex shrink-0 items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
           >
-            <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-500 text-xl font-black shadow-lg shadow-indigo-500/20">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-xl font-black">
               S
             </span>
             <span className="text-xl font-bold tracking-tight">Sway</span>
@@ -48,7 +48,7 @@ function App() {
             {isPending ? (
               <span
                 role="status"
-                className="h-10 w-28 rounded-xl bg-white/10 motion-safe:animate-pulse"
+                className="h-11 w-28 rounded-xl bg-white/10 motion-safe:animate-pulse"
               >
                 <span className="sr-only">Loading account…</span>
               </span>
@@ -76,19 +76,18 @@ function App() {
 
                 <Link
                   to="/dashboard"
-                  className="rounded-xl border border-indigo-400/25 bg-indigo-400/10 px-4 py-2.5 text-sm font-semibold text-indigo-200 transition hover:border-indigo-400/50 hover:bg-indigo-400/20 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                  className="ui-button-primary focus-visible:ring-offset-slate-950"
                 >
                   Open dashboard
                 </Link>
 
-                <div className="[&>button]:cursor-pointer [&>button]:rounded-xl [&>button]:px-3 [&>button]:py-2.5 [&>button]:text-sm [&>button]:font-medium [&>button]:text-slate-400 [&>button]:transition [&>button:focus-visible]:ring-2 [&>button:focus-visible]:ring-indigo-400 [&>button:focus-visible]:outline-none [&>button:hover]:bg-white/5 [&>button:hover]:text-white">
+                <div className="[&>button]:min-h-11 [&>button]:cursor-pointer [&>button]:rounded-xl [&>button]:px-3 [&>button]:py-2.5 [&>button]:text-sm [&>button]:font-medium [&>button]:text-slate-300 [&>button]:transition [&>button:focus-visible]:ring-2 [&>button:focus-visible]:ring-indigo-400 [&>button:focus-visible]:outline-none [&>button:hover]:bg-white/5 [&>button:hover]:text-white">
                   <SignOutButton />
                 </div>
               </>
             ) : (
               <>
-                {/* SVG is hidden here. */}
-                <div className="flex items-center gap-2 [&>button]:inline-flex [&>button]:h-10 [&>button]:cursor-pointer [&>button]:items-center [&>button]:justify-center [&>button]:px-3 [&>button]:py-2 [&>button]:whitespace-nowrap [&>button>svg]:hidden">
+                <div className="flex items-center gap-2 [&>button]:px-4 [&>button]:whitespace-nowrap [&>button>svg]:hidden">
                   <SignInDialog />
                   <SignUpDialog />
                 </div>
@@ -97,7 +96,7 @@ function App() {
           </div>
         </header>
 
-        <div className="grid flex-1 items-center gap-16 py-16 lg:grid-cols-[1fr_0.9fr] lg:py-20">
+        <div className="grid flex-1 items-center gap-12 py-12 sm:py-16 lg:grid-cols-[1fr_0.9fr] lg:gap-16 lg:py-20">
           <section className="max-w-2xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-400/10 px-3 py-1.5 text-xs font-semibold tracking-wider text-indigo-300 uppercase">
               <span className="size-1.5 rounded-full bg-indigo-400" />
@@ -109,18 +108,18 @@ function App() {
               <span className="text-indigo-400"> real conversation.</span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-400">
+            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
               Share what you are learning, follow thoughtful people, and keep up
               with ideas that actually matter to you.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
               {isPending ? (
-                <span className="h-12 w-64 animate-pulse rounded-xl bg-white/10" />
+                <span className="h-11 w-64 rounded-xl bg-white/10 motion-safe:animate-pulse" />
               ) : session ? (
                 <Link
                   to="/dashboard"
-                  className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-5 py-3 text-sm font-semibold shadow-xl shadow-indigo-500/20 transition hover:-translate-y-0.5 hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
+                  className="ui-button-primary focus-visible:ring-offset-slate-950"
                 >
                   Continue as {session.user.name}
                   <ArrowIcon />
@@ -128,7 +127,7 @@ function App() {
               ) : (
                 <>
                   <SignUpDialog />
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-slate-400">
                     Free to join. Start writing in minutes.
                   </p>
                 </>
@@ -140,16 +139,11 @@ function App() {
             className="relative mx-auto w-full max-w-lg lg:mx-0"
             aria-label="A preview of conversations on Sway"
           >
-            <div
-              aria-hidden="true"
-              className="absolute -inset-3 rounded-4xl border border-white/5 bg-white/2.5"
-            />
-
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900/90 p-4 shadow-2xl shadow-black/30 backdrop-blur sm:p-5">
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900 p-4 sm:p-6">
               <div className="mb-4 flex items-center justify-between px-1">
                 <div>
                   <p className="text-sm font-semibold">Today on Sway</p>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-slate-400">
                     Fresh ideas from your community
                   </p>
                 </div>
@@ -162,7 +156,7 @@ function App() {
                 {conversations.map((conversation) => (
                   <article
                     key={conversation.name}
-                    className="rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-lg shadow-black/10"
+                    className="ui-card p-5 text-slate-900"
                   >
                     <div className="flex items-center gap-3">
                       <span
@@ -174,7 +168,7 @@ function App() {
                         <p className="truncate text-sm font-semibold">
                           {conversation.name}
                         </p>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-slate-500">
                           {conversation.time} ago
                         </p>
                       </div>
@@ -183,7 +177,7 @@ function App() {
                     <h2 className="mt-4 text-lg leading-7 font-semibold">
                       {conversation.title}
                     </h2>
-                    <div className="mt-5 flex items-center gap-4 text-xs font-medium text-slate-400">
+                    <div className="mt-5 flex items-center gap-4 text-xs font-medium text-slate-500">
                       <span>♡ 24</span>
                       <span>8 replies</span>
                     </div>
@@ -194,7 +188,7 @@ function App() {
           </section>
         </div>
 
-        <footer className="flex flex-col gap-2 border-t border-white/10 pt-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <footer className="flex flex-col gap-2 border-t border-white/10 pt-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Sway</p>
           <p>Thoughtful people. Better conversations.</p>
         </footer>

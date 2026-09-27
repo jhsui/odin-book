@@ -33,7 +33,7 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
           aria-label="Sway feed"
           className="flex shrink-0 items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
         >
-          <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-500 text-xl font-black text-white shadow-lg shadow-indigo-500/20">
+          <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-xl font-black text-white">
             S
           </span>
           <span className="hidden text-xl font-bold tracking-tight text-white sm:block">
@@ -42,7 +42,7 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
         </Link>
 
         {isAnonymous && (
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-300/20 bg-sky-300/10 px-2.5 py-1 text-xs font-medium text-sky-200">
+          <span className="hidden items-center gap-1.5 rounded-full border border-sky-300/20 bg-sky-300/10 px-2.5 py-1 text-xs font-medium text-sky-200 sm:inline-flex">
             <svg
               aria-hidden="true"
               viewBox="0 0 20 20"
@@ -78,7 +78,7 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
               <Link
                 to={item.to}
                 aria-current={isActive ? "page" : undefined}
-                className={`flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
+                className={`flex min-h-11 items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
                   isActive
                     ? "bg-indigo-400/15 text-indigo-200 ring-1 ring-indigo-400/25 ring-inset"
                     : "text-slate-400 hover:bg-white/5 hover:text-white"
@@ -94,19 +94,19 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
       <div
         className={`ml-auto flex max-w-full min-w-0 flex-wrap items-center gap-1.5 sm:gap-2 ${
           isAnonymous
-            ? "w-full justify-between sm:w-auto sm:justify-end lg:ml-0"
+            ? "justify-end lg:ml-0"
             : "justify-end md:ml-0"
         }`}
       >
         {isPending ? (
           <span
             role="status"
-            className="h-10 w-48 rounded-xl bg-white/10 motion-safe:animate-pulse"
+            className="h-11 w-32 rounded-xl bg-white/10 motion-safe:animate-pulse"
           >
             <span className="sr-only">Loading account…</span>
           </span>
-        ) : isAnonymous ? (
-          <div className="flex items-center gap-2 [&>button]:inline-flex [&>button]:h-10 [&>button]:cursor-pointer [&>button]:items-center [&>button]:justify-center [&>button]:px-3 [&>button]:py-2 [&>button]:whitespace-nowrap [&>button>svg]:hidden">
+        ) : !session || isAnonymous ? (
+          <div className="flex items-center gap-2 [&>button]:inline-flex [&>button]:h-11 [&>button]:cursor-pointer [&>button]:items-center [&>button]:justify-center [&>button]:px-3 [&>button]:py-2 [&>button]:whitespace-nowrap [&>button>svg]:hidden">
             <SignInDialog />
             <SignUpDialog />
           </div>
@@ -117,7 +117,7 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
               aria-current={
                 pathname === "/dashboard/writing" ? "page" : undefined
               }
-              className="inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-indigo-500 px-3 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 focus-visible:outline-none active:bg-indigo-600 sm:gap-2 sm:px-4"
+              className="ui-button-primary px-3 focus-visible:ring-offset-slate-950 sm:px-4"
             >
               <svg
                 aria-hidden="true"
@@ -133,7 +133,7 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
             <Link
               to="/my-profile"
               aria-current={isProfileActive ? "page" : undefined}
-              className={`inline-flex min-h-10 items-center justify-center rounded-xl border px-2.5 py-2 text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none sm:px-3 ${
+              className={`inline-flex min-h-11 items-center justify-center rounded-xl border px-2.5 py-2 text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none sm:px-3 ${
                 isProfileActive
                   ? "border-indigo-400/25 bg-indigo-400/10 text-indigo-200"
                   : "border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white"
@@ -145,7 +145,7 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
         )}
 
         {session && (
-          <div className="sm:border-l sm:border-white/10 sm:pl-2 [&>button]:inline-flex [&>button]:min-h-10 [&>button]:cursor-pointer [&>button]:items-center [&>button]:justify-center [&>button]:rounded-xl [&>button]:px-2.5 [&>button]:py-2.5 [&>button]:text-sm [&>button]:font-medium [&>button]:whitespace-nowrap [&>button]:text-slate-400 [&>button]:transition sm:[&>button]:px-3 [&>button:focus-visible]:ring-2 [&>button:focus-visible]:ring-indigo-400 [&>button:focus-visible]:outline-none [&>button:hover]:bg-white/5 [&>button:hover]:text-white">
+          <div className="sm:border-l sm:border-white/10 sm:pl-2 [&>button]:inline-flex [&>button]:min-h-11 [&>button]:cursor-pointer [&>button]:items-center [&>button]:justify-center [&>button]:rounded-xl [&>button]:px-2.5 [&>button]:py-2.5 [&>button]:text-sm [&>button]:font-medium [&>button]:whitespace-nowrap [&>button]:text-slate-400 [&>button]:transition sm:[&>button]:px-3 [&>button:focus-visible]:ring-2 [&>button:focus-visible]:ring-indigo-400 [&>button:focus-visible]:outline-none [&>button:hover]:bg-white/5 [&>button:hover]:text-white">
             <SignOutButton />
           </div>
         )}

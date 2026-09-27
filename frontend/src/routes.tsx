@@ -41,6 +41,7 @@ const routes: RouteObject[] = [
   {
     path: "posts/:postId",
     element: <PostDetailPage />,
+    errorElement: <RouteError />,
     loader: async ({ params }) => {
       const { postId } = params;
 
@@ -70,6 +71,7 @@ const routes: RouteObject[] = [
   {
     path: "user-profile/:userId",
     element: <UserProfilePage />,
+    errorElement: <RouteError />,
   },
   {
     path: "my-profile",
