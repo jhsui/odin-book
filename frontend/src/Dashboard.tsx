@@ -3,13 +3,15 @@ import React, { useEffect } from "react";
 import PostCard from "./posts/PostCard.tsx";
 import { type PostDash } from "./posts/types.ts";
 import { useInView } from "react-intersection-observer";
-import { Link } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { authClient } from "./lib/auth-client.ts";
 import PageShell, { PageHeading } from "./layout/PageShell.tsx";
 
 export default function Dashboard() {
   const { data: session } = authClient.useSession();
   const canWrite = session && !session.user.isAnonymous;
+
+  const { avatarUrl } = useLoaderData();
 
   const fetchSomePosts = async ({ pageParam }: { pageParam: number }) => {
     const res = await fetch(
@@ -119,9 +121,20 @@ export default function Dashboard() {
           >
             <span
               aria-hidden="true"
-              className="bg-brand-100 text-brand-700 flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              className="bg-brand-100 text-brand-700 relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full text-sm font-bold"
             >
               {session.user.name.trim().charAt(0).toUpperCase() || "S"}
+
+              {avatarUrl && (
+                <img
+                  src={avatarUrl}
+                  alt=""
+                  className="bg-brand-100 absolute inset-0 size-full object-cover"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                  }}
+                />
+              )}
             </span>
             <span className="text-brand-700 min-w-0 flex-1 py-2.5 text-sm">
               What would you like to share?
@@ -131,7 +144,6 @@ export default function Dashboard() {
             </span>
           </Link>
         )}
-        {/* Check if posts exists instead of pages. */}
         {status === "pending" ? (
           <div role="status" className="space-y-4">
             <span className="sr-only">Loading posts…</span>
@@ -163,7 +175,8 @@ export default function Dashboard() {
               {isFetching ? "Trying again…" : "Try again"}
             </button>
           </div>
-        ) : data?.pages.some((page) => page.data.length > 0) ? (
+        ) : // Check if posts exists instead of pages.
+        data?.pages.some((page) => page.data.length > 0) ? (
           <div className="flex flex-col gap-5">
             {data.pages.map((page, i) => (
               <React.Fragment key={i}>

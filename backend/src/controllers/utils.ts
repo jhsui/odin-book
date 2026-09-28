@@ -10,7 +10,7 @@ export async function getImageUrl(
 
   const { data, error } = await supabase.storage
     .from(bucket)
-    .createSignedUrl(path, 3600);
+    .createSignedUrl(path, 3600); // Available for 1h.
 
   if (error) {
     console.error("Failed to sign image URL:", error.message);

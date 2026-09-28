@@ -25,6 +25,7 @@ const requireNotAnonymous = async (
   next: NextFunction,
 ) => {
   const session = await auth.api.getSession({
+    // Convert Express’s headers into BetterAuth format.
     headers: fromNodeHeaders(req.headers),
   });
 

@@ -392,6 +392,19 @@ const changeIntro = [
   },
 ];
 
+const getCurrentUserAvatar = [
+  requireNotAnonymous,
+
+  async (_req: Request, res: Response) => {
+    const avatar = res.locals.session.user.image;
+    const avatarUrl = await getImageUrl(avatar, "user-avatars");
+
+    return res.json({
+      avatarUrl,
+    });
+  },
+];
+
 export default {
   followUser,
   unfollowUser,
@@ -402,4 +415,5 @@ export default {
   changeIntro,
   getUserOwnProfile,
   getUserProfile,
+  getCurrentUserAvatar,
 };

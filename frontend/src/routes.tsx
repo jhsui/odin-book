@@ -23,6 +23,24 @@ const routes: RouteObject[] = [
       {
         index: true,
         element: <Dashboard />,
+        loader: async () => {
+          const { data: session } = await authClient.getSession();
+
+          if (!session || session.user.isAnonymous) {
+            return { avatarUrl: null };
+          }
+
+          const res = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/users/me/avatar`,
+            { credentials: "include" },
+          );
+
+          if (!res.ok) {
+            return { avatarUrl: null };
+          }
+
+          return res;
+        },
       },
       {
         path: "writing",
@@ -65,7 +83,7 @@ const routes: RouteObject[] = [
         });
       }
 
-      return res.json();
+      return res;
     },
   },
   {
@@ -101,8 +119,7 @@ const routes: RouteObject[] = [
         });
       }
 
-      const { user } = await res.json();
-      return { user };
+      return res;
     },
   },
   {

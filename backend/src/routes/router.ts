@@ -20,6 +20,7 @@ router.post("/posts/:postId/comments", commentController.postComment);
 router.delete("/comments/:commentId", commentController.deleteComment);
 
 router.get("/users/index", userController.getAllUsers);
+router.get("/users/me/avatar", userController.getCurrentUserAvatar);
 router.put("/users/me/avatar", userController.uploadNewAvatar);
 router.put("/users/me/name", userController.changeName);
 router.put("/users/me/intro", userController.changeIntro);
