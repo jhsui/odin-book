@@ -135,20 +135,20 @@ export default function CommentSection({ postId }: { postId: string }) {
   };
 
   return (
-    <section className="w-full py-8 sm:py-10" aria-labelledby="comments-title">
-      <div className="mb-6">
+    <section className="w-full py-9 sm:py-12" aria-labelledby="comments-title">
+      <div className="mb-6 px-1">
         <h2
           id="comments-title"
-          className="text-2xl font-bold tracking-tight text-slate-900"
+          className="font-display text-ink text-3xl tracking-tight"
         >
-          Join the conversation
+          The conversation
         </h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">
+        <p className="mt-2 text-sm leading-6 text-stone-500">
           Add your perspective or respond to what others shared.
         </p>
       </div>
 
-      <form onSubmit={handleCommentSubmit} className="ui-card mb-6 p-5 sm:p-6">
+      <form onSubmit={handleCommentSubmit} className="ui-card mb-5 p-5 sm:p-6">
         {!isSessionPending && !session && (
           <div className="mb-5 flex flex-col gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 sm:flex-row sm:items-center sm:justify-between">
             <p>Sign in to add your voice.</p>
@@ -169,13 +169,13 @@ export default function CommentSection({ postId }: { postId: string }) {
           id="comment"
           name="comment"
           value={comment}
-          rows={4}
+          rows={3}
           required
           disabled={isSessionPending || isSubmitting}
           aria-invalid={feedback?.type === "error" || undefined}
           placeholder="What would you add to this conversation?"
           onChange={handleChange}
-          className="ui-input resize-y leading-7"
+          className="ui-input bg-canvas/50 resize-y p-4 leading-7"
         />
 
         <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">

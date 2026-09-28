@@ -86,7 +86,7 @@ export default function SignUpDialog() {
     <>
       <button
         type="button"
-        className="ui-button-primary focus-visible:ring-offset-slate-950"
+        className="ui-button-primary"
         onClick={() => dialogRef.current?.showModal()}
       >
         Sign up
@@ -109,14 +109,14 @@ export default function SignUpDialog() {
         aria-labelledby={`${id}-title`}
         aria-describedby={`${id}-description`}
         onClick={handleBackdropClick}
-        className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white p-0 text-slate-900 shadow-xl backdrop:bg-slate-950/60 backdrop:backdrop-blur-sm"
+        className="text-ink backdrop:bg-brand-950/45 m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-[1.75rem] border border-stone-200 bg-[#fffefa] p-0 shadow-2xl backdrop:backdrop-blur-sm"
       >
         <div className="relative">
           <button
             type="button"
             onClick={closeDialog}
             aria-label="Close sign up dialog"
-            className="absolute top-4 right-4 flex size-11 cursor-pointer items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none sm:top-5 sm:right-5"
+            className="focus-visible:ring-brand-600 absolute top-4 right-4 flex size-11 cursor-pointer items-center justify-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-900 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:top-5 sm:right-5"
           >
             <svg
               aria-hidden="true"
@@ -128,22 +128,19 @@ export default function SignUpDialog() {
             </svg>
           </button>
 
-          <div className="border-b border-slate-200 p-6 sm:p-8">
-            <span
-              aria-hidden="true"
-              className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-lg font-black text-white"
-            >
-              S
+          <div className="bg-canvas border-b border-stone-200 p-6 sm:p-8">
+            <span aria-hidden="true" className="sway-mark">
+              s
             </span>
             <h2
               id={`${id}-title`}
-              className="mt-4 text-2xl font-bold tracking-tight text-slate-950"
+              className="font-display text-ink mt-4 text-3xl tracking-tight"
             >
               Join the conversation
             </h2>
             <p
               id={`${id}-description`}
-              className="mt-2 text-sm leading-6 text-slate-500"
+              className="mt-2 text-sm leading-6 text-stone-500"
             >
               Create your account and start sharing ideas.
             </p>
@@ -263,11 +260,11 @@ export default function SignUpDialog() {
 
             <div className="mt-6">
               <div className="flex items-center gap-3">
-                <span aria-hidden="true" className="h-px flex-1 bg-slate-200" />
-                <p className="text-xs font-medium text-slate-500">
+                <span aria-hidden="true" className="h-px flex-1 bg-stone-200" />
+                <p className="text-xs font-medium text-stone-500">
                   Or continue with
                 </p>
-                <span aria-hidden="true" className="h-px flex-1 bg-slate-200" />
+                <span aria-hidden="true" className="h-px flex-1 bg-stone-200" />
               </div>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <GoogleSignInButton disabled={isSubmitting} />

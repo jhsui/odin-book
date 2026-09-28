@@ -240,6 +240,7 @@ const getUserProfile = [
     return res.json({
       user: {
         ...user,
+        // Get user own avatar.
         image: await getImageUrl(user.image, "user-avatars"),
       },
     });

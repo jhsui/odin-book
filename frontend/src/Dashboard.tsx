@@ -37,7 +37,7 @@ export default function Dashboard() {
     queryKey: ["posts-for-dashboard"],
     queryFn: fetchSomePosts,
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => lastPage.nextPage, // todo: lastPage needs to have nextPage.
+    getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
   const { ref, inView } = useInView({
@@ -51,41 +51,44 @@ export default function Dashboard() {
   }, [fetchNextPage, inView, hasNextPage, isFetching, isFetchNextPageError]);
 
   return (
-    <PageShell className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_17rem] xl:grid-cols-[11rem_minmax(0,1fr)_17rem]">
+    <PageShell className="grid items-start gap-7 lg:grid-cols-[minmax(0,1fr)_17rem] xl:grid-cols-[11rem_minmax(0,1fr)_17rem] xl:gap-9">
       <aside
         className="sticky top-28 hidden xl:block"
         aria-label="Explore Sway"
       >
+        <p className="ui-eyebrow mb-5 px-3">Your daily pause</p>
         <nav aria-label="Dashboard navigation" className="space-y-1">
           <Link
             to="/dashboard"
             aria-current="page"
-            className="flex items-center gap-3 rounded-xl bg-indigo-100 px-3 py-3 text-sm font-semibold text-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
+            className="bg-brand-100/70 text-brand-700 focus-visible:ring-brand-500 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold focus-visible:ring-2 focus-visible:outline-none"
           >
             <DashboardIcon name="home" />
             Home
           </Link>
           <Link
             to="/dashboard/user-index"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-200/70 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
+            className="focus-visible:ring-brand-500 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-stone-600 transition hover:bg-stone-200/70 hover:text-stone-900 focus-visible:ring-2 focus-visible:outline-none"
           >
             <DashboardIcon name="people" />
             Discover people
           </Link>
           <Link
             to="/dashboard/post-index"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-200/70 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
+            className="focus-visible:ring-brand-500 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-stone-600 transition hover:bg-stone-200/70 hover:text-stone-900 focus-visible:ring-2 focus-visible:outline-none"
           >
             <DashboardIcon name="posts" />
             All posts
           </Link>
         </nav>
 
-        <div className="mt-5 border-t border-slate-200 px-3 pt-5">
-          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
-            A place to connect
+        <div className="mt-8 border-t border-stone-200 px-3 pt-6">
+          <p className="font-display text-ink text-xl leading-snug">
+            A little more
+            <br />
+            connected.
           </p>
-          <p className="mt-2 text-sm leading-6 text-slate-500">
+          <p className="mt-2 text-sm leading-6 text-stone-500">
             Share an idea. Find your people. Join a conversation.
           </p>
         </div>
@@ -97,12 +100,13 @@ export default function Dashboard() {
         className="min-w-0 scroll-mt-48 xl:scroll-mt-28"
       >
         <PageHeading
+          eyebrow="The community journal"
           title="Home feed"
-          description="Fresh stories and ideas from your community."
+          description="A fresh perspective is just a conversation away."
         >
           <span className="ui-badge">
             <span
-              className="size-1.5 rounded-full bg-indigo-500"
+              className="bg-brand-500 size-1.5 rounded-full"
               aria-hidden="true"
             />
             Latest
@@ -111,21 +115,18 @@ export default function Dashboard() {
         {canWrite && (
           <Link
             to="/dashboard/writing"
-            className="group mb-4 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:border-indigo-300 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none sm:p-4"
+            className="group border-brand-200/70 bg-brand-50/60 hover:border-brand-300 hover:bg-brand-50 focus-visible:ring-brand-500 mb-6 flex items-center gap-3 rounded-[1.25rem] border p-3 transition focus-visible:ring-2 focus-visible:outline-none sm:p-4"
           >
             <span
               aria-hidden="true"
-              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700"
+              className="bg-brand-100 text-brand-700 flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold"
             >
               {session.user.name.trim().charAt(0).toUpperCase() || "S"}
             </span>
-            <span className="min-w-0 flex-1 rounded-full border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-500 transition group-hover:border-indigo-200 group-hover:bg-indigo-50/50">
+            <span className="text-brand-700 min-w-0 flex-1 py-2.5 text-sm">
               What would you like to share?
             </span>
-            <span
-              className="hidden text-indigo-500 sm:block"
-              aria-hidden="true"
-            >
+            <span className="text-brand-500 hidden sm:block" aria-hidden="true">
               <DashboardIcon name="plus" />
             </span>
           </Link>
@@ -141,18 +142,18 @@ export default function Dashboard() {
                 className="ui-card space-y-4 p-5 motion-safe:animate-pulse"
               >
                 <div className="flex items-center gap-3">
-                  <div className="size-10 rounded-full bg-slate-100" />
-                  <div className="h-3 w-32 rounded bg-slate-100" />
+                  <div className="size-10 rounded-full bg-stone-100" />
+                  <div className="h-3 w-32 rounded bg-stone-100" />
                 </div>
-                <div className="h-5 w-2/3 rounded bg-slate-100" />
-                <div className="h-16 rounded-xl bg-slate-50" />
+                <div className="h-5 w-2/3 rounded bg-stone-100" />
+                <div className="h-16 rounded-xl bg-stone-50" />
               </div>
             ))}
           </div>
         ) : status === "error" && !data ? (
           <div role="alert" className="ui-card px-6 py-12 text-center">
             <h2 className="text-lg font-semibold">We couldn’t load the feed</h2>
-            <p className="mt-2 text-sm text-slate-600">{error.message}</p>
+            <p className="mt-2 text-sm text-stone-600">{error.message}</p>
             <button
               type="button"
               className="ui-button-secondary mt-5"
@@ -163,7 +164,7 @@ export default function Dashboard() {
             </button>
           </div>
         ) : data?.pages.some((page) => page.data.length > 0) ? (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-5">
             {data.pages.map((page, i) => (
               <React.Fragment key={i}>
                 {page.data.map((post: PostDash) => (
@@ -172,7 +173,7 @@ export default function Dashboard() {
               </React.Fragment>
             ))}
 
-            <div ref={ref} className="py-3 text-center text-sm text-slate-500">
+            <div ref={ref} className="py-3 text-center text-sm text-stone-500">
               {isFetching && <p role="status">Loading more stories…</p>}
               {!hasNextPage && !isFetching && <p>You’re all caught up.</p>}
 
@@ -195,7 +196,7 @@ export default function Dashboard() {
         ) : (
           <div className="ui-empty">
             <span
-              className="mx-auto flex size-12 items-center justify-center rounded-full bg-indigo-50 text-indigo-600"
+              className="bg-brand-50 text-brand-600 mx-auto flex size-12 items-center justify-center rounded-full"
               aria-hidden="true"
             >
               <DashboardIcon name="posts" />
@@ -203,7 +204,7 @@ export default function Dashboard() {
             <h2 className="mt-4 text-lg font-semibold">
               The conversation starts here
             </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+            <p className="mt-2 text-sm leading-6 text-stone-500">
               No posts yet. Share something with the community.
             </p>
             <Link
@@ -220,24 +221,53 @@ export default function Dashboard() {
         className="sticky top-28 hidden space-y-4 lg:block"
         aria-label="About the community"
       >
-        <section className="ui-card overflow-hidden">
-          <div className="flex h-20 items-end bg-indigo-600 px-5">
-            <span
-              aria-hidden="true"
-              className="flex size-14 translate-y-5 items-center justify-center rounded-2xl border-4 border-white bg-slate-950 text-2xl font-black text-white"
-            >
-              S
-            </span>
-          </div>
-          <div className="px-5 pt-8 pb-5">
-            <h2 className="text-base font-bold">Your corner of the internet</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+        <section className="bg-brand-800 relative overflow-hidden rounded-[1.25rem] p-6 text-white">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 180 150"
+            className="text-brand-300/20 pointer-events-none absolute -top-7 -right-9 w-48"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+          >
+            <ellipse
+              cx="95"
+              cy="75"
+              rx="75"
+              ry="36"
+              transform="rotate(-35 95 75)"
+            />
+            <ellipse
+              cx="95"
+              cy="75"
+              rx="75"
+              ry="48"
+              transform="rotate(-35 95 75)"
+            />
+            <ellipse
+              cx="95"
+              cy="75"
+              rx="75"
+              ry="60"
+              transform="rotate(-35 95 75)"
+            />
+          </svg>
+          <div className="relative">
+            <p className="text-brand-200 text-[0.6875rem] font-medium tracking-[0.18em] uppercase">
+              Made for connection
+            </p>
+            <h2 className="font-display mt-8 text-[1.8rem] leading-[1.15]">
+              Your corner
+              <br />
+              of the internet.
+            </h2>
+            <p className="text-brand-100/90 mt-4 text-sm leading-6">
               Welcome to Sway. A community for everyday stories, fresh ideas,
               and the people behind them.
             </p>
             <Link
               to={canWrite ? "/dashboard/writing" : "/"}
-              className="ui-button-primary mt-5 w-full"
+              className="text-brand-900 mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#e8edce] px-3 py-2.5 text-sm font-semibold transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               {canWrite && <DashboardIcon name="plus" />}
               {canWrite ? "Create a post" : "Join the conversation"}
@@ -245,51 +275,51 @@ export default function Dashboard() {
           </div>
         </section>
 
-        <section className="ui-card p-5">
-          <h2 className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
+        <section className="px-1 py-5">
+          <h2 className="text-xs font-semibold tracking-wider text-stone-500 uppercase">
             Explore the community
           </h2>
           <Link
             to="/dashboard/user-index"
-            className="group mt-4 flex items-center gap-3 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-4 focus-visible:outline-none"
+            className="group focus-visible:ring-brand-500 mt-4 flex items-center gap-3 rounded-lg focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-none"
           >
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+            <span className="bg-brand-50 text-brand-600 flex size-10 shrink-0 items-center justify-center rounded-xl">
               <DashboardIcon name="people" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-sm font-semibold transition group-hover:text-indigo-600">
+              <span className="group-hover:text-brand-600 block text-sm font-semibold transition">
                 Find your people
               </span>
-              <span className="mt-0.5 block text-xs text-slate-500">
+              <span className="mt-0.5 block text-xs text-stone-500">
                 Discover someone new
               </span>
             </span>
-            <span aria-hidden="true" className="text-slate-400">
+            <span aria-hidden="true" className="text-stone-400">
               →
             </span>
           </Link>
           <Link
             to="/dashboard/post-index"
-            className="group mt-5 flex items-center gap-3 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-4 focus-visible:outline-none"
+            className="group focus-visible:ring-brand-500 mt-5 flex items-center gap-3 rounded-lg focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-none"
           >
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+            <span className="bg-brand-50 text-brand-600 flex size-10 shrink-0 items-center justify-center rounded-xl">
               <DashboardIcon name="posts" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-sm font-semibold transition group-hover:text-indigo-600">
+              <span className="group-hover:text-brand-600 block text-sm font-semibold transition">
                 Browse the archive
               </span>
-              <span className="mt-0.5 block text-xs text-slate-500">
+              <span className="mt-0.5 block text-xs text-stone-500">
                 More stories to explore
               </span>
             </span>
-            <span aria-hidden="true" className="text-slate-400">
+            <span aria-hidden="true" className="text-stone-400">
               →
             </span>
           </Link>
         </section>
 
-        <p className="px-2 text-xs leading-5 text-slate-500">
+        <p className="px-2 text-xs leading-5 text-stone-500">
           Sway · A little more connected.
         </p>
       </aside>

@@ -16,30 +16,29 @@ export default function PostDetailPage() {
   return (
     <PageShell>
       <div className="mx-auto max-w-3xl">
-        <Link to="/dashboard" className="ui-button-secondary">
-          <span aria-hidden="true">←</span>
-          Back to Feed
+        <Link to="/dashboard" className="ui-link text-sm">
+          <span aria-hidden="true">←</span> Back to Feed
         </Link>
 
-        <article className="ui-card mt-6 min-w-0 overflow-hidden">
-          <header className="border-b border-slate-200 px-5 py-6 sm:px-8 sm:py-8">
-            <div className="mb-5 flex items-center gap-2">
+        <article className="ui-card mt-7 min-w-0 overflow-hidden">
+          <header className="px-5 pt-7 pb-6 sm:px-10 sm:pt-10 sm:pb-7">
+            <div className="mb-6 flex items-center gap-2">
               <span className="ui-badge">Community post</span>
             </div>
 
-            <h1 className="text-3xl leading-tight font-bold tracking-tight text-balance wrap-anywhere text-slate-900 sm:text-4xl">
+            <h1 className="font-display text-ink text-4xl leading-[1.15] tracking-tight text-balance wrap-anywhere sm:text-5xl">
               {post.title}
             </h1>
 
-            <div className="mt-7 flex min-w-0 items-center gap-3">
+            <div className="mt-7 flex min-w-0 items-center gap-3 border-b border-stone-200/80 pb-7">
               <Link
                 to={`/user-profile/${post.author.id}`}
                 aria-label={`View ${post.author.name}'s profile`}
-                className="shrink-0 rounded-full transition hover:opacity-80 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-4 focus-visible:outline-none"
+                className="focus-visible:ring-brand-500 shrink-0 rounded-full transition hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-none"
               >
                 <span
                   aria-hidden="true"
-                  className="relative flex size-12 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-base font-bold text-indigo-700 ring-1 ring-indigo-600/10 ring-inset"
+                  className="bg-brand-50 text-brand-700 ring-brand-600/10 relative flex size-11 items-center justify-center overflow-hidden rounded-full text-sm font-semibold ring-1 ring-inset"
                 >
                   {authorInitial}
                   {post.author.image && (
@@ -59,13 +58,13 @@ export default function PostDetailPage() {
               <div className="min-w-0">
                 <Link
                   to={`/user-profile/${post.author.id}`}
-                  className="rounded-md text-sm font-semibold wrap-anywhere text-slate-900 transition hover:text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+                  className="hover:text-brand-600 focus-visible:ring-brand-500 rounded-md text-sm font-semibold wrap-anywhere text-stone-900 transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
                   {post.author.name}
                 </Link>
                 <time
                   dateTime={post.createdAt}
-                  className="mt-1 block text-xs leading-5 text-slate-500"
+                  className="mt-1 block text-xs leading-5 text-stone-500"
                 >
                   Published {createdAt}
                 </time>
@@ -73,16 +72,18 @@ export default function PostDetailPage() {
             </div>
           </header>
 
-          <div className="px-5 py-6 sm:px-8 sm:py-8">
+          <div className="px-5 pt-1 pb-9 sm:px-10 sm:pb-11">
             <PostImageGallery key={post.id} images={post.images} />
 
-            <p className="text-base leading-8 wrap-anywhere whitespace-pre-wrap text-slate-700 sm:text-lg sm:leading-9">
+            <p className="text-base leading-8 wrap-anywhere whitespace-pre-wrap text-stone-700 sm:text-[1.0625rem] sm:leading-9">
               {post.content}
             </p>
           </div>
 
-          <footer className="flex flex-col gap-4 border-t border-slate-200 bg-slate-50 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-            <p className="text-sm text-slate-500">Do you like this post?</p>
+          <footer className="bg-canvas/50 flex flex-col gap-4 border-t border-stone-200/80 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-10">
+            <p className="text-sm text-stone-500">
+              A little appreciation goes a long way.
+            </p>
             <div className="flex min-w-0 flex-wrap items-start gap-3">
               <LikeButton postId={post.id} />
               <DeletePostButton

@@ -50,15 +50,15 @@ export default function Comments({ postId }: { postId: string }) {
             className="ui-card p-5 motion-safe:animate-pulse sm:p-6"
           >
             <div className="flex items-center gap-3">
-              <div className="size-11 shrink-0 rounded-full bg-slate-200" />
+              <div className="size-11 shrink-0 rounded-full bg-stone-200" />
               <div className="min-w-0 flex-1 space-y-2">
-                <div className="h-3.5 w-28 max-w-full rounded bg-slate-200" />
-                <div className="h-3 w-40 max-w-full rounded bg-slate-100" />
+                <div className="h-3.5 w-28 max-w-full rounded bg-stone-200" />
+                <div className="h-3 w-40 max-w-full rounded bg-stone-100" />
               </div>
             </div>
             <div className="mt-4 space-y-2.5 sm:ml-14">
-              <div className="h-3.5 w-full rounded bg-slate-100" />
-              <div className="h-3.5 w-2/3 rounded bg-slate-100" />
+              <div className="h-3.5 w-full rounded bg-stone-100" />
+              <div className="h-3.5 w-2/3 rounded bg-stone-100" />
             </div>
           </div>
         ))}
@@ -88,7 +88,7 @@ export default function Comments({ postId }: { postId: string }) {
   if (comments.length === 0) {
     return (
       <div className="ui-empty">
-        <span className="mx-auto flex size-11 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+        <span className="bg-brand-50 text-brand-600 ring-brand-100 mx-auto flex size-11 items-center justify-center rounded-2xl ring-1">
           <svg
             aria-hidden="true"
             viewBox="0 0 20 20"
@@ -102,10 +102,10 @@ export default function Comments({ postId }: { postId: string }) {
             />
           </svg>
         </span>
-        <p className="mt-4 text-sm font-semibold text-slate-900">
+        <p className="mt-4 text-sm font-semibold text-stone-900">
           No comments yet
         </p>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-stone-500">
           Be the first person to add to the conversation.
         </p>
       </div>
@@ -113,13 +113,16 @@ export default function Comments({ postId }: { postId: string }) {
   }
 
   return (
-    <ul className="space-y-4" aria-label="Comments">
+    <ul
+      className="ui-card divide-y divide-stone-200/70 overflow-hidden"
+      aria-label="Comments"
+    >
       {comments.map((comment) => {
         const authorDetails = (
           <>
             <span
               aria-hidden="true"
-              className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-50 text-sm font-bold text-indigo-600 ring-1 ring-indigo-600/10 ring-inset"
+              className="bg-brand-50 text-brand-700 ring-brand-600/10 relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full text-sm font-semibold ring-1 ring-inset"
             >
               {comment.author.name.trim().charAt(0).toUpperCase() || "?"}
               {comment.author.image && (
@@ -137,13 +140,13 @@ export default function Comments({ postId }: { postId: string }) {
             </span>
 
             <span className="min-w-0 flex-1">
-              <span className="block text-sm font-semibold wrap-anywhere text-slate-900 transition group-hover:text-indigo-600">
+              <span className="group-hover:text-brand-600 block text-sm font-semibold wrap-anywhere text-stone-900 transition">
                 {comment.author.name}
               </span>
 
               <time
                 dateTime={comment.createdAt}
-                className="mt-1 block text-xs leading-5 text-slate-500"
+                className="mt-1 block text-xs leading-5 text-stone-500"
               >
                 {formatDateTime(comment.createdAt)}
               </time>
@@ -153,28 +156,30 @@ export default function Comments({ postId }: { postId: string }) {
 
         return (
           <li key={comment.id}>
-            <article className="ui-card min-w-0 p-5 sm:p-6">
+            <article className="min-w-0 p-5 sm:p-6">
               <header>
                 {comment.author.isAnonymous ? (
                   <div className="flex items-center gap-3">{authorDetails}</div>
                 ) : (
                   <Link
                     to={`/user-profile/${comment.author.id}`}
-                    className="group flex w-fit max-w-full items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-4 focus-visible:outline-none"
+                    className="group focus-visible:ring-brand-500 flex w-fit max-w-full items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-none"
                   >
                     {authorDetails}
                   </Link>
                 )}
               </header>
 
-              <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-600 sm:ml-14 sm:text-base">
+              <p className="mt-3 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-stone-600 sm:ml-14 sm:text-[0.9375rem]">
                 {comment.content}
               </p>
 
-              <DeleteCommentButton
-                commentId={comment.id}
-                authorId={comment.author.id}
-              />
+              <div className="sm:ml-14">
+                <DeleteCommentButton
+                  commentId={comment.id}
+                  authorId={comment.author.id}
+                />
+              </div>
             </article>
           </li>
         );

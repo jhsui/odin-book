@@ -71,7 +71,7 @@ export default function MyUserIntro({ user }: { user: User }) {
 
   return (
     <>
-      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-600">
+      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-stone-600">
         {user.intro || "You haven't added an intro yet."}
       </p>
 
@@ -85,11 +85,14 @@ export default function MyUserIntro({ user }: { user: User }) {
           setShowIntroInput(true);
         }}
       >
-        {user.intro ? "Edit Intro" : "Add an introduction"}
+        {user.intro ? "Edit introduction" : "Add an introduction"}
       </button>
 
       {showIntroInput && (
-        <form onSubmit={handleIntroSubmit} className="mt-4 space-y-3">
+        <form
+          onSubmit={handleIntroSubmit}
+          className="bg-canvas mt-4 space-y-3 rounded-2xl border border-stone-200 p-4"
+        >
           <label htmlFor="intro" className="ui-label">
             Introduction
           </label>
@@ -110,7 +113,7 @@ export default function MyUserIntro({ user }: { user: User }) {
             }}
           ></textarea>
 
-          <p id="intro-help" className="text-xs text-slate-500">
+          <p id="intro-help" className="text-xs text-stone-500">
             {intro.length.toLocaleString()} /{" "}
             {MAX_INTRO_LENGTH.toLocaleString()} characters
           </p>

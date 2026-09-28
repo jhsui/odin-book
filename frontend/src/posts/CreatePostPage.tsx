@@ -120,19 +120,18 @@ export default function CreatePostPage() {
   return (
     <PageShell>
       <div className="mx-auto max-w-5xl">
-        <div className="mb-6">
-          <Link to="/dashboard" className="ui-button-secondary">
-            <span aria-hidden="true">←</span>
-            Back to Feed
+        <div className="mb-7">
+          <Link to="/dashboard" className="ui-link text-sm">
+            <span aria-hidden="true">←</span> Back to Feed
           </Link>
         </div>
         <PageHeading
-          eyebrow="Create"
-          title="Write something worth sharing"
-          description="Start with one clear idea. You can keep it short, tell a story, or share what you have learned."
+          eyebrow="Your next story"
+          title="A thought worth sharing."
+          description="An everyday discovery, a fresh perspective, a story only you can tell. Make a little space for it here."
         />
 
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_17rem]">
+        <div className="grid items-start gap-7 lg:grid-cols-[minmax(0,1fr)_15rem]">
           <section className="ui-card min-w-0 p-5 sm:p-8">
             {!isSessionPending && !session && (
               <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 sm:flex-row sm:items-center sm:justify-between">
@@ -146,7 +145,7 @@ export default function CreatePostPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-7">
               <div className="flex flex-col gap-2">
                 <label htmlFor="title" className="ui-label mb-0">
                   Title
@@ -156,11 +155,11 @@ export default function CreatePostPage() {
                   id="title"
                   name="title"
                   value={formData.title}
-                  placeholder="Give your idea a clear title"
+                  placeholder="Start with a title…"
                   required
                   disabled={inputsDisabled}
                   aria-invalid={feedback?.type === "error" || undefined}
-                  className="ui-input"
+                  className="ui-input font-display bg-white py-4 text-2xl placeholder:text-xl sm:text-3xl"
                   onChange={handleChange}
                 />
               </div>
@@ -170,7 +169,7 @@ export default function CreatePostPage() {
                   <label htmlFor="content" className="ui-label mb-0">
                     Your post
                   </label>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-stone-500">
                     {formData.content.length.toLocaleString()} characters
                   </span>
                 </div>
@@ -184,16 +183,16 @@ export default function CreatePostPage() {
                   required
                   disabled={inputsDisabled}
                   aria-invalid={feedback?.type === "error" || undefined}
-                  className="ui-input resize-y leading-7"
+                  className="ui-input min-h-72 resize-y bg-white p-4 text-base leading-8 sm:text-base"
                   onChange={handleChange}
                 />
               </div>
 
-              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4 sm:p-5">
+              <div className="bg-canvas/60 min-w-0 rounded-2xl border border-dashed border-stone-300 p-4 sm:p-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <label htmlFor="post-images" className="ui-label mb-0">
                     Post images
-                    <span className="ml-2 text-xs font-normal text-slate-500">
+                    <span className="ml-2 text-xs font-normal text-stone-500">
                       Optional
                     </span>
                   </label>
@@ -203,7 +202,7 @@ export default function CreatePostPage() {
                 </div>
                 <p
                   id="post-images-help"
-                  className="mt-2 text-xs leading-5 text-slate-500"
+                  className="mt-2 text-xs leading-5 text-stone-500"
                 >
                   You can add up to 4 images. JPEG, PNG or WebP, up to 5 MiB
                   each.
@@ -215,7 +214,7 @@ export default function CreatePostPage() {
                   multiple
                   disabled={inputsDisabled}
                   aria-describedby="post-images-help"
-                  className="mt-4 block w-full min-w-0 cursor-pointer rounded-xl border border-indigo-100 bg-white p-2 text-sm text-slate-500 shadow-sm transition file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-indigo-600 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-white file:transition hover:border-indigo-300 hover:file:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 disabled:file:cursor-not-allowed"
+                  className="file:bg-brand-50 file:text-brand-700 hover:border-brand-300 hover:file:bg-brand-100 focus-visible:ring-brand-500 mt-4 block w-full min-w-0 cursor-pointer rounded-xl border border-stone-200 bg-white p-2 text-sm text-stone-500 transition file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 disabled:file:cursor-not-allowed"
                   onChange={(event) => {
                     const input = event.currentTarget;
                     const images = Array.from(input.files ?? []);
@@ -258,19 +257,19 @@ export default function CreatePostPage() {
                     {formData.images.map((img, index) => (
                       <li
                         key={img.name}
-                        className="flex min-w-0 flex-wrap items-center gap-3 rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm"
+                        className="flex min-w-0 flex-wrap items-center gap-3 rounded-xl border border-stone-200/80 bg-white p-3"
                       >
                         <span
                           aria-hidden="true"
-                          className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-xs font-semibold text-indigo-600 ring-1 ring-indigo-100 ring-inset"
+                          className="bg-brand-50 text-brand-600 ring-brand-100 flex size-9 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ring-1 ring-inset"
                         >
                           {index + 1}
                         </span>
                         <div className="min-w-0 flex-1 basis-24">
-                          <p className="text-sm leading-5 font-medium wrap-anywhere text-slate-800">
+                          <p className="text-sm leading-5 font-medium wrap-anywhere text-stone-800">
                             {img.name}
                           </p>
-                          <p className="mt-0.5 text-xs text-slate-500">
+                          <p className="mt-0.5 text-xs text-stone-500">
                             {(img.size / (1024 * 1024)).toFixed(2)} MiB
                           </p>
                         </div>
@@ -278,7 +277,7 @@ export default function CreatePostPage() {
                           type="button"
                           disabled={inputsDisabled}
                           aria-label={`Remove ${img.name}`}
-                          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 px-3 text-xs font-semibold text-rose-700 transition hover:border-rose-300 hover:bg-rose-100 focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-full px-3 text-xs font-medium text-stone-500 transition hover:bg-rose-50 hover:text-rose-700 focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                           onClick={() =>
                             setFormData((prev) => ({
                               ...prev,
@@ -294,7 +293,7 @@ export default function CreatePostPage() {
                 )}
               </div>
 
-              <div className="flex flex-col-reverse gap-4 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col-reverse gap-4 border-t border-stone-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-h-6 min-w-0 flex-1" aria-live="polite">
                   {feedback && (
                     <p
@@ -322,22 +321,40 @@ export default function CreatePostPage() {
             </form>
           </section>
 
-          <aside className="ui-card p-5 sm:p-6">
-            <p className="text-sm font-semibold text-slate-900">
-              A strong post
+          <aside className="px-1 py-3 lg:pt-6">
+            <p className="text-brand-700 text-xs font-semibold tracking-[0.16em] uppercase">
+              A few gentle prompts
             </p>
-            <ul className="mt-4 space-y-4 text-sm leading-6 text-slate-600">
-              <li className="flex gap-3">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-indigo-600" />
-                Focuses on one useful idea.
+            <h2 className="font-display text-ink mt-3 text-2xl">
+              Make it yours.
+            </h2>
+            <ul className="mt-5 space-y-5 text-sm leading-6 text-stone-600">
+              <li className="flex gap-3 border-t border-stone-200 pt-4">
+                <span
+                  className="text-brand-600 text-xs leading-6"
+                  aria-hidden="true"
+                >
+                  01
+                </span>
+                Start with one idea you keep coming back to.
               </li>
-              <li className="flex gap-3">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-indigo-600" />
-                Uses a title that sets clear expectations.
+              <li className="flex gap-3 border-t border-stone-200 pt-4">
+                <span
+                  className="text-brand-600 text-xs leading-6"
+                  aria-hidden="true"
+                >
+                  02
+                </span>
+                Let your title offer a glimpse of what's inside.
               </li>
-              <li className="flex gap-3">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-indigo-600" />
-                Invites others into the conversation.
+              <li className="flex gap-3 border-t border-stone-200 pt-4">
+                <span
+                  className="text-brand-600 text-xs leading-6"
+                  aria-hidden="true"
+                >
+                  03
+                </span>
+                Leave room for someone else's perspective.
               </li>
             </ul>
           </aside>

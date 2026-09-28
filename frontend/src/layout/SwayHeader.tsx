@@ -20,8 +20,8 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
 
   return (
     <nav
-      className={`flex flex-wrap items-center gap-x-3 gap-y-4 sm:gap-x-4 ${
-        compact ? "py-3" : "border-b border-white/10 pb-5 sm:pb-6"
+      className={`flex flex-wrap items-center gap-x-3 gap-y-3 sm:gap-x-4 ${
+        compact ? "py-4" : "border-b border-stone-200 pb-5 sm:pb-6"
       } ${
         isAnonymous ? "lg:flex-nowrap lg:gap-x-6" : "md:flex-nowrap md:gap-x-6"
       }`}
@@ -29,20 +29,18 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
     >
       <div className="flex shrink-0 items-center gap-3">
         <Link
-          to="/dashboard"
+          to="/"
           aria-label="Sway feed"
-          className="flex shrink-0 items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
+          className="focus-visible:ring-brand-400 focus-visible:ring-offset-canvas flex shrink-0 items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-none"
         >
-          <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-xl font-black text-white">
-            S
-          </span>
-          <span className="hidden text-xl font-bold tracking-tight text-white sm:block">
+          <span className="sway-mark">s</span>
+          <span className="font-display text-ink hidden text-3xl tracking-tight sm:block">
             Sway
           </span>
         </Link>
 
         {isAnonymous && (
-          <span className="hidden items-center gap-1.5 rounded-full border border-sky-300/20 bg-sky-300/10 px-2.5 py-1 text-xs font-medium text-sky-200 sm:inline-flex">
+          <span className="hidden items-center gap-1.5 rounded-full border border-stone-200 bg-white/70 px-2.5 py-1 text-xs font-medium text-stone-500 sm:inline-flex">
             <svg
               aria-hidden="true"
               viewBox="0 0 20 20"
@@ -60,14 +58,14 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
       </div>
 
       <ul
-        className={`order-last grid w-full grid-cols-3 gap-1 rounded-2xl border border-white/10 bg-white/5 p-1 ${
+        className={`order-last grid w-full grid-cols-3 gap-1 rounded-full border border-stone-200/80 bg-stone-200/40 p-1 ${
           isAnonymous
             ? "lg:order-0 lg:mx-auto lg:flex lg:w-auto lg:shrink-0"
             : "md:order-0 md:mx-auto md:flex md:w-auto md:shrink-0"
         }`}
       >
         {navigation.map((item) => {
-          // Check if the button should have highlight
+          // Check if the button should have highlight.
           const isActive =
             item.to === "/dashboard"
               ? pathname === item.to
@@ -78,10 +76,10 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
               <Link
                 to={item.to}
                 aria-current={isActive ? "page" : undefined}
-                className={`flex min-h-11 items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
+                className={`focus-visible:ring-brand-400 flex min-h-11 items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition focus-visible:ring-2 focus-visible:outline-none ${
                   isActive
-                    ? "bg-indigo-400/15 text-indigo-200 ring-1 ring-indigo-400/25 ring-inset"
-                    : "text-slate-400 hover:bg-white/5 hover:text-white"
+                    ? "text-brand-700 bg-white shadow-sm"
+                    : "hover:text-ink text-stone-500 hover:bg-white/70"
                 }`}
               >
                 {item.label}
@@ -93,19 +91,17 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
 
       <div
         className={`ml-auto flex max-w-full min-w-0 flex-wrap items-center gap-1.5 sm:gap-2 ${
-          isAnonymous
-            ? "justify-end lg:ml-0"
-            : "justify-end md:ml-0"
+          isAnonymous ? "justify-end lg:ml-0" : "justify-end md:ml-0"
         }`}
       >
         {isPending ? (
           <span
             role="status"
-            className="h-11 w-32 rounded-xl bg-white/10 motion-safe:animate-pulse"
+            className="h-11 w-32 rounded-full bg-stone-200 motion-safe:animate-pulse"
           >
             <span className="sr-only">Loading account…</span>
           </span>
-        ) : !session || isAnonymous ? (
+        ) : !session ? (
           <div className="flex items-center gap-2 [&>button]:inline-flex [&>button]:h-11 [&>button]:cursor-pointer [&>button]:items-center [&>button]:justify-center [&>button]:px-3 [&>button]:py-2 [&>button]:whitespace-nowrap [&>button>svg]:hidden">
             <SignInDialog />
             <SignUpDialog />
@@ -117,7 +113,7 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
               aria-current={
                 pathname === "/dashboard/writing" ? "page" : undefined
               }
-              className="ui-button-primary px-3 focus-visible:ring-offset-slate-950 sm:px-4"
+              className="ui-button-primary focus-visible:ring-offset-canvas px-3 sm:px-4"
             >
               <svg
                 aria-hidden="true"
@@ -133,10 +129,10 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
             <Link
               to="/my-profile"
               aria-current={isProfileActive ? "page" : undefined}
-              className={`inline-flex min-h-11 items-center justify-center rounded-xl border px-2.5 py-2 text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none sm:px-3 ${
+              className={`focus-visible:ring-brand-400 inline-flex min-h-11 items-center justify-center rounded-full border px-2.5 py-2 text-sm font-semibold transition focus-visible:ring-2 focus-visible:outline-none sm:px-3 ${
                 isProfileActive
-                  ? "border-indigo-400/25 bg-indigo-400/10 text-indigo-200"
-                  : "border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white"
+                  ? "border-brand-200 bg-brand-50 text-brand-700"
+                  : "hover:text-ink border-transparent text-stone-600 hover:border-stone-200 hover:bg-white"
               }`}
             >
               Profile
@@ -145,7 +141,7 @@ export default function SwayHeader({ compact = false }: { compact?: boolean }) {
         )}
 
         {session && (
-          <div className="sm:border-l sm:border-white/10 sm:pl-2 [&>button]:inline-flex [&>button]:min-h-11 [&>button]:cursor-pointer [&>button]:items-center [&>button]:justify-center [&>button]:rounded-xl [&>button]:px-2.5 [&>button]:py-2.5 [&>button]:text-sm [&>button]:font-medium [&>button]:whitespace-nowrap [&>button]:text-slate-400 [&>button]:transition sm:[&>button]:px-3 [&>button:focus-visible]:ring-2 [&>button:focus-visible]:ring-indigo-400 [&>button:focus-visible]:outline-none [&>button:hover]:bg-white/5 [&>button:hover]:text-white">
+          <div className="[&>button:focus-visible]:ring-brand-400 [&>button:hover]:text-ink sm:border-l sm:border-stone-200 sm:pl-2 [&>button]:inline-flex [&>button]:min-h-11 [&>button]:cursor-pointer [&>button]:items-center [&>button]:justify-center [&>button]:rounded-full [&>button]:px-2.5 [&>button]:py-2.5 [&>button]:text-sm [&>button]:font-medium [&>button]:whitespace-nowrap [&>button]:text-stone-500 [&>button]:transition sm:[&>button]:px-3 [&>button:focus-visible]:ring-2 [&>button:focus-visible]:outline-none [&>button:hover]:bg-stone-200/60">
             <SignOutButton />
           </div>
         )}

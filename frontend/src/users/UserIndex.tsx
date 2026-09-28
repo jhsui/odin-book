@@ -43,25 +43,25 @@ export default function UserIndex() {
       <PageHeading
         eyebrow="Community"
         title="Find your people"
-        description="Follow writers and thinkers you want to hear more from."
+        description="A good conversation starts with good company. Find a new voice to follow."
       />
 
       {isLoading ? (
         <section
-          className="ui-card overflow-hidden"
+          className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
           aria-label="Loading community members"
         >
-          {[1, 2, 3, 4].map((item) => (
+          {[1, 2, 3, 4, 5, 6].map((item) => (
             <div
               key={item}
-              className="flex animate-pulse items-center gap-4 border-b border-slate-100 px-5 py-5 last:border-0 sm:px-7"
+              className="ui-card flex animate-pulse flex-col items-start p-6 motion-reduce:animate-none"
             >
-              <div className="size-11 shrink-0 rounded-2xl bg-slate-200 sm:size-12" />
-              <div className="flex-1">
-                <div className="h-4 w-36 rounded bg-slate-200" />
-                <div className="mt-2 h-3 w-24 rounded bg-slate-100" />
+              <div className="size-14 shrink-0 rounded-full bg-stone-200" />
+              <div className="mt-5">
+                <div className="h-4 w-36 rounded bg-stone-200" />
+                <div className="mt-2 h-3 w-24 rounded bg-stone-100" />
               </div>
-              <div className="h-11 w-24 rounded-xl bg-slate-200" />
+              <div className="mt-6 h-11 w-24 rounded-full bg-stone-200" />
             </div>
           ))}
         </section>
@@ -81,7 +81,7 @@ export default function UserIndex() {
               />
             </svg>
           </span>
-          <h2 className="mt-4 text-lg font-semibold text-slate-900">
+          <h2 className="mt-4 text-lg font-semibold text-stone-900">
             Could not load the community
           </h2>
           <p className="mt-2 text-sm text-rose-700">
@@ -97,9 +97,9 @@ export default function UserIndex() {
           </button>
         </section>
       ) : (
-        <section className="ui-card overflow-hidden">
+        <section aria-label="Community members">
           {users && users.length > 0 ? (
-            <ul className="divide-y divide-slate-100">
+            <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {users
                 .filter((user) => !user.isAnonymous)
                 .map((user) => {
@@ -107,40 +107,58 @@ export default function UserIndex() {
                   const initial =
                     user.name.trim().charAt(0).toUpperCase() || "?";
 
+                  const avatar =
+                    user.image !== null ? (
+                      <img
+                        src={user.image}
+                        alt={`${user.name}'s avatar`}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      initial
+                    );
+
                   return (
                     <li
                       key={user.id}
-                      className="flex items-center gap-3 px-4 py-4 transition hover:bg-slate-50 sm:gap-4 sm:px-7 sm:py-5"
+                      className="ui-card group hover:border-brand-200 flex min-w-0 flex-col p-6 transition duration-200 hover:shadow-md hover:shadow-stone-200/40"
                     >
                       <div
                         aria-hidden="true"
-                        className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-indigo-100 font-bold text-indigo-700 sm:size-12"
+                        className="bg-brand-50 text-brand-700 ring-brand-100 flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full text-xl font-semibold ring-1"
                       >
-                        {user.image !== null ? (
-                          <img
-                            src={user.image}
-                            alt={`${user.name}'s avatar`}
-                            className="size-full object-cover"
-                          />
+                        {isSessionPending ? (
+                          <div className="flex size-full items-center justify-center">
+                            {avatar}
+                          </div>
                         ) : (
-                          initial
+                          <Link
+                            to={
+                              isCurrentUser
+                                ? "/my-profile"
+                                : `/user-profile/${user.id}`
+                            }
+                            className="flex size-full items-center justify-center"
+                          >
+                            {avatar}
+                          </Link>
                         )}
                       </div>
 
-                      <div className="min-w-0 flex-1">
-                        <div className="truncate font-semibold text-slate-900">
+                      <div className="mt-5 min-w-0 flex-1">
+                        <div className="text-ink truncate text-lg font-semibold tracking-tight">
                           {isSessionPending ? (
                             <p>{user.name}</p>
                           ) : isCurrentUser ? (
                             <Link
-                              className="rounded transition hover:text-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-600"
+                              className="hover:text-brand-600 focus-visible:outline-brand-600 rounded transition focus-visible:outline-2 focus-visible:outline-offset-4"
                               to={`/my-profile`}
                             >
                               {user.name}
                             </Link>
                           ) : (
                             <Link
-                              className="rounded transition hover:text-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-600"
+                              className="hover:text-brand-600 focus-visible:outline-brand-600 rounded transition focus-visible:outline-2 focus-visible:outline-offset-4"
                               to={`/user-profile/${user.id}`}
                             >
                               {user.name}
@@ -148,36 +166,43 @@ export default function UserIndex() {
                           )}
                         </div>
 
-                        <p className="mt-0.5 text-xs text-slate-500 sm:text-sm">
+                        <p className="mt-1 text-sm text-stone-500">
                           Community member
                         </p>
                       </div>
 
-                      {isSessionPending ? (
-                        <div className="h-11 w-24 animate-pulse rounded-xl bg-slate-200" />
-                      ) : isCurrentUser ? (
-                        <span className="ui-badge">You</span>
-                      ) : session ? (
-                        <FollowButton
-                          userId={user.id}
-                          isFollowing={user.isFollowing}
-                        />
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => alert("Please sign in first.")}
-                          className="ui-button-primary min-w-24"
-                        >
-                          Follow
-                        </button>
-                      )}
+                      <div className="mt-6 flex min-h-11 items-center justify-between gap-3 border-t border-stone-100 pt-4">
+                        <span className="text-xs font-medium tracking-wide text-stone-500">
+                          {isCurrentUser
+                            ? "Your corner of Sway"
+                            : "Stay connected"}
+                        </span>
+                        {isSessionPending ? (
+                          <div className="h-11 w-24 animate-pulse rounded-full bg-stone-200 motion-reduce:animate-none" />
+                        ) : isCurrentUser ? (
+                          <span className="ui-badge">You</span>
+                        ) : session ? (
+                          <FollowButton
+                            userId={user.id}
+                            isFollowing={user.isFollowing}
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => alert("Please sign in first.")}
+                            className="ui-button-primary min-w-24"
+                          >
+                            Follow
+                          </button>
+                        )}
+                      </div>
                     </li>
                   );
                 })}
             </ul>
           ) : (
-            <div className="px-6 py-16 text-center">
-              <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600">
+            <div className="ui-empty px-6 py-16 text-center">
+              <span className="bg-brand-50 text-brand-600 mx-auto flex size-12 items-center justify-center rounded-full">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 20 20"
@@ -187,10 +212,10 @@ export default function UserIndex() {
                   <path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a7 7 0 0 1 13.07 0A2.002 2.002 0 0 1 14.663 17H5.337a2.002 2.002 0 0 1-1.872-2.507Z" />
                 </svg>
               </span>
-              <h2 className="mt-4 font-semibold text-slate-900">
+              <h2 className="mt-4 font-semibold text-stone-900">
                 No people here yet
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-stone-500">
                 New community members will appear here.
               </p>
             </div>

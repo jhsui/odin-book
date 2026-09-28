@@ -10,13 +10,13 @@ export function PostImageGallery({ images }: { images: Post["images"] }) {
   if (!image) return null;
 
   const arrowClass =
-    "absolute top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-slate-900 shadow-md transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400 disabled:cursor-default disabled:opacity-30";
+    "absolute top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-stone-900 shadow-md transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-400 disabled:cursor-default disabled:opacity-30";
 
   return (
     <div
       role="region"
       aria-label="Post images"
-      className="relative mb-8 overflow-hidden rounded-2xl bg-slate-950 sm:mb-10"
+      className="relative mb-8 overflow-hidden rounded-2xl bg-stone-950 sm:mb-10"
     >
       <div
         className="flex w-full transition-transform duration-300 ease-out motion-reduce:transition-none"

@@ -122,28 +122,39 @@ export default function MyProfilePage() {
         eyebrow="Your space"
         title="Your profile"
         description="Update your profile and revisit what you’ve shared."
-      />
+      >
+        <Link to="/dashboard/writing" className="ui-button-primary gap-2">
+          <span aria-hidden="true">+</span> Write a post
+        </Link>
+      </PageHeading>
 
-      <div className="grid items-start gap-8 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[22rem_minmax(0,1fr)]">
+      <div className="grid items-start gap-7 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[22rem_minmax(0,1fr)] xl:gap-10">
         <section
           aria-label="Profile settings"
-          className="ui-card min-w-0 p-5 sm:p-6"
+          className="ui-card min-w-0 overflow-hidden p-5 sm:p-7"
         >
-          <div>
+          <div
+            aria-hidden="true"
+            className="bg-brand-700 -mx-5 -mt-5 h-28 sm:-mx-7 sm:-mt-7"
+          />
+          <div className="relative -mt-12">
             <div className="mb-5">
               {user.image ? (
                 <img
                   src={user.image}
                   alt="Your avatar"
-                  className="size-24 rounded-2xl object-cover ring-4 ring-indigo-50"
+                  className="size-24 rounded-full bg-white object-cover ring-[5px] ring-white"
                 />
               ) : (
-                <span className="flex size-24 items-center justify-center rounded-2xl bg-indigo-100 text-3xl font-bold text-indigo-700 ring-1 ring-indigo-200">
+                <span className="bg-brand-50 text-brand-700 flex size-24 items-center justify-center rounded-full text-3xl font-semibold ring-[5px] ring-white">
                   {user.name.trim().charAt(0).toUpperCase() || "?"}
                 </span>
               )}
             </div>
-            <h2 className="text-2xl font-semibold wrap-anywhere text-slate-900">
+            <p className="text-brand-700 mb-2 text-[10px] font-semibold tracking-[0.18em] uppercase">
+              Your profile
+            </p>
+            <h2 className="font-display text-ink text-3xl tracking-tight wrap-anywhere">
               {user.name}
             </h2>
 
@@ -163,7 +174,7 @@ export default function MyProfilePage() {
             {showNameEditor && (
               <div
                 id="name-editor"
-                className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4"
+                className="bg-canvas mt-4 rounded-2xl border border-stone-200 p-4"
               >
                 <form
                   noValidate
@@ -230,17 +241,17 @@ export default function MyProfilePage() {
                     setActiveConnections(kind);
                     connectionsDialogRef.current?.showModal();
                   }}
-                  className={`rounded-xl border px-4 py-3 text-left transition focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none ${
+                  className={`focus-visible:ring-brand-600 cursor-pointer rounded-2xl border px-4 py-4 text-left transition focus-visible:ring-2 focus-visible:outline-none ${
                     activeConnections === kind
-                      ? "border-indigo-200 bg-indigo-50"
-                      : "border-slate-200 bg-slate-50 hover:border-indigo-200 hover:bg-indigo-50"
+                      ? "border-brand-200 bg-brand-50"
+                      : "bg-canvas hover:border-brand-200 hover:bg-brand-50 border-stone-200/80"
                   }`}
                 >
-                  <span className="block text-xl font-semibold text-slate-900 tabular-nums">
+                  <span className="text-ink block text-2xl font-semibold tabular-nums">
                     {user[kind].length}
                   </span>
 
-                  <span className="mt-1 block text-sm text-slate-600">
+                  <span className="mt-1 block text-xs text-stone-500">
                     {kind === "followers" ? "Followers" : "Following"}
                   </span>
                 </button>
@@ -264,12 +275,12 @@ export default function MyProfilePage() {
                   event.currentTarget.close();
                 }
               }}
-              className="m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl border border-slate-200 bg-white p-0 text-slate-900 shadow-xl backdrop:bg-slate-950/60 backdrop:backdrop-blur-sm"
+              className="text-ink m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-3xl border border-stone-200 bg-white p-0 shadow-xl backdrop:bg-stone-950/40 backdrop:backdrop-blur-sm"
             >
-              <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-4 sm:px-6">
+              <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-stone-200 bg-white px-5 py-4 sm:px-6">
                 <h2
                   id="connections-title"
-                  className="flex items-center gap-3 text-lg font-semibold"
+                  className="font-display flex items-center gap-3 text-2xl"
                 >
                   {activeConnections === "followers"
                     ? "Followers"
@@ -283,9 +294,9 @@ export default function MyProfilePage() {
                   type="button"
                   aria-label="Close connections"
                   onClick={() => connectionsDialogRef.current?.close()}
-                  className="flex size-11 shrink-0 items-center justify-center rounded-xl text-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none"
+                  className="focus-visible:ring-brand-600 flex size-11 shrink-0 items-center justify-center rounded-full text-xl text-stone-500 transition hover:bg-stone-100 hover:text-stone-900 focus-visible:ring-2 focus-visible:outline-none"
                 >
-                  <span aria-hidden="true">x</span>
+                  <span aria-hidden="true">×</span>
                 </button>
               </div>
 
@@ -303,11 +314,11 @@ export default function MyProfilePage() {
                       <Link
                         to={`/user-profile/${person.id}`}
                         onClick={() => connectionsDialogRef.current?.close()}
-                        className="flex min-w-0 flex-1 items-center justify-between gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-900 transition hover:bg-slate-50 hover:text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none"
+                        className="hover:text-brand-600 focus-visible:ring-brand-600 flex min-w-0 flex-1 items-center justify-between gap-3 rounded-xl px-3 py-3 text-sm font-medium text-stone-900 transition hover:bg-stone-50 focus-visible:ring-2 focus-visible:outline-none"
                       >
                         <span
                           aria-hidden="true"
-                          className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-indigo-100 font-semibold text-indigo-700"
+                          className="bg-brand-50 text-brand-700 relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold"
                         >
                           {person.name.trim().charAt(0).toUpperCase() || "?"}
                           {person.image && (
@@ -345,7 +356,7 @@ export default function MyProfilePage() {
                   ))}
                 </ul>
               ) : (
-                <p className="px-6 py-10 text-center text-sm leading-6 text-slate-500">
+                <p className="px-6 py-10 text-center text-sm leading-6 text-stone-500">
                   {activeConnections === "followers"
                     ? "You don't have any followers yet."
                     : "You aren't following anyone yet."}
@@ -354,31 +365,27 @@ export default function MyProfilePage() {
             </dialog>
           </div>
 
-          <div className="mt-7 border-t border-slate-200 pt-6">
-            <h3 className="font-semibold text-slate-900">Profile photo</h3>
-            <p className="mt-1 text-sm leading-6 text-slate-500">
-              Add a face to your conversations.
-            </p>
-
+          <div className="mt-7 border-t border-stone-200 pt-6">
             <form
               onSubmit={handleAvatarSubmit}
               encType="multipart/form-data"
               className="mt-4 space-y-3"
             >
-              <label htmlFor="uploaded-avatar" className="ui-label">
+              <p id="avatar-label" className="ui-label">
                 Upload a new avatar
-              </label>
+              </p>
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
                 id="uploaded-avatar"
                 name="uploaded-avatar"
+                aria-labelledby="avatar-label"
                 aria-describedby={
                   avatarError
                     ? "avatar-size-hint avatar-error"
                     : "avatar-size-hint"
                 }
-                className="block w-full min-w-0 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-3 text-xs text-slate-500 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none"
+                className="bg-canvas file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 focus-visible:ring-brand-600 block w-full min-w-0 rounded-2xl border border-dashed border-stone-300 p-3 text-xs text-stone-500 transition-transform file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:px-3 file:py-2 file:text-xs file:font-semibold focus-visible:outline-none active:scale-[0.97]"
                 onChange={(e) => {
                   const selectedFile = e.currentTarget.files?.[0] ?? null;
 
@@ -393,7 +400,7 @@ export default function MyProfilePage() {
                 }}
               />
 
-              <p id="avatar-size-hint" className="text-xs text-slate-500">
+              <p id="avatar-size-hint" className="text-xs text-stone-500">
                 Maximum file size: 5 MiB.
               </p>
               {avatarError && (
@@ -409,25 +416,25 @@ export default function MyProfilePage() {
               <button
                 type="submit"
                 disabled={!file}
-                className="ui-button-secondary w-full"
+                className="ui-button-secondary w-full transition-transform active:scale-[0.97]"
               >
                 Upload photo
               </button>
             </form>
           </div>
 
-          <div className="mt-7 border-t border-slate-200 pt-6">
-            <h3 className="mb-3 font-semibold text-slate-900">About you</h3>
+          <div className="mt-7 border-t border-stone-200 pt-6">
+            <h3 className="text-ink mb-3 text-sm font-semibold">About you</h3>
             <MyUserIntro user={user} />
           </div>
         </section>
 
-        <div className="min-w-0 space-y-8">
+        <div className="min-w-0 space-y-10">
           <section aria-labelledby="your-posts">
-            <div className="mb-5 flex items-center gap-3">
+            <div className="mb-5 flex items-center gap-3 border-b border-stone-200 pb-4">
               <h2
                 id="your-posts"
-                className="text-xl font-semibold tracking-tight text-slate-900"
+                className="font-display text-ink text-2xl tracking-tight"
               >
                 Your posts
               </h2>
@@ -439,20 +446,20 @@ export default function MyProfilePage() {
                 user.posts.map((post) => (
                   <article
                     key={post.id}
-                    className="ui-card flex min-w-0 flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6"
+                    className="ui-card hover:border-brand-200 flex min-w-0 flex-col gap-4 p-5 transition sm:flex-row sm:items-center sm:justify-between sm:p-6"
                   >
                     <div className="min-w-0">
-                      <h3 className="text-lg leading-7 font-semibold wrap-anywhere text-slate-900">
+                      <h3 className="text-ink text-lg leading-7 font-semibold tracking-tight wrap-anywhere">
                         <Link
                           to={`/posts/${post.id}`}
-                          className="rounded transition hover:text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none"
+                          className="hover:text-brand-600 focus-visible:ring-brand-600 rounded transition focus-visible:ring-2 focus-visible:outline-none"
                         >
                           {post.title}
                         </Link>
                       </h3>
                       <time
                         dateTime={post.createdAt}
-                        className="mt-1 block text-xs leading-5 text-slate-500 sm:text-sm"
+                        className="mt-1 block text-xs leading-5 text-stone-500 sm:text-sm"
                       >
                         {formatDateTime(post.createdAt)}
                       </time>
@@ -469,10 +476,10 @@ export default function MyProfilePage() {
                 ))
               ) : (
                 <div className="ui-empty">
-                  <p className="font-medium text-slate-900">
+                  <p className="font-medium text-stone-900">
                     Your story starts here
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-500">
+                  <p className="mt-2 text-sm leading-6 text-stone-500">
                     You haven’t published any posts yet.
                   </p>
                   <Link
@@ -487,10 +494,10 @@ export default function MyProfilePage() {
           </section>
 
           <section aria-labelledby="your-comments">
-            <div className="mb-5 flex items-center gap-3">
+            <div className="mb-5 flex items-center gap-3 border-b border-stone-200 pb-4">
               <h2
                 id="your-comments"
-                className="text-xl font-semibold tracking-tight text-slate-900"
+                className="font-display text-ink text-2xl tracking-tight"
               >
                 Your comments
               </h2>
@@ -503,14 +510,14 @@ export default function MyProfilePage() {
                     key={comment.id}
                     className="ui-card min-w-0 p-5 sm:p-6"
                   >
-                    <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-600 sm:text-base sm:leading-8">
+                    <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-stone-600 sm:text-base sm:leading-8">
                       {comment.content}
                     </p>
 
-                    <footer className="mt-5 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 border-t border-slate-200 pt-4">
+                    <footer className="mt-5 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 border-t border-stone-200 pt-4">
                       <time
                         dateTime={comment.createdAt}
-                        className="text-xs leading-5 text-slate-500 sm:text-sm"
+                        className="text-xs leading-5 text-stone-500 sm:text-sm"
                       >
                         {formatDateTime(comment.createdAt)}
                       </time>
@@ -518,7 +525,7 @@ export default function MyProfilePage() {
                       <div className="flex max-w-full flex-wrap items-center gap-x-4 gap-y-2 [&>div]:mt-0">
                         <Link
                           to={`/posts/${comment.postId}`}
-                          className="ui-link inline-flex min-h-11 items-center gap-2 py-2 text-sm font-semibold"
+                          className="ui-link min-h-11 items-center py-2 text-sm font-semibold"
                         >
                           View conversation <span aria-hidden="true">→</span>
                         </Link>
@@ -535,8 +542,8 @@ export default function MyProfilePage() {
               </div>
             ) : (
               <div className="ui-empty">
-                <p className="font-medium text-slate-900">No comments yet</p>
-                <p className="mt-2 text-sm leading-6 text-slate-500">
+                <p className="font-medium text-stone-900">No comments yet</p>
+                <p className="mt-2 text-sm leading-6 text-stone-500">
                   Join a conversation and your replies will appear here.
                 </p>
               </div>

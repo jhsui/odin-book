@@ -44,13 +44,13 @@ export default function UserProfilePage() {
       {isPending ? (
         <section
           role="status"
-          className="grid gap-6 lg:grid-cols-[20rem_minmax(0,1fr)]"
+          className="grid gap-7 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[22rem_minmax(0,1fr)] xl:gap-10"
         >
           <span className="sr-only">Loading profile...</span>
           <div aria-hidden="true" className="ui-card p-6">
-            <div className="size-24 animate-pulse rounded-2xl bg-slate-200 motion-reduce:animate-none" />
-            <div className="mt-6 h-7 w-3/4 animate-pulse rounded bg-slate-200 motion-reduce:animate-none" />
-            <div className="mt-4 h-20 animate-pulse rounded-xl bg-slate-200 motion-reduce:animate-none" />
+            <div className="size-24 animate-pulse rounded-full bg-stone-200 motion-reduce:animate-none" />
+            <div className="mt-6 h-7 w-3/4 animate-pulse rounded bg-stone-200 motion-reduce:animate-none" />
+            <div className="mt-4 h-20 animate-pulse rounded-xl bg-stone-200 motion-reduce:animate-none" />
           </div>
           <div aria-hidden="true" className="space-y-4">
             {[1, 2, 3].map((item) => (
@@ -66,7 +66,7 @@ export default function UserProfilePage() {
           role="alert"
           className="rounded-2xl border border-rose-200 bg-rose-50 px-6 py-12 text-center"
         >
-          <h1 className="text-xl font-semibold text-slate-900">
+          <h1 className="text-xl font-semibold text-stone-900">
             Could not load this profile
           </h1>
           <p className="mt-3 text-sm text-rose-700">{error.message}</p>
@@ -80,71 +80,68 @@ export default function UserProfilePage() {
           </button>
         </section>
       ) : (
-        <div className="grid items-start gap-8 lg:grid-cols-[20rem_minmax(0,1fr)]">
+        <div className="grid items-start gap-7 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[22rem_minmax(0,1fr)] xl:gap-10">
           <section
             aria-labelledby="profile-name"
             className="ui-card min-w-0 overflow-hidden"
           >
-            <div
-              aria-hidden="true"
-              className="h-24 border-b border-indigo-100 bg-indigo-50"
-            />
+            <div aria-hidden="true" className="bg-brand-700 h-32" />
             <div className="px-6 pb-7 sm:px-7">
               <div className="relative -mt-12 mb-5">
                 {user.image ? (
                   <img
                     src={user.image}
                     alt={`${user.name}'s avatar`}
-                    className="size-24 rounded-2xl bg-white object-cover ring-4 ring-white"
+                    className="size-24 rounded-full bg-white object-cover ring-[5px] ring-white"
                   />
                 ) : (
                   <span
                     aria-hidden="true"
-                    className="flex size-24 items-center justify-center rounded-2xl bg-indigo-100 text-3xl font-bold text-indigo-700 ring-4 ring-white"
+                    className="bg-brand-50 text-brand-700 flex size-24 items-center justify-center rounded-full text-3xl font-semibold ring-[5px] ring-white"
                   >
                     {user.name.trim().charAt(0).toUpperCase() || "?"}
                   </span>
                 )}
               </div>
-              <p className="mb-2 text-xs font-semibold tracking-widest text-indigo-600 uppercase">
+              <p className="text-brand-700 mb-2 text-[10px] font-semibold tracking-[0.18em] uppercase">
                 Community profile
               </p>
               <h1
                 id="profile-name"
-                className="text-2xl font-bold tracking-tight wrap-anywhere text-slate-900"
+                className="font-display text-ink text-3xl tracking-tight wrap-anywhere"
               >
                 {user.name}
               </h1>
 
-              <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-600">
+              <p className="mt-4 text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-stone-600">
                 {user.intro || "No introduction yet."}
               </p>
 
-              <dl className="mt-6 grid grid-cols-2 gap-4 border-t border-slate-200 pt-6">
+              <dl className="bg-canvas mt-7 grid grid-cols-2 gap-x-6 gap-y-5 rounded-2xl border border-stone-200/80 p-5">
                 <div>
-                  <dt className="text-xs text-slate-500">Posts</dt>
-                  <dd className="mt-1 text-2xl font-semibold text-slate-900">
+                  <dt className="text-xs text-stone-500">Posts</dt>
+                  <dd className="text-ink mt-1 text-2xl font-semibold tabular-nums">
                     {user.posts.length}
                   </dd>
                 </div>
 
                 <div>
-                  <dt className="text-xs text-slate-500">Comments</dt>
-                  <dd className="mt-1 text-2xl font-semibold text-slate-900">
+                  <dt className="text-xs text-stone-500">Comments</dt>
+                  <dd className="text-ink mt-1 text-2xl font-semibold tabular-nums">
                     {user.comments.length}
                   </dd>
                 </div>
 
                 <div>
-                  <dt className="text-xs text-slate-500">Followers</dt>
-                  <dd className="mt-1 text-2xl font-semibold text-slate-900">
+                  <dt className="text-xs text-stone-500">Followers</dt>
+                  <dd className="text-ink mt-1 text-2xl font-semibold tabular-nums">
                     {user.followers.length}
                   </dd>
                 </div>
 
                 <div>
-                  <dt className="text-xs text-slate-500">Following</dt>
-                  <dd className="mt-1 text-2xl font-semibold text-slate-900">
+                  <dt className="text-xs text-stone-500">Following</dt>
+                  <dd className="text-ink mt-1 text-2xl font-semibold tabular-nums">
                     {user.following.length}
                   </dd>
                 </div>
@@ -152,11 +149,11 @@ export default function UserProfilePage() {
             </div>
           </section>
 
-          <div className="min-w-0 space-y-8">
+          <div className="min-w-0 space-y-10">
             <section aria-labelledby="profile-posts">
               <h2
                 id="profile-posts"
-                className="mb-4 text-xl font-semibold text-slate-900"
+                className="font-display text-ink mb-5 flex items-center border-b border-stone-200 pb-4 text-2xl tracking-tight"
               >
                 Posts{" "}
                 <span className="ui-badge ml-2 align-middle">
@@ -166,18 +163,21 @@ export default function UserProfilePage() {
               <div className="space-y-4">
                 {user.posts.length ? (
                   user.posts.map((post) => (
-                    <article key={post.id} className="ui-card p-5 sm:p-6">
-                      <h3 className="text-lg font-semibold wrap-anywhere text-slate-900">
+                    <article
+                      key={post.id}
+                      className="ui-card hover:border-brand-200 p-5 transition sm:p-6"
+                    >
+                      <h3 className="text-ink text-lg font-semibold tracking-tight wrap-anywhere">
                         <Link
                           to={`/posts/${post.id}`}
-                          className="rounded transition hover:text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none"
+                          className="hover:text-brand-600 focus-visible:ring-brand-600 rounded transition focus-visible:ring-2 focus-visible:outline-none"
                         >
                           {post.title}
                         </Link>
                       </h3>
                       <time
                         dateTime={post.createdAt}
-                        className="mt-2 block text-xs text-slate-500"
+                        className="mt-2 block text-xs text-stone-500"
                       >
                         {formatDateTime(post.createdAt)}
                       </time>
@@ -185,8 +185,8 @@ export default function UserProfilePage() {
                   ))
                 ) : (
                   <div className="ui-empty">
-                    <p className="font-medium text-slate-900">No posts yet</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-500">
+                    <p className="font-medium text-stone-900">No posts yet</p>
+                    <p className="mt-2 text-sm leading-6 text-stone-500">
                       Posts written by {user.name} will appear here.
                     </p>
                   </div>
@@ -196,7 +196,7 @@ export default function UserProfilePage() {
             <section aria-labelledby="profile-comments">
               <h2
                 id="profile-comments"
-                className="mb-4 text-xl font-semibold text-slate-900"
+                className="font-display text-ink mb-5 flex items-center border-b border-stone-200 pb-4 text-2xl tracking-tight"
               >
                 Comments{" "}
                 <span className="ui-badge ml-2 align-middle">
@@ -204,22 +204,22 @@ export default function UserProfilePage() {
                 </span>
               </h2>
               {user.comments.length ? (
-                <div className="ui-card divide-y divide-slate-100 px-5 sm:px-6">
+                <div className="ui-card divide-y divide-stone-100 px-5 sm:px-6">
                   {user.comments.map((comment) => (
-                    <article key={comment.id} className="py-5">
-                      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-slate-600">
+                    <article key={comment.id} className="py-6">
+                      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-stone-600">
                         {comment.content}
                       </p>
                       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs">
                         <time
                           dateTime={comment.createdAt}
-                          className="text-slate-500"
+                          className="text-stone-500"
                         >
                           {formatDateTime(comment.createdAt)}
                         </time>
                         <Link
                           to={`/posts/${comment.postId}`}
-                          className="ui-link inline-flex min-h-11 items-center gap-1 font-semibold"
+                          className="ui-link min-h-11 items-center font-semibold"
                         >
                           View conversation <span aria-hidden="true">→</span>
                         </Link>
@@ -229,8 +229,8 @@ export default function UserProfilePage() {
                 </div>
               ) : (
                 <div className="ui-empty">
-                  <p className="font-medium text-slate-900">No comments yet</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-500">
+                  <p className="font-medium text-stone-900">No comments yet</p>
+                  <p className="mt-2 text-sm leading-6 text-stone-500">
                     Replies from {user.name} will appear here.
                   </p>
                 </div>

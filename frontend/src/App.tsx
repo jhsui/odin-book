@@ -8,16 +8,18 @@ const conversations = [
   {
     initials: "AM",
     name: "Avery Morgan",
-    time: "4 min",
+    topic: "Everyday inspiration",
     title: "The small rituals that make creative work easier",
-    accent: "bg-violet-100 text-violet-700",
+    excerpt: "Sometimes a fresh perspective starts with a slower morning.",
+    accent: "bg-[#eadbc9] text-[#71573e]",
   },
   {
     initials: "JK",
     name: "Jordan Kim",
-    time: "12 min",
+    topic: "Learning out loud",
     title: "What I learned from building in public for 30 days",
-    accent: "bg-sky-100 text-sky-700",
+    excerpt: "A work in progress can be the beginning of a good conversation.",
+    accent: "bg-brand-100 text-brand-700",
   },
 ];
 
@@ -26,141 +28,130 @@ function App() {
   const isAnonymous = session?.user.isAnonymous === true;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(99,102,241,0.12),transparent_45%)]"
-      />
-
-      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-6 sm:px-6 lg:px-8">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5 sm:pb-6">
+    <main className="bg-canvas text-ink min-h-screen overflow-hidden">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-5 sm:px-8 lg:px-12">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-200/80 pb-5 sm:pb-6">
           <Link
             to="/"
-            className="flex shrink-0 items-center gap-3 rounded-xl focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-950 focus-visible:outline-none"
+            aria-label="Sway home"
+            className="focus-visible:ring-brand-600 focus-visible:ring-offset-canvas flex shrink-0 items-center gap-2.5 rounded-xl focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-none"
           >
-            <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-xl font-black">
-              S
-            </span>
-            <span className="text-xl font-bold tracking-tight">Sway</span>
+            <span className="sway-mark">s</span>
+            <span className="font-display text-3xl tracking-tight">Sway</span>
           </Link>
 
-          <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2 sm:gap-3">
+          <p className="hidden text-sm text-stone-500 md:block">
+            A little less noise. A little more connection.
+          </p>
+
+          <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2 sm:gap-3 md:ml-0">
             {isPending ? (
               <span
                 role="status"
-                className="h-11 w-28 rounded-xl bg-white/10 motion-safe:animate-pulse"
+                className="h-11 w-28 rounded-full bg-stone-200 motion-safe:animate-pulse"
               >
                 <span className="sr-only">Loading account…</span>
               </span>
             ) : session ? (
               <>
-                {isAnonymous && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-300/20 bg-sky-300/10 px-2.5 py-1 text-xs font-medium text-sky-200">
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      className="size-3.5"
-                    >
-                      <circle cx="10" cy="6.25" r="2.75" />
-                      <path
-                        strokeLinecap="round"
-                        d="M4.5 16a5.5 5.5 0 0 1 11 0"
-                      />
-                    </svg>
-                    Guest
-                  </span>
-                )}
-
-                <Link
-                  to="/dashboard"
-                  className="ui-button-primary focus-visible:ring-offset-slate-950"
-                >
+                {isAnonymous && <span className="ui-badge">Guest</span>}
+                <Link to="/dashboard" className="ui-button-primary">
                   Open dashboard
                 </Link>
-
-                <div className="[&>button]:min-h-11 [&>button]:cursor-pointer [&>button]:rounded-xl [&>button]:px-3 [&>button]:py-2.5 [&>button]:text-sm [&>button]:font-medium [&>button]:text-slate-300 [&>button]:transition [&>button:focus-visible]:ring-2 [&>button:focus-visible]:ring-indigo-400 [&>button:focus-visible]:outline-none [&>button:hover]:bg-white/5 [&>button:hover]:text-white">
+                <div className="[&>button:focus-visible]:ring-brand-600 [&>button:hover]:text-brand-700 [&>button]:min-h-11 [&>button]:cursor-pointer [&>button]:rounded-full [&>button]:px-3 [&>button]:py-2.5 [&>button]:text-sm [&>button]:font-medium [&>button]:text-stone-600 [&>button]:transition [&>button:focus-visible]:ring-2 [&>button:focus-visible]:outline-none [&>button:hover]:bg-stone-200/60">
                   <SignOutButton />
                 </div>
               </>
             ) : (
-              <>
-                <div className="flex items-center gap-2 [&>button]:px-4 [&>button]:whitespace-nowrap [&>button>svg]:hidden">
-                  <SignInDialog />
-                  <SignUpDialog />
-                </div>
-              </>
+              <div className="flex items-center gap-2 [&>button]:px-4 [&>button]:whitespace-nowrap [&>button>svg]:hidden">
+                <SignInDialog />
+                <SignUpDialog />
+              </div>
             )}
           </div>
         </header>
 
-        <div className="grid flex-1 items-center gap-12 py-12 sm:py-16 lg:grid-cols-[1fr_0.9fr] lg:gap-16 lg:py-20">
+        <div className="grid flex-1 items-center gap-12 py-14 sm:py-20 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:py-20">
           <section className="max-w-2xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-400/10 px-3 py-1.5 text-xs font-semibold tracking-wider text-indigo-300 uppercase">
-              <span className="size-1.5 rounded-full bg-indigo-400" />
-              Ideas worth sharing
+            <div className="text-brand-700 mb-7 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.18em] uppercase">
+              <span className="bg-brand-600 size-2 rounded-full" />A space to be
+              yourself
             </div>
-
-            <h1 className="text-5xl leading-[1.04] font-bold tracking-tight text-balance sm:text-6xl lg:text-7xl">
-              A calmer place for
-              <span className="text-indigo-400"> real conversation.</span>
+            <h1 className="font-display text-[3.5rem] leading-[1.04] tracking-[-0.045em] text-balance sm:text-7xl lg:text-[5.3rem]">
+              Good ideas grow
+              <span className="text-brand-600 block italic">
+                in good company.
+              </span>
             </h1>
-
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
-              Share what you are learning, follow thoughtful people, and keep up
-              with ideas that actually matter to you.
+            <p className="mt-7 max-w-md text-base leading-8 text-stone-600 sm:text-lg">
+              Share what you’re learning. Find your people. Make room for
+              conversations that stay with you.
             </p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               {isPending ? (
-                <span className="h-11 w-64 rounded-xl bg-white/10 motion-safe:animate-pulse" />
+                <span className="h-12 w-56 rounded-full bg-stone-200 motion-safe:animate-pulse" />
               ) : session ? (
-                <Link
-                  to="/dashboard"
-                  className="ui-button-primary focus-visible:ring-offset-slate-950"
-                >
-                  Continue as {session.user.name}
+                <Link to="/dashboard" className="ui-button-primary">
+                  Continue as
+                  <span className="font-semibold underline underline-offset-4">
+                    {session.user.name}
+                  </span>
                   <ArrowIcon />
                 </Link>
               ) : (
                 <>
                   <SignUpDialog />
-                  <p className="text-sm text-slate-400">
-                    Free to join. Start writing in minutes.
-                  </p>
+                  <span className="text-sm text-stone-500">
+                    Your next conversation starts here.
+                  </span>
                 </>
               )}
+            </div>
+            <div className="mt-12 flex items-center gap-3 border-t border-stone-200 pt-5 text-sm text-stone-500 sm:mt-14">
+              <span
+                className="font-display text-brand-600 text-2xl"
+                aria-hidden="true"
+              >
+                ✳
+              </span>
+              <p>A thoughtful corner of the internet, made for you.</p>
             </div>
           </section>
 
           <section
-            className="relative mx-auto w-full max-w-lg lg:mx-0"
-            aria-label="A preview of conversations on Sway"
+            className="relative mx-auto w-full max-w-lg lg:mx-0 lg:justify-self-end"
+            aria-label="Example conversations on Sway"
           >
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900 p-4 sm:p-6">
-              <div className="mb-4 flex items-center justify-between px-1">
+            <div className="bg-brand-800 relative overflow-hidden rounded-4xl px-5 pt-7 pb-8 sm:px-8 sm:pt-8 sm:pb-10">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-12 -right-12 size-52 rounded-full border border-white/10"
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-5 -right-5 size-38 rounded-full border border-white/10"
+              />
+              <div className="relative mb-7 flex items-center justify-between gap-3 text-white">
                 <div>
-                  <p className="text-sm font-semibold">Today on Sway</p>
-                  <p className="mt-1 text-xs text-slate-400">
-                    Fresh ideas from your community
+                  <p className="text-brand-200 text-xs font-medium tracking-[0.16em] uppercase">
+                    The conversation starts small
+                  </p>
+                  <p className="font-display mt-2 text-3xl">
+                    A thought. A spark. A hello.
                   </p>
                 </div>
-                <span className="flex size-8 items-center justify-center rounded-full bg-emerald-400/10 text-emerald-300 ring-1 ring-emerald-400/20">
-                  <span className="size-2 rounded-full bg-emerald-400" />
-                </span>
               </div>
 
-              <div className="space-y-3">
-                {conversations.map((conversation) => (
+              <div className="relative space-y-4">
+                {conversations.map((conversation, index) => (
                   <article
                     key={conversation.name}
-                    className="ui-card p-5 text-slate-900"
+                    className={`text-ink rounded-2xl p-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)] sm:p-6 ${index === 0 ? "bg-[#fffdf7] sm:mr-6" : "bg-[#e9eee4] sm:ml-6"}`}
                   >
                     <div className="flex items-center gap-3">
                       <span
-                        className={`flex size-9 items-center justify-center rounded-full text-xs font-bold ${conversation.accent}`}
+                        className={`flex size-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${conversation.accent}`}
                       >
                         {conversation.initials}
                       </span>
@@ -168,27 +159,48 @@ function App() {
                         <p className="truncate text-sm font-semibold">
                           {conversation.name}
                         </p>
-                        <p className="text-xs text-slate-500">
-                          {conversation.time} ago
+                        <p className="mt-0.5 text-xs text-stone-500">
+                          {conversation.topic}
                         </p>
                       </div>
-                      <span className="text-slate-300">•••</span>
+                      <span className="text-stone-400" aria-hidden="true">
+                        ···
+                      </span>
                     </div>
-                    <h2 className="mt-4 text-lg leading-7 font-semibold">
+                    <h2 className="font-display mt-4 text-[1.4rem] leading-7 tracking-tight">
                       {conversation.title}
                     </h2>
-                    <div className="mt-5 flex items-center gap-4 text-xs font-medium text-slate-500">
-                      <span>♡ 24</span>
-                      <span>8 replies</span>
+                    <p className="mt-2 text-sm leading-6 text-stone-600">
+                      {conversation.excerpt}
+                    </p>
+                    <div className="text-brand-700 mt-4 flex items-center gap-2 border-t border-stone-300/50 pt-3 text-xs font-medium">
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        className="size-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.5 9.5a6.5 6.5 0 0 1-6.5 6.5 7.5 7.5 0 0 1-2.5-.5L3 17l1.3-4.2A6.5 6.5 0 1 1 16.5 9.5Z"
+                        />
+                      </svg>
+                      There’s a conversation in every idea
                     </div>
                   </article>
                 ))}
               </div>
+              <p className="text-brand-200 relative mt-6 text-center text-xs tracking-wide">
+                A glimpse of what you could share · Example posts
+              </p>
             </div>
           </section>
         </div>
 
-        <footer className="flex flex-col gap-2 border-t border-white/10 pt-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+        <footer className="flex flex-col gap-2 border-t border-stone-200 pt-5 pb-1 text-xs text-stone-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Sway</p>
           <p>Thoughtful people. Better conversations.</p>
         </footer>

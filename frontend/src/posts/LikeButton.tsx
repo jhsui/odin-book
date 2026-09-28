@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "../lib/auth-client.ts";
 
 const baseButtonClasses =
-  "inline-flex min-h-11 min-w-24 items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex min-h-11 min-w-24 items-center justify-center gap-2 rounded-full border px-4 py-2.5 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-60";
 
 type LikeData = {
   liked: boolean;
@@ -81,7 +81,7 @@ export default function LikeButton({ postId }: { postId: string }) {
       <button
         type="button"
         disabled
-        className={`${baseButtonClasses} border-slate-200 bg-slate-100 text-slate-500`}
+        className={`${baseButtonClasses} border-stone-200 bg-stone-100 text-stone-500`}
       >
         <SpinnerIcon />
         Loading
@@ -94,7 +94,7 @@ export default function LikeButton({ postId }: { postId: string }) {
       <button
         type="button"
         onClick={() => alert("Please sign in first.")}
-        className={`${baseButtonClasses} border-slate-200 bg-white text-slate-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600`}
+        className={`${baseButtonClasses} hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700 border-stone-200 bg-white text-stone-600`}
       >
         <HeartIcon filled={false} />
         Like
@@ -107,7 +107,7 @@ export default function LikeButton({ postId }: { postId: string }) {
       <button
         type="button"
         disabled
-        className={`${baseButtonClasses} border-slate-200 bg-slate-100 text-slate-500`}
+        className={`${baseButtonClasses} border-stone-200 bg-stone-100 text-stone-500`}
       >
         <SpinnerIcon />
         Loading
@@ -141,8 +141,8 @@ export default function LikeButton({ postId }: { postId: string }) {
         onClick={() => toggleLike.mutate()}
         className={`${baseButtonClasses} ${
           liked
-            ? "border-rose-600 bg-rose-600 text-white hover:bg-rose-700"
-            : "border-slate-200 bg-white text-slate-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
+            ? "border-brand-200 bg-brand-50 text-brand-700 hover:border-brand-300 hover:bg-brand-100"
+            : "hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700 border-stone-200 bg-white text-stone-600"
         }`}
       >
         {toggleLike.isPending ? <SpinnerIcon /> : <HeartIcon filled={liked} />}
@@ -151,7 +151,7 @@ export default function LikeButton({ postId }: { postId: string }) {
 
         <span
           aria-hidden="true"
-          className={liked ? "text-rose-100" : "text-slate-300"}
+          className={liked ? "text-brand-300" : "text-stone-300"}
         >
           ·
         </span>

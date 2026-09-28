@@ -39,12 +39,12 @@ export default function PostIndex() {
     <PageShell>
       <div className="mx-auto max-w-5xl">
         <PageHeading
-          eyebrow="Explore"
-          title="The Sway archive"
-          description="Browse every idea and story shared by the community."
+          eyebrow="The archive"
+          title="Good stories live here."
+          description="Ideas, observations, and everyday discoveries from the Sway community."
         >
           {!isLoading && !isError && posts && (
-            <p className="mt-4 text-sm text-slate-500 sm:mt-0 sm:pb-1">
+            <p className="ui-badge mt-2 sm:mt-0">
               {posts.length} {posts.length === 1 ? "post" : "posts"}
             </p>
           )}
@@ -54,8 +54,8 @@ export default function PostIndex() {
           <section className="space-y-4" aria-label="Loading posts">
             {[1, 2, 3].map((item) => (
               <div key={item} className="ui-card p-6 motion-safe:animate-pulse">
-                <div className="h-6 w-2/3 rounded bg-slate-200" />
-                <div className="mt-5 h-4 w-48 rounded bg-slate-100" />
+                <div className="h-6 w-2/3 rounded bg-stone-200" />
+                <div className="mt-5 h-4 w-48 rounded bg-stone-100" />
               </div>
             ))}
           </section>
@@ -75,7 +75,7 @@ export default function PostIndex() {
                 />
               </svg>
             </span>
-            <h2 className="mt-4 text-lg font-semibold text-slate-900">
+            <h2 className="mt-4 text-lg font-semibold text-stone-900">
               Unable to load posts
             </h2>
             <p className="mt-2 text-sm text-rose-700">
@@ -93,29 +93,29 @@ export default function PostIndex() {
             </button>
           </section>
         ) : posts?.length ? (
-          <ul className="space-y-4">
+          <ul className="ui-card divide-y divide-stone-200/80 overflow-hidden">
             {posts.map((post, index) => (
               <li key={post.id}>
                 <Link
                   to={`/posts/${post.id}`}
-                  className="ui-card group flex items-start gap-4 p-5 transition hover:border-indigo-200 hover:bg-indigo-50/30 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-600 sm:gap-6 sm:p-6"
+                  className="group hover:bg-brand-50/50 focus-visible:outline-brand-600 flex items-start gap-4 p-5 transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] sm:gap-7 sm:px-8 sm:py-7"
                 >
-                  <span className="hidden min-w-10 pt-1 text-sm font-semibold text-slate-600 tabular-nums sm:block">
+                  <span className="hidden min-w-8 pt-1 text-xs font-medium text-stone-400 tabular-nums sm:block">
                     {String(index + 1).padStart(2, "0")}
                   </span>
 
                   <article className="min-w-0 flex-1">
-                    <h2 className="text-lg leading-7 font-semibold wrap-anywhere text-slate-900 transition group-hover:text-indigo-600 sm:text-xl">
+                    <h2 className="font-display text-ink group-hover:text-brand-700 text-xl leading-7 wrap-anywhere transition sm:text-2xl sm:leading-8">
                       {post.title}
                     </h2>
-                    <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
+                    <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-stone-500">
                       <span>
                         By{" "}
-                        <span className="font-medium text-slate-700">
+                        <span className="font-medium text-stone-700">
                           {post.author.name}
                         </span>
                       </span>
-                      <span aria-hidden="true" className="text-slate-600">
+                      <span aria-hidden="true" className="text-stone-600">
                         •
                       </span>
                       <time dateTime={post.createdAt}>
@@ -128,7 +128,7 @@ export default function PostIndex() {
                     aria-hidden="true"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="mt-1 size-5 shrink-0 text-slate-600 transition group-hover:translate-x-1 group-hover:text-indigo-600"
+                    className="group-hover:text-brand-600 mt-1.5 size-5 shrink-0 text-stone-400 transition group-hover:translate-x-1"
                   >
                     <path
                       fillRule="evenodd"
@@ -142,7 +142,7 @@ export default function PostIndex() {
           </ul>
         ) : (
           <section className="ui-empty">
-            <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+            <span className="bg-brand-50 text-brand-600 ring-brand-100 mx-auto flex size-12 items-center justify-center rounded-2xl ring-1">
               <svg
                 aria-hidden="true"
                 viewBox="0 0 20 20"
@@ -152,10 +152,10 @@ export default function PostIndex() {
                 <path d="M4.5 3A1.5 1.5 0 0 0 3 4.5v11A1.5 1.5 0 0 0 4.5 17h11a1.5 1.5 0 0 0 1.5-1.5v-11A1.5 1.5 0 0 0 15.5 3h-11ZM6 6.75A.75.75 0 0 1 6.75 6h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 6 6.75Zm0 3.5a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z" />
               </svg>
             </span>
-            <h2 className="mt-4 text-lg font-semibold text-slate-900">
+            <h2 className="mt-4 text-lg font-semibold text-stone-900">
               Nothing published yet
             </h2>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-stone-500">
               Be the first person to add something to the archive.
             </p>
             <Link to="/dashboard/writing" className="ui-button-primary mt-6">

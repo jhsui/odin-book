@@ -58,18 +58,21 @@ function ErrorPage({
 }) {
   return (
     <PageShell>
-      <section className="ui-card mx-auto my-8 w-full max-w-lg p-6 text-center sm:my-16 sm:p-10">
+      <section className="ui-card mx-auto my-8 w-full max-w-lg p-7 text-center sm:my-16 sm:p-12">
         <Link
           to="/dashboard"
-          className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-indigo-600 text-lg font-black text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+          className="font-display bg-brand-700 focus-visible:ring-brand-400 mx-auto flex size-12 items-center justify-center rounded-full text-3xl text-white italic focus-visible:ring-2 focus-visible:outline-none"
         >
-          S<span className="sr-only">Go to Sway dashboard</span>
+          <span className="-translate-y-0.75">s</span>
+          <span className="sr-only">Go to Sway dashboard</span>
         </Link>
-        <p className="mt-7 text-xs font-semibold tracking-wider text-indigo-600 uppercase">
+        <p className="text-brand-600 mt-7 text-xs font-semibold tracking-wider uppercase">
           {eyebrow}
         </p>
-        <h1 className="mt-3 text-3xl font-bold tracking-tight">{title}</h1>
-        <p className="mt-3 leading-7 text-slate-600">{message}</p>
+        <h1 className="font-display text-ink mt-3 text-4xl leading-tight tracking-tight">
+          {title}
+        </h1>
+        <p className="mt-3 leading-7 text-stone-600">{message}</p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link to="/dashboard" className="ui-button-primary">
             Back to dashboard

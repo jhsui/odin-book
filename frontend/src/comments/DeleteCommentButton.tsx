@@ -52,14 +52,14 @@ export default function DeleteCommentButton({
   return (
     <>
       {session && session.user.id === authorId ? (
-        <div className="mt-3 inline-flex max-w-full flex-col items-start gap-2 align-top">
+        <div className="mt-2 inline-flex max-w-full flex-col items-start gap-2 align-top">
           <button
             type="button"
             onClick={handleClick}
             disabled={isDeleting}
             aria-busy={isDeleting}
             aria-label={isDeleting ? "Deleting comment" : "Delete comment"}
-            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold whitespace-nowrap text-rose-700 transition focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 focus-visible:outline-none enabled:cursor-pointer enabled:hover:border-rose-300 enabled:hover:bg-rose-100 enabled:active:bg-rose-200 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium whitespace-nowrap text-stone-500 transition focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 focus-visible:outline-none enabled:cursor-pointer enabled:hover:bg-rose-50 enabled:hover:text-rose-700 enabled:active:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <svg
               aria-hidden="true"
