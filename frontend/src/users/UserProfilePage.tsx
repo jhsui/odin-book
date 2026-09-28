@@ -207,9 +207,14 @@ export default function UserProfilePage() {
                 <div className="ui-card divide-y divide-stone-100 px-5 sm:px-6">
                   {user.comments.map((comment) => (
                     <article key={comment.id} className="py-6">
-                      <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-stone-600">
+                      <p className="text-xs text-stone-600">
+                        {comment.post.title}
+                      </p>
+
+                      <p className="text-base leading-7 font-bold wrap-anywhere whitespace-pre-wrap text-stone-800 italic">
                         {comment.content}
                       </p>
+
                       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs">
                         <time
                           dateTime={comment.createdAt}

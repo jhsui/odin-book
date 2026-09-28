@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "@fontsource-variable/roboto";
+import "@fontsource-variable/roboto/wght-italic.css";
 
 const router = createBrowserRouter(routes);
 

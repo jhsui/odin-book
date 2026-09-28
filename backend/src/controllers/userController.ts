@@ -187,6 +187,17 @@ const getUserProfile = [
         },
         comments: {
           orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            content: true,
+            postId: true,
+            createdAt: true,
+            post: {
+              select: {
+                title: true,
+              },
+            },
+          },
         },
         followers: {
           select: {

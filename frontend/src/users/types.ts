@@ -30,5 +30,6 @@ export type User = {
     content: string;
     postId: string;
     createdAt: string;
+    post: { title: string };
   }[];
 };

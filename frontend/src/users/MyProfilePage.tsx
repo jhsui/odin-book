@@ -47,6 +47,8 @@ export default function MyProfilePage() {
   const handleAvatarSubmit: SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
+    const form = e.currentTarget;
+
     if (!file) return;
     setAvatarError("");
 
@@ -72,6 +74,11 @@ export default function MyProfilePage() {
       if (!res.ok) {
         throw new Error(`Upload failed (${res.status}): ${await res.text()}`);
       }
+
+      setFile(null);
+      setAvatarError("");
+
+      form.reset();
 
       await revalidator.revalidate();
     } catch (error) {
@@ -374,6 +381,7 @@ export default function MyProfilePage() {
               <p id="avatar-label" className="ui-label">
                 Upload a new avatar
               </p>
+
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
@@ -503,6 +511,7 @@ export default function MyProfilePage() {
               </h2>
               <span className="ui-badge">{user.comments.length}</span>
             </div>
+
             {user.comments.length ? (
               <div className="space-y-5">
                 {user.comments.map((comment) => (
@@ -510,11 +519,14 @@ export default function MyProfilePage() {
                     key={comment.id}
                     className="ui-card min-w-0 p-5 sm:p-6"
                   >
-                    <p className="text-sm leading-7 wrap-anywhere whitespace-pre-wrap text-stone-600 sm:text-base sm:leading-8">
+                    <p className="text-xs text-stone-600">
+                      {comment.post.title}
+                    </p>
+                    <p className="text-base leading-7 font-bold wrap-anywhere whitespace-pre-wrap text-stone-800 italic">
                       {comment.content}
                     </p>
 
-                    <footer className="mt-5 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 border-t border-stone-200 pt-4">
+                    <footer className="mt-3 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 border-t border-stone-200 pt-4">
                       <time
                         dateTime={comment.createdAt}
                         className="text-xs leading-5 text-stone-500 sm:text-sm"
