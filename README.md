@@ -2,6 +2,8 @@
 
 Sway is a full-stack social app for sharing posts, joining conversations, and following other users. Built with React, TypeScript, Express, and PostgreSQL, it brings together authentication, image uploads, a paginated feed, and user profiles.
 
+For frontend development, client routes, and shared UI conventions, see the [frontend guide](frontend/README.md).
+
 ## Features
 
 - **Authentication:** email/password registration and sign-in, Google and GitHub OAuth, and anonymous guest sessions.
@@ -11,7 +13,7 @@ Sway is a full-stack social app for sharing posts, joining conversations, and fo
 - **Profiles:** update your display name, avatar, and introduction, and browse a user's posts and comments.
 - **Image galleries:** browse post images with previous/next controls and an image counter.
 
-Guests can browse, like posts, and add or delete their own comments. Creating posts, following users, and editing a profile require a registered account.
+Anyone can browse without signing in. Signing in as a guest creates an anonymous session that can like and unlike posts and add or delete its own comments. Creating posts, following users, and editing a profile require a registered account.
 
 ## Tech stack
 
@@ -34,6 +36,8 @@ Prisma stores users, sessions, accounts, posts, comments, likes, follows, and im
 
 The frontend uses TanStack Query for cached server data and infinite scrolling, alongside React Router loaders for selected pages. Database constraints enforce one like per user/post pair and one follow per follower/following pair.
 
+Shared page layouts and Tailwind theme tokens keep the interface consistent, with warm ivory backgrounds, forest-green accents, and serif display headings. [PageShell](frontend/src/layout/PageShell.tsx) supplies the shared header, content width, and skip-to-content link; [index.css](frontend/src/index.css) defines reusable surfaces and controls.
+
 ## Project structure
 
 ```text
@@ -54,7 +58,7 @@ odin-book/
     └── src/
         ├── auth/              # Sign-in, registration, and guest access
         ├── comments/          # Comment lists and actions
-        ├── layout/            # Shared navigation
+        ├── layout/            # Shared page shell, headings, and navigation
         ├── posts/             # Feed cards, editor, detail view, and gallery
         ├── users/             # Profiles, user directory, and follow controls
         ├── Dashboard.tsx      # Infinite-scrolling feed
@@ -177,7 +181,7 @@ npm --prefix frontend run dev -- --port 5173 --strictPort
 
 Open **http://localhost:5173**. The API listens on **http://localhost:3000**.
 
-The backend currently fixes its listening port at `3000` in `backend/src/app.ts`. If you change the frontend origin or backend port, update the matching environment values and OAuth callbacks. Restart the relevant server after changing an environment file.
+The backend currently fixes its listening port at `3000` in `backend/src/app.ts`. If you change the frontend origin or backend port, update the matching environment values and OAuth callbacks. Restart the relevant server after changing an environment file. The backend start script has no watch mode, so restart it after backend source changes as well.
 
 ## Development commands
 
@@ -208,12 +212,12 @@ Application routes are defined in [`backend/src/routes/router.ts`](backend/src/r
 | POST               | `/api/posts`                                  | Create a post using multipart fields `title`, `content`, and optional `images` |
 | GET / DELETE       | `/api/posts/:postId`                          | Read a post / delete your own post                                             |
 | GET / PUT / DELETE | `/api/posts/:postId/likes/me`                 | Read like status and count / like / unlike                                     |
-| GET / POST         | `/api/posts/:postId/comments`                 | Read comments / add a comment                                                  |
+| GET / POST         | `/api/posts/:postId/comments`                 | Read comments / add a comment using `{ "comment": "..." }`                     |
 | DELETE             | `/api/comments/:commentId`                    | Delete your own comment                                                        |
 | GET                | `/api/users/index`                            | User directory                                                                 |
 | GET                | `/api/users/profile/:userId`                  | Public user profile                                                            |
 | GET                | `/api/users/me/profile`                       | Your registered account's profile                                              |
-| PUT                | `/api/users/me/avatar`                        | Upload an avatar using the multipart field `avatar`                            |
+| GET / PUT          | `/api/users/me/avatar`                        | Read your avatar URL / upload an avatar using the multipart field `avatar`     |
 | PUT                | `/api/users/me/name`                          | Update your display name using `{ "newName": "..." }`                          |
 | PUT                | `/api/users/me/intro`                         | Update your introduction using `{ "intro": "..." }` (up to 1,000 characters)   |
 | PUT / DELETE       | `/api/users/me/following/:followingId`        | Follow / unfollow a user                                                       |
@@ -227,4 +231,4 @@ Better Auth handles authentication routes under `/api/auth/*`. Requests that nee
 
 For this proxy setup, set `VITE_BACKEND_URL`, `VITE_FRONTEND_URL`, `BETTER_AUTH_URL`, and `FRONTEND_URL` to the public frontend origin. Configure provider callback URLs as `https://your-domain/api/auth/callback/google` and `https://your-domain/api/auth/callback/github`. Set the frontend variables before building, and set `NODE_ENV=production` on the backend so session cookies use HTTPS.
 
-The backend listens on port `3000`; Caddy uses `PORT`, defaulting to `8080`. Configure your hosting services accordingly and apply the database migrations during deployment.
+The backend listens on port `3000`; Caddy uses `PORT`, defaulting to `8080`. This Caddyfile disables automatic HTTPS, so the hosting platform or an upstream proxy must terminate HTTPS for the public site. Configure your hosting services accordingly and apply the database migrations during deployment.
