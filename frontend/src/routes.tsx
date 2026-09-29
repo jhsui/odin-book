@@ -100,7 +100,6 @@ const routes: RouteObject[] = [
 
       // Only signed-in non-anonymous users have profile.
       if (!session || session.user.isAnonymous) {
-        // todo: add feedback in App.tsx
         return redirect("/?reason=registered-user-required");
       }
 

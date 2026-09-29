@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import SignInDialog from "./auth/SignInDialog.tsx";
 import SignUpDialog from "./auth/SignUpDialog.tsx";
 import { authClient } from "./lib/auth-client.ts";
@@ -26,6 +26,21 @@ const conversations = [
 function App() {
   const { data: session, isPending } = authClient.useSession();
   const isAnonymous = session?.user.isAnonymous === true;
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const showProfileBanner =
+    searchParams.get("reason") === "registered-user-required";
+
+  function dismissProfileBanner() {
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        next.delete("reason");
+        return next;
+      },
+      { replace: true }, // Replaces the current browser-history entry instead of adding another one.
+    );
+  }
 
   return (
     <main className="bg-canvas text-ink min-h-screen overflow-hidden">
@@ -70,6 +85,35 @@ function App() {
             )}
           </div>
         </header>
+
+        {showProfileBanner && (
+          <section
+            aria-label="Profile access"
+            className="border-brand-200 bg-brand-50 relative mt-6 rounded-2xl border p-5 sm:p-6"
+          >
+            <div role="alert" className="pr-10">
+              <h2 className="text-brand-800 text-base font-semibold">
+                Sign in to view your profile
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-stone-600">
+                Profiles are available to registered members. Sign in or create
+                an account to view yours.
+              </p>
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <SignInDialog />
+              <SignUpDialog />
+            </div>
+            <button
+              type="button"
+              aria-label="Dismiss profile notice"
+              onClick={dismissProfileBanner}
+              className="text-brand-700 hover:bg-brand-100 focus-visible:ring-brand-600 absolute top-3 right-3 flex size-11 cursor-pointer items-center justify-center rounded-full text-xl transition focus-visible:ring-2 focus-visible:outline-none"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </section>
+        )}
 
         <div className="grid flex-1 items-center gap-12 py-14 sm:py-20 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:py-20">
           <section className="max-w-2xl">
